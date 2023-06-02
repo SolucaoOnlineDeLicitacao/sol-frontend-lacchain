@@ -1,0 +1,92 @@
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h1><strong>Licitações</strong></h1>
+            <hr class="bg-primary">
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-8 mt-2">
+            <input type="text" class="form-control h50 br-10 text-dark"
+                placeholder="Busque por nome, CPF, telefone ou e-mail do usuário" />
+        </div>
+        <div class="col-md-3 mt-2">
+            <div class="form-group">
+                <select class="form-control br-10 h50">
+                    <option [disabled]="true" [selected]="true">Listar Todas</option>
+                    <option>A-Z</option>
+                    <option>Z-A</option>
+                </select>
+            </div>
+        </div>
+
+        <div *ngFor="let item of licitacoesList | paginate: { itemsPerPage:
+            itensPerPage, currentPage: currentPage }; let i= index;" class="col-md-11 border mt-2 br-10 py-3 m-3">
+            <div class="row">
+                <div class="col-md-10">
+                    <h2 class="mb-0 text-dark"><strong>{{item.bid_count}} / 2023</strong></h2>
+                </div>
+                <div class="col-md-2 text-capitalize">
+                    <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
+                    <h5 *ngIf="item.status ==='awaiting'" class="f-size-16 text-warning">Aguardando Liberação</h5>
+                    <h5 *ngIf="item.status ==='tiebreaker'" class="f-size-16 text-warning">Aguardando desempate</h5>
+                    <h5 *ngIf="item.status ==='analysis'" class="f-size-16 text-info">Em Análise</h5>
+                    <h5 *ngIf="item.status ==='deserted'" class="f-size-16 text-danger">Deserta</h5>
+                    <h5 *ngIf="item.status ==='canceled'" class="f-size-16 text-danger">Cancelada</h5>
+                    <h5 *ngIf="item.status ==='failed'" class="f-size-16 text-danger">Falhou</h5>
+                    <h5 *ngIf="item.status ==='draft'" class="f-size-16 text-dark">Em Rascunho</h5>
+                    <h5 *ngIf="item.status ==='released'" class="f-size-16 text-success">Lançada</h5>
+                    <h5 *ngIf="item.status ==='open'" class="f-size-16 text-success">Aberta</h5>
+                    <h5 *ngIf="item.status ==='completed'" class="f-size-16 text-success">Concluida</h5>
+                    <h5 *ngIf="item.status ==='reopened'" class="f-size-16 text-success">Reaberta</h5>
+                </div>
+                <div class="col-md-10 mt-2 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
+                    <h5 class="f-size-16">{{item.association?.name}}</h5>
+                </div>
+                <div *ngIf="item.proofreader" class="col-md-2 mt-2 text-capitalize">
+                    <h6 class="font-poppins f-size-14 text-secondary">Revisor</h6>
+                    <h5 class="f-size-16">{{item.proofreader?.name}}</h5>
+                </div>
+                <div class="col-md-4 mt-2 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Modalidade</h6>
+                    <h5 class="f-size-16">{{item.modality}}</h5>
+                </div>
+                <div class="col-md-4 mt-2 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Classificação</h6>
+                    <h5 class="f-size-16">{{item.classification}}</h5>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4 mt-2 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Data de
+                        Início</h6>
+                    <h5 class="f-size-16">{{item.start_at | date: 'dd/MM/yyyy'}}</h5>
+                </div>
+                <div class="col-md-4 mt-2 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Data de
+                        encerramento</h6>
+                    <h5 class="f-size-16">{{item.end_at | date: 'dd/MM/yyyy'}}</h5>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-10 mt-2 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Descrição</h6>
+                    <div style="max-width: 400px; height: 100px; overflow: hidden;">
+                        <h5 class="f-size-16" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{item.description}}</h5>
+                    </div>
+                </div>
+                <div class="col-md-2 mt-2 ">
+                    <button (click)="detailBids(item)" class="br-10 w-100 h50
+                        btn btn-dark">Detalhes</button>
+                </div>
+
+            </div>
+        </div>
+        <div *ngIf="licitacoesList > 6" class="col-md-12">
+            <div class="col-md-12 d-flex justify-content-end">
+                <pagination-controls (pageChange)="currentPage= $event"></pagination-controls>
+            </div>
+        </div>
+    </div>
+
+</div>

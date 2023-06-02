@@ -1,0 +1,256 @@
+<div class="container-fluid mb-6">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <h1>Dados da Licitação</h1>
+      <hr class="bg-primary">
+    </div>
+  </div>
+
+  <div class="row mt-1">
+    <div class="col-12">
+      <i class="fa fa-arrow-left f-size-24 cursor-pointer" [routerLink]="['/pages/associacao/licitacoes']"
+        aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-12">
+      <div class="col-md-12 col-lg-12 col-xl-10">
+        <div class="row p-3 user-data-border">
+
+          <div class="row col-12 p-2">
+            <div class="col-12 col-md-10">
+              <h3 class="text-dark">{{response.bid_count}} / 2022</h3>
+            </div>
+            <div class="col-12 col-md-2">
+              <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
+              <h5 *ngIf="response.status ==='awaiting'" class="f-size-16 text-warning">Aguardando Liberação</h5>
+              <h5 *ngIf="response.status ==='tiebreaker'" class="f-size-16 text-warning">Aguardando desempate</h5>
+              <h5 *ngIf="response.status ==='analysis'" class="f-size-16 text-info">Em Análise</h5>
+              <h5 *ngIf="response.status ==='deserted'" class="f-size-16 text-danger">Deserta</h5>
+              <h5 *ngIf="response.status ==='canceled'" class="f-size-16 text-danger">Cancelada</h5>
+              <h5 *ngIf="response.status ==='failed'" class="f-size-16 text-danger">Falhou</h5>
+              <h5 *ngIf="response.status ==='draft'" class="f-size-16 text-dark">Em Rascunho</h5>
+              <h5 *ngIf="response.status ==='released'" class="f-size-16 text-success">Lançada</h5>
+              <h5 *ngIf="response.status ==='open'" class="f-size-16 text-success">Aberta</h5>
+              <h5 *ngIf="response.status ==='completed'" class="f-size-16 text-success">Concluida</h5>
+              <h5 *ngIf="response.status ==='reopened'" class="f-size-16 text-success">Reaberta</h5>
+            </div>
+          </div>
+
+          <div class="row col-12 p-2">
+            <div class="col-12 col-md-10">
+              <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
+              <p class="f-size-16 text-dark">{{authService.getAuthenticatedUser().name}}</p>
+            </div>
+            <div class="col-12 col-md-2">
+              <h6 class="font-poppins f-size-14 text-secondary">Revisor</h6>
+              <h6 class="f-size-16 text-dark">Adm Geral</h6>
+            </div>
+          </div>
+
+          <div class="row col-12 p-2">
+            <div class="col-12 col-md-6">
+              <h6 class="font-poppins f-size-14 text-secondary">Modalidade</h6>
+              <p *ngIf="response.modality ==='openClosed'" class="f-size-16 text-dark">Aberta/pública</p>
+              <p *ngIf="response.modality ==='openInvite'" class="f-size-16 text-dark">Convite aberto</p>
+              <p *ngIf="response.modality ==='closedInvite'" class="f-size-16 text-dark">Convite fechado</p>
+            </div>
+            <div class="col-12 col-md-6">
+              <h6 class="font-poppins f-size-14 text-secondary">Classificação</h6>
+              <h6 class="f-size-16 text-dark">{{response?.classification}}</h6>
+            </div>
+          </div>
+
+          <div class="row col-12 p-2">
+            <div class="col-12 col-md-6">
+              <h6 class="font-poppins f-size-14 text-secondary">Prazo para entrega/execução (dias)</h6>
+              <h6 class="f-size-16 text-dark">{{prazoEmdias}} dias</h6>
+            </div>
+            <div class="col-12 col-md-4">
+              <h6 class="font-poppins f-size-14 text-secondary">Data de início</h6>
+              <p class="text-dark">{{response.start_at | date: 'dd/MM/yyyy'}}</p>
+            </div>
+            <div class="col-12 col-md-2">
+              <h6 class="font-poppins f-size-14 text-secondary">Data de encerramento</h6>
+              <h6 class="f-size-16 text-dark">{{response.end_at | date: 'dd/MM/yyyy'}}</h6>
+            </div>
+          </div>
+
+          <div class="row col-12 p-2">
+            <div class="col-12 col-md-6">
+              <h6 class="font-poppins f-size-14 text-secondary">Local da Entrega</h6>
+              <p class="text-dark">{{response.local_to_delivery}}</p>
+            </div>
+            <div class="col-12 col-md-6">
+              <h6 class="font-poppins f-size-14 text-secondary">Dias corridos para desempate</h6>
+              <h6 class="f-size-16 text-dark">{{response.days_to_tiebreaker}}</h6>
+            </div>
+          </div>
+
+          <div class="row col-12 p-2">
+            <div class="col-12 col-md-6">
+              <h6 class="font-poppins f-size-14 text-secondary">Tipo de Licitação</h6>
+              <p *ngIf="response.bid_type ==='individualPrice'" class="f-size-16 text-dark">Preço individual</p>
+              <p *ngIf="response.bid_type ==='allotmentPrice'" class="f-size-16 text-dark">Preço por lote</p>
+              <p *ngIf="response.bid_type ==='globalPrice'" class="f-size-16 text-dark">Preço global</p>
+            </div>
+            <div class="col-12 col-md-6">
+              <h6 class="font-poppins f-size-14 text-secondary">Convênio</h6>
+              <h6 class="f-size-16 text-dark">{{response.agreement}}</h6>
+            </div>
+          </div>
+
+          <div class="row col-6 p-2">
+            <div class="col-12 col-md-12">
+              <h6 class="font-poppins f-size-14 text-secondary">Descrição</h6>
+              <p class="text-dark">{{response?.description}}</p>
+            </div>
+            <div class="col-12 col-md-12">
+              <h6 class="font-poppins f-size-14 text-secondary">Site Adicional</h6>
+              <h6 class="f-size-16 text-dark">{{response.aditional_site}}</h6>
+            </div>
+          </div>
+
+          <div class="row col-12 col-md-6 p-2">
+            <div class="col-12">
+              <button type="button" class="bg-light btn-lg btn-block mb-4 text-small">Baixar Edital</button>
+            </div>
+            <div class="col-12">
+              <button type="button" class="bg-light btn-lg btn-block mb-4 text-small">Baixar Ata</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row col-12 col-md-6 ml-auto float-right mt-4 p-0">
+          <button (click)="cancelStatus();" type="button" class="btn-block-supplier btn-lg btn-block mb-4 text-small border-0 text-white">Cancelar
+            Licitação</button>
+        </div>
+
+        <div class="row col-12 mt-6">
+          <h4>Lotes e itens</h4>
+        </div>
+
+        <div class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border">
+          <div class="col-12 py-2">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="col-md-3 p-0">
+                <h6>Nº de lote</h6>
+                <h6>3 - lote 4</h6>
+              </div>
+              <div class="col-md-3 p-0">
+                <h6>Itens</h6>
+                <h6>{{response.add_allotment[0].add_item[0].quantity}}</h6>
+              </div>
+              <div class="col-md-3 p-0">
+                <h6>Status</h6>
+                <h6 class="text-success">Adjudicado</h6>
+              </div>
+              <div class="col-md-1 p-0 d-flex justify-content-end">
+                <img (click)="toggleSectionOne()" style="width: 16px;"
+                  [src]="isSectionOneOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
+                  alt="Ícone"
+                  class="opener-icon cursor-pointer">
+              </div>
+            </div>
+
+            <div class="content" [ngClass]="{ 'open': isSectionOneOpen }">
+              <hr>
+              <h4 class="pb-3">Lista de itens e propostas</h4>
+              <div class="row col-12 mb-3">
+                <div class="col-md-12">
+                  <div class="table-responsive-sm">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr class="custom-th-contrato">
+                          <th scope="col" style="color: black;">Item</th>
+                          <th scope="col"></th>
+                          <th scope="col"></th>
+                          <th scope="col"></th>
+                          <th scope="col" style="color: black;">Quantidade</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="bg-first-row">
+                          <th class="text-capitalize" scope="row">Microcomputadores i3 4gb</th>
+                          <th scope="col"></th>
+                          <th scope="col"></th>
+                          <th scope="col"></th>
+                          <td class="text-capitalize">1 Unidade(s)</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center justify-content-between p-0">
+                <div class="col-md-4 p-0">
+                  <h6>Arquivos do lote</h6>
+                  <h6 class="text-primary cursor-pointer">teste.png</h6>
+                </div>
+                <div class="col-md-3 mt-4">
+                  <button type="button" routerLink='/associacao/licitacoes/view-proposal/' class="bg-dark btn-lg btn-block mb-4 text-small text-white">Visualizar
+                    propostas</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row col-12 mt-5">
+          <h4>Fornecedores convidados</h4>
+        </div>
+
+        <div class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border mb-5">
+          <div class="col-12 py-2">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="col-md-9 p-0">
+                <h6>Fornecedor</h6>
+                <h6>{{response.invited_suppliers}}</h6>
+              </div>
+              <div class="col-md-3 p-0 d-flex justify-content-end">
+                <div class="pr-5">
+                  <h6>Documento</h6>
+                  <h6>000.000.000-00</h6>
+                </div>
+                <img (click)="toggleSectionTwo()" style="width: 16px;"
+                  [src]="isSectionTwoOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
+                  alt="Ícone"
+                  class="opener-icon cursor-pointer">
+              </div>
+            </div>
+
+            <div class="content" [ngClass]="{ 'open': isSectionTwoOpen }">
+              <hr>
+              <h6 class="text-dark">Endereço</h6>
+              <div class="d-flex align-items-center justify-content-between p-0">
+                <div class="col-md-4 p-0">
+                  <h6>Longradouro</h6>
+                  <h6>Rua Maria Cândida Aparecida</h6>
+                </div>
+                <div class="col-md-2 p-0">
+                  <h6>Número</h6>
+                  <h6>191</h6>
+                </div>
+                <div class="col-md-2 p-0">
+                  <h6>Bairro</h6>
+                  <h6>Vila são josé</h6>
+                </div>
+                <div class="col-md-2 p-0">
+                  <h6>Cidade</h6>
+                  <h6>São Paulo</h6>
+                </div>
+                <div class="col-md-2 p-0">
+                  <h6>Cep</h6>
+                  <h6>00000-000</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

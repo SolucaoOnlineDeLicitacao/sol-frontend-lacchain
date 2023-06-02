@@ -1,0 +1,255 @@
+<div class="container-fluid mb-5">
+	<div class="row mt-5">
+		<div class="col-md-12">
+			<h1>Dados do Fornecedor</h1>
+			<hr class="bg-primary">
+		</div>
+	</div>
+
+	<div class="row mt-1">
+		<div class="col-12">
+			<i class="fa fa-arrow-left f-size-24 cursor-pointer" [routerLink]="['/pages/fornecedor']"
+				aria-hidden="true"></i>
+		</div>
+	</div>
+
+	<div class="row mt-3">
+		<div class="col-12">
+			<div class="col-md-12 col-lg-12 col-xl-10">
+				<div class="row p-3 user-data-border">
+
+					<div class="col-12 col-lg-4 p-2 text-capitalize">
+						<h6 class="font-poppins f-size-14 text-secondary">Nome</h6>
+						<h5 class="f-size-16">{{fornecedor?.name}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">CNPJ</h6>
+						<h5 class="f-size-16">{{fornecedor?.document! | mask : '00.000.000/0000-00'}}</h5>
+					</div>
+
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Situação</h6>
+						<h5 *ngIf="fornecedor?.block == true" class="f-size-16 text-danger">Bloqueado</h5>
+						<h5 *ngIf="fornecedor?.block == false" class="f-size-16 text-success">Ativo</h5>
+					</div>
+
+					<div class="col-12 p-2 mt-5">
+						<h5> <b> Endereço </b></h5>
+						<hr>
+					</div>
+
+					<div class="col-12 col-lg-4 p-2 text-capitalize">
+						<h6 class="font-poppins f-size-14 text-secondary">CEP</h6>
+						<h5 class="f-size-16">{{fornecedor?.zip! | mask : '00.000-000'}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2 text-capitalize">
+						<h6 class="font-poppins f-size-14 text-secondary">Estado</h6>
+						<h5 class="f-size-16">{{fornecedor?.state}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Município</h6>
+						<h5 class="f-size-16">{{fornecedor?.city}}</h5>
+					</div>
+
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Bairro</h6>
+						<h5 class="f-size-16">{{fornecedor?.neighborhood}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Logradouro</h6>
+						<h5 class="f-size-16">{{fornecedor?.publicPlace}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Número</h6>
+						<h5 class="f-size-16">{{fornecedor?.number}}</h5>
+					</div>
+
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Complemento</h6>
+						<h5 class="f-size-16">{{fornecedor?.complement}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Ponto de referência</h6>
+						<h5 class="f-size-16">{{fornecedor?.referencePoint}}</h5>
+					</div>
+
+				</div>
+
+				<div class="row mt-5 p-3 user-data-border">
+
+					<div class="col-12 p-3">
+						<h5><b>Representante Legal (Dados para contrato)</b></h5>
+						<hr>
+					</div>
+
+					<div class="col-12 col-lg-4 p-2 text-capitalize">
+						<h6 class="font-poppins f-size-14 text-secondary">Nome</h6>
+						<h5 class="f-size-16">{{fornecedor?.legalName}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2 text-capitalize">
+						<h6 class="font-poppins f-size-14 text-secondary">CPF</h6>
+						<h5 class="f-size-16">{{fornecedor?.cpf! | mask : '000.000.000-00'}}</h5>
+					</div>
+					<!-- <div class="col-12 col-lg-4 p-2 text-capitalize">
+                        <h6 class="font-poppins f-size-14 text-secondary">Estado Civil</h6>
+                        <h5 class="f-size-16">{{fornecedor?.legalmaritalStatus}}</h5>
+                    </div> -->
+					<div class="col-12 p-2 mt-5">
+						<h5> <b> Endereço </b></h5>
+						<hr>
+					</div>
+
+					<div class="col-12 col-lg-4 p-2 text-capitalize">
+						<h6 class="font-poppins f-size-14 text-secondary">CEP</h6>
+						<h5 class="f-size-16">{{fornecedor?.legalZip! | mask : '00.000-000'}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2 text-capitalize">
+						<h6 class="font-poppins f-size-14 text-secondary">Estado</h6>
+						<h5 class="f-size-16">{{fornecedor?.legalState}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Município</h6>
+						<h5 class="f-size-16">{{fornecedor?.legalCity}}</h5>
+					</div>
+
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Bairro</h6>
+						<h5 class="f-size-16">{{fornecedor?.legalNeighborhood}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Logradouro</h6>
+						<h5 class="f-size-16">{{fornecedor?.legalPublicPlace}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Número</h6>
+						<h5 class="f-size-16">{{fornecedor?.legalNumber}}</h5>
+					</div>
+
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Complemento</h6>
+						<h5 class="f-size-16">{{fornecedor?.legalComplement}}</h5>
+					</div>
+					<div class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">Ponto de referência</h6>
+						<h5 class="f-size-16">{{fornecedor?.legalReferencePoint}}</h5>
+					</div>
+
+				</div>
+
+				<div class="row mt-5 p-3 user-data-border">
+
+					<div class="col-12 p-3">
+						<h5><b>Categorias e Segmentos</b></h5>
+						<hr>
+					</div>
+
+					<div *ngFor="let item of fornecedor?.categories" class="col-12 p-2 text-capitalize">
+						<h5 class="font-poppins f-size-14 text-secondary mb-3 text-dark">{{item}}</h5>
+					</div>
+
+				</div>
+
+				<div class="row mt-5 p-3 user-data-border">
+
+					<div class="col-12 p-3">
+						<h5><b>Documentos</b></h5>
+						<hr>
+					</div>
+
+					<div class="col-12 col-lg-4 p-2 text-capitalize">
+						<h5 class="font-poppins f-size-14 text-secondary mb-3 text-dark">Documento.PDF</h5>
+					</div>
+
+				</div>
+
+				<div class="row mt-5 p-3 user-data-border">
+
+					<div class="col-12 p-3">
+						<div class="d-flex">
+							<h5 class="col-md-6"><b>Evento de Bloqueio</b></h5>
+							<button *ngIf="fornecedor?.block == false" (click)="open(contentBlocked);" type="button" class="bg-dark btn-lg btn-block mb-4 text-small
+								col-md-6
+								text-white">Bloquear fornecedor</button>
+
+							<button *ngIf="fornecedor?.block == true" (click)="open(contentUnBlocked);" type="button" class="bg-dark btn-lg btn-block mb-4 text-small
+								col-md-6
+								text-white">Debloquear fornecedor</button>
+						</div>
+						<hr>
+					</div>
+
+					<div class="col-12 col-lg-12 p-2 text-capitalize">
+						<h5 class="font-poppins f-size-14 text-secondary mb-3 text-dark">Não há bloqueios para este fornecedor.</h5>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template class="container-fluid" #contentBlocked let-modal>
+	<div class="p-5 bg-light">
+		<div class="col-12 d-flex justify-content-between">
+			<h3 class="tfa-title m-0">Bloquear Fornecedor</h3>
+			<h5 (click)="exit()" class="cursor-pointer">X</h5>
+		</div>
+
+		<div class="my-4 text-center block-messege py-1 d-flex justify-content-center">
+			<div class="pr-1"><img src="../../../../assets/images/icon-alert.svg" (click)="exit()"></div>
+			<div class="danger-text">Esta ação irá bloquear o acesso do fornecedor à plataforma</div>
+		</div>
+
+		<div>
+			<form [formGroup]="blockSupplier">
+				<div class="mb-2">
+					<label for="message" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Motivo do bloqueio</b></label>
+					<textarea formControlName="message" class="form-control custom-textarea" id="message" placeholder="Digite sua mensagem"></textarea>
+				</div>
+
+				<div class="d-flex justify-content-center">
+					<div class="col-md-6 mt-4">
+						<button type="button" class="bg-light btn-lg btn-block mb-4 text-small border-0" (click)="exit();">Cancelar</button>
+					</div>
+					<div class="col-md-6 mt-4">
+						<button type="button" class="btn-lg btn-block mb-4 text-small btn-block-supplier text-white border-0"
+							(click)="handleBlock();">Bloquear Fornecedor</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template class="container-fluid" #contentUnBlocked let-modal>
+	<div class="p-5 bg-light">
+		<div class="col-12 d-flex justify-content-between">
+			<h3 class="tfa-title m-0">Bloquear Fornecedor</h3>
+			<h5 (click)="exit()" class="cursor-pointer">X</h5>
+		</div>
+
+		<div class="my-4 text-center unblock-messege py-1 d-flex justify-content-center">
+			<div class="pr-1"><img src="../../../../assets/images/icon-alert-blue.svg" (click)="exit()"></div>
+			<div class="unblock-text">Esta ação irá liberar o acesso do fornecedor à plataforma</div>
+		</div>
+
+		<div>
+			<form [formGroup]="blockSupplier">
+				<div class="mb-2">
+					<label for="message" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Motivo do debloqueio</b></label>
+					<textarea formControlName="message" class="form-control custom-textarea" id="message" placeholder="Digite sua mensagem"></textarea>
+				</div>
+
+				<div class="d-flex justify-content-center">
+					<div class="col-md-6 mt-4">
+						<button type="button" class="bg-light btn-lg btn-block mb-4 text-small border-0" (click)="exit();">Cancelar</button>
+					</div>
+					<div class="col-md-6 mt-4">
+						<button type="button" class="btn-lg btn-block mb-4 text-small btn-unblock-supplier text-white border-0"
+							(click)="handleUnBlock();">Desbloquear Fornecedor</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</ng-template>

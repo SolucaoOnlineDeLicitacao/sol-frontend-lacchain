@@ -1,0 +1,93 @@
+<div class="container mb-5">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h1><strong>Contrato</strong></h1>
+            <hr class="bg-primary">
+        </div>
+
+        <div class="col-md-11 border mt-3 br-10 py-3 ">
+            <div class="row px-2">
+                <div class="col-md-6 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Contrato</h6>
+                    <h5 class="f-size-16">{{datamock.getDataContratos().licitacao}}</h5>
+                </div>
+                <div class="col-md-3 mt-3 text-capitalize">
+                    <h6 class="font-poppins f-size-14 text-secondary">Licitação</h6>
+                    <h5 class="f-size-16">{{datamock.getDataContratos().licitacaodata}}</h5>
+                </div>
+                <div class="col-md-3 mt-3 text-capitalize">
+                    <h6 class="font-poppins f-size-14 text-secondary">Situação</h6>
+                    <h5 *ngIf="datamock.getDataContratos().status ==='Assinado'" class="f-size-16 text-primary">
+                        {{datamock.getDataContratos().status}}</h5>
+                    <h5 *ngIf="datamock.getDataContratos().status ==='Aguardando Assinatura'"
+                        class="f-size-16 text-dark"> {{datamock.getDataContratos().status}}</h5>
+                </div>
+                <div class="col-md-6 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
+                    <h5 class="f-size-16">{{datamock.getDataContratos().associacao}}</h5>
+                </div>
+                <div class="col-md-3 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Valor</h6>
+                    <h5 class="f-size-16">{{datamock.getDataContratos().valor | currency: 'BRL'}}</h5>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-12 mt-3">
+                    <div class="row d-flex justify-content-between">
+                        <div class="col-md-4">
+                            <h2><strong>Assinaturas</strong></h2>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn h50 w-100 btn-dark br-10" type="button"
+                                (click)="openModal('proposal')"><strong>Proposta</strong></button>
+                        </div>
+                        <div class="col-md-12">
+                            <hr class="bg-primary">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <div *ngIf="datamock.getDataContratos().status === 'Assinado'" class="row d-flex justify-content-between">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
+                                    <h5 class="f-size-16">{{datamock.getDataContratos().associacaodata}}</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="font-poppins f-size-14 text-secondary">Fornecedor</h6>
+                                    <h5 class="f-size-16">{{datamock.getDataContratos().fornecedor}}</h5>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn h50 w-100 w3-white text-dark border br-10" type="button"
+                                (click)="openModal('edital')"><strong>Baixar contrato original</strong></button>
+                        </div>
+                    </div>
+                    <div *ngIf="datamock.getDataContratos().status === 'Aguardando Assinatura'" class="row d-flex justify-content-between">
+                        <div class="col-md-12">
+                            <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
+                            <h5 class="f-size-16">{{datamock.getDataContratos().associacaodata}}</h5>
+                        </div>
+                        <div class="col-md-12">
+                            <h6 class="font-poppins f-size-14 text-secondary">Fornecedor</h6>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <button class="btn h50 w-100 btn-success br-10" type="button"
+                                        (click)="openModal('aceitar')"><strong>Aceitar</strong></button>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn h50 w-100 btn-danger br-10" type="button"
+                                        (click)="openModal('recusar')"><strong>Recusar</strong></button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

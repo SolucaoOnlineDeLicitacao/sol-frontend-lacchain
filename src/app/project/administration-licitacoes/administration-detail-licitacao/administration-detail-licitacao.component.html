@@ -1,0 +1,168 @@
+<div class="container mb-5">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h1><strong>Licitações</strong></h1>
+            <hr class="bg-primary">
+        </div>
+
+        <div class="col-md-11 border mt-3 br-10 py-3 ">
+            <div class="row px-2">
+                <div class="col-md-10">
+                    <h2 class="mb-0 text-dark"><strong>{{response.numero}}</strong></h2>
+                </div>
+                <div class="col-md-2 text-capitaliz">
+                    <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
+                    <h5 *ngIf="response.status ==='awaiting'" class="f-size-16 text-warning">Aguardando Liberação</h5>
+                    <h5 *ngIf="response.status ==='tiebreaker'" class="f-size-16 text-warning">Aguardando desempate</h5>
+                    <h5 *ngIf="response.status ==='analysis'" class="f-size-16 text-info">Em Análise</h5>
+                    <h5 *ngIf="response.status ==='deserted'" class="f-size-16 text-danger">Deserta</h5>
+                    <h5 *ngIf="response.status ==='canceled'" class="f-size-16 text-danger">Cancelada</h5>
+                    <h5 *ngIf="response.status ==='failed'" class="f-size-16 text-danger">Falhou</h5>
+                    <h5 *ngIf="response.status ==='draft'" class="f-size-16 text-dark">Em Rascunho</h5>
+                    <h5 *ngIf="response.status ==='released'" class="f-size-16 text-success">Lançada</h5>
+                    <h5 *ngIf="response.status ==='open'" class="f-size-16 text-success">Aberta</h5>
+                    <h5 *ngIf="response.status ==='completed'" class="f-size-16 text-success">Concluida</h5>
+                    <h5 *ngIf="response.status ==='reopened'" class="f-size-16 text-success">Reaberta</h5>
+                </div>
+                <div class="col-md-10 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
+                    <h5 class="f-size-16">{{response.association?.name}}</h5>
+                </div>
+                <div *ngIf="response.proofreader" class="col-md-2 mt-3 text-capitaliz">
+                    <h6 class="font-poppins f-size-14 text-secondary">Revisor</h6>
+                    <h5 class="f-size-16">{{response.proofreader?.name}}</h5>
+                </div>
+                <div class="col-md-4 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Modalidade</h6>
+                    <h5 class="f-size-16">{{response.modality}}</h5>
+                </div>
+                <div class="col-md-4 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Classificação</h6>
+                    <h5 class="f-size-16">{{response.classification}}</h5>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Data de Início</h6>
+                    <h5 class="f-size-16">{{response.start_at | date: 'dd/MM/yyyy'}}</h5>
+                </div>
+                <div class="col-md-4 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Data de encerramento</h6>
+                    <h5 class="f-size-16">{{response.end_at | date: 'dd/MM/yyyy'}}</h5>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="font-poppins f-size-14 text-secondary">Prazo para entrega/execução (dias)</h6>
+                    <h5 class="f-size-16">{{prazoEmdias}}</h5>
+                </div>
+                <div class="col-md-4 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Local de Entrega</h6>
+                    <h5 class="f-size-16">{{response.local_to_delivery}}</h5>
+                </div>
+                <div class="col-md-4 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Dias corridos para desempate</h6>
+                    <h5 class="f-size-16">{{response.days_to_tiebreaker}}</h5>
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Tipo de Licitação</h6>
+                    <h5 class="f-size-16">{{response.bid_type}}</h5>
+                </div>
+                <div class="col-md-4 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Convênio</h6>
+                    <h5 class="f-size-16">{{response.agreement}}</h5>
+                </div>
+                <div *ngIf="response.status === 'deserted' || response.status === 'canceled' || response.status === 'failed'"
+                    class="col-md-8 mt-3 ">
+                    <h6 class="font-poppins f-size-14 text-secondary">Motivo do Cancelamento</h6>
+                    <h5 class="f-size-16">--</h5>
+                </div>
+                <div class="col-md-4">
+                    <button (click)="openModal('lote', null)" class="br-10 w-100 h50 btn border btn-light"><strong>Lotes
+                            da
+                            Licitação</strong></button>
+                </div>
+                <div class="col-md-8 mt-1">
+                    <h6 class="font-poppins f-size-14 text-secondary">Detalhes</h6>
+                    <h5 class="f-size-16">{{response.description}}</h5>
+                </div>
+                <div class="col-md-4 d-flex align-self-end">
+                    <button (click)="openModal('contract', null)"
+                        class="br-10 w-100 h50 border btn btn-light"><strong>Contratos da Licitação</strong></button>
+
+                </div>
+                <div *ngIf="response.status !== 'draft'" class="col-md-12 mt-1">
+                    <div class="row d-flex justify-content-end">
+                        <div class="col-md-4 mt-3">
+                            <button (click)="openModal('edital', null)"
+                                class="br-10 w-100 h50 border btn btn-light"><strong>Baixar Edital</strong></button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="response.status === 'released' || response.status === 'open' || response.status === 'completed' || response.status === 'reopened'"
+                    class="col-md-12">
+                    <div class="row d-flex justify-content-end">
+                        <div class="col-md-4 mt-3">
+                            <button (click)="openModal('edital', null)"
+                                class="br-10 w-100 h50 border btn btn-light"><strong>Baixar Ata</strong></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="response.status ==='awaiting' || response.status ==='tiebreaker' || response.status ==='analysis'"
+            class="col-md-11 mt-3">
+            <div class="row">
+                <div class="col-md-5 mt-2">
+                    <button (click)="openModal('onefailbids', response)"
+                        class="btn h50 br-10 w-100 btn-outline-danger"><strong>Fracassar Licitação</strong></button>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-3 px-1">
+                    <button (click)="openModal('recusa', response)" class="btn mt-2 h50 br-10 btn-danger w-100">
+                        <strong>Recusar
+                            Licitação</strong></button>
+                </div>
+                <div class="col-md-3 px-1 nowrap d-flex align-items-center">
+                    <button class="btn mt-2 h50 br-10 btn-success w-100" (click)="releasedBid()"><strong>Liberar
+                            Licitação</strong></button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="response.status !== 'awaiting' && response.status !== 'tiebreaker' && response.status !== 'analysis'"
+            class="col-md-11 mt-3">
+            <div class="row">
+                <div class="col-md-3 px-0">
+                    <button (click)="openModal('proposal', null)"
+                        class="btn mt-2 h50 br-10 w3-white text-dark border-dark w-100"> <strong>Lista de
+                            propostas</strong></button>
+                </div>
+                <div class="col-md-4"></div>
+                <!-- <div class="col-md-5 mt-2 px-0">
+                    <button (click)="openModal('onefailbids')" class="btn h50 br-10 w-100 btn-danger"><strong>Fracassar
+                            Licitação</strong></button>
+                </div> -->
+            </div>
+        </div>
+        <div *ngIf="response.status === 'deserted' || response.status === 'canceled' || response.status === 'failed'"
+            class="col-md-11 mt-3">
+            <div class="row">
+
+                <div class="col-md-4"></div>
+                <div class="col-md-5 mt-2 px-0">
+                    <button (click)="openModal('cancel', null)"
+                        class="btn h50 br-10 w-100 bg-pattern text-light"><strong>Responder pedido de
+                            cancelamento</strong></button>
+                </div>
+            </div>
+        </div>
+        <!-- <div *ngIf="response.status === 'released' || response.status === 'open' || response.status === 'completed' || response.status === 'reopened'"
+            class="col-md-11 mt-3">
+            <div class="row d-flex justify-content-end">
+                <div class="col-md-4 px-0">
+                    <button (click)="openModal('proposal', null)"
+                        class="btn mt-2 w-100 h50 br-10 w3-white text-dark border-dark"> <strong>Lista de
+                            propostas</strong></button>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>

@@ -1,0 +1,45 @@
+<div class="container mb-5">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h1><strong>Contratos da Licitação</strong></h1>
+            <hr class="bg-primary">
+        </div>
+        <div class="col-md-11 mt-2">
+            <input type="text" class="form-control h50 br-10 text-dark" placeholder="Busque por nome, CPF, telefone ou e-mail do usuário"/>
+        </div>
+    </div>
+
+    <div class="col-md-11 px-0 mt-4">
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th class="bg-pattern text-light br-tabele" scope="col">Contrato<i class="bi ml-1 bi-caret-down-fill"></i></th>
+                <th class="bg-pattern text-light" scope="col">Licitação</th>
+                <th class="bg-pattern text-light" scope="col">Fornecedor</th>
+                <th class="bg-pattern text-light" scope="col">Valor</th>
+                <th class="bg-pattern text-light" scope="col">Situação</th>
+                <th class="bg-pattern text-light br-tabele2" scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border">
+                <td class="text-capitalize text-dark">000{{datamock.getDataLicitacao()._id}}/2023</td>
+                <td class="text-capitalize text-dark">Convênio2023</td>
+                <td class="text-capitalize text-dark">{{datamock.getDataLicitacao().supplier}}</td>
+                <td class="text-capitalize text-dark">{{datamock.getDataLicitacao().convenio | currency: 'BRL'}}</td>
+                <td *ngIf="datamock.getDataLicitacao().status ==='Aberta'" class="text-capitalize text-primary">{{datamock.getDataLicitacao().status}}</td>
+                <td *ngIf="datamock.getDataLicitacao().status ==='Cancelada'" class="text-capitalize text-danger">{{datamock.getDataLicitacao().status}}</td>
+                <td *ngIf="datamock.getDataLicitacao().status ==='Deserta'" class="text-capitalize text-danger">{{datamock.getDataLicitacao().status}}</td>
+                <td *ngIf="datamock.getDataLicitacao().status ==='Concluída '" class="text-capitalize text-success">{{datamock.getDataLicitacao().status}}</td>
+                <td *ngIf="datamock.getDataLicitacao().status ==='Em Rascunho'" class="text-capitalize text-dark">{{datamock.getDataLicitacao().status}}</td>
+                <td *ngIf="datamock.getDataLicitacao().status ==='Aguardando Liberação'" class="f-size-16" style="color: #F1CF1C">{{datamock.getDataLicitacao().status}}</td>
+                <td *ngIf="datamock.getDataLicitacao().status ==='Em Análise'" class="text-capitalize text-warning">{{datamock.getDataLicitacao().status}}</td>
+                <td class="text-capitalize text-dark">
+                    <buton class="btn btn-dark w-100  br-10 text-center" type="button" (click)="goBackDetail()"><strong>Detalhes</strong></buton>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+
+</div>

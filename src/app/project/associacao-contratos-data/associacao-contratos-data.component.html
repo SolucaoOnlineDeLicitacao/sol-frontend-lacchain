@@ -1,0 +1,146 @@
+ <div class="container-fluid mb-6">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <h1>Dados do Contrato</h1>
+      <hr class="bg-primary">
+    </div>
+  </div>
+
+  <div class="row mt-1">
+    <div class="col-12">
+      <i class="fa fa-arrow-left f-size-24 cursor-pointer" [routerLink]="['/pages/associacao/contratos']"
+        aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-12">
+      <div class="col-md-12 col-lg-12 col-xl-10">
+        <div class="row p-3 user-data-border">
+
+          <div class="row col-12 p-2">
+            <div class="col-12 col-md-5">
+              <h6 class="font-poppins f-size-14 text-secondary">Contrato</h6>
+              <h6 class="f-size-16">{{convenio?.insuranceNumber}}</h6>
+            </div>
+            <div class="col-12 col-md-5">
+              <h6 class="font-poppins f-size-14 text-secondary">Licitação</h6>
+              <h6 class="f-size-16">{{convenio?.object}}</h6>
+            </div>
+            <div class="col-12 col-md-2">
+              <h6 class="font-poppins f-size-14 text-secondary">Situação</h6>
+              <h6 class="f-size-16 text-warning">{{convenio?.situation}}</h6>
+            </div>
+          </div>
+
+          <div class="row col-12 p-2">
+            <div class="col-12 col-md-5">
+              <h6 class="font-poppins f-size-14 text-secondary">Município de execução do convênio</h6>
+              <p>{{convenio?.executionCounty}}</p>
+            </div>
+            <div class="col-12 col-md-5">
+              <h6 class="font-poppins f-size-14 text-secondary">Valor do Convênio (R$)</h6>
+              <h6 class="f-size-16 text-dark">{{convenio?.insuranceValue}}</h6>
+            </div>
+          </div>
+
+          <div class="col-md-12 mt-2">
+            <h4>Assinaturas</h4>
+            <hr>
+          </div>
+
+          <div class="row col-12 p-2">
+            <div class="col-12 col-md-5">
+              <h6 class="font-poppins f-size-14 text-secondary">Data da Assinatura</h6>
+              <p>{{convenio?.signatureDate}}</p>
+            </div>
+            <div class="col-12 col-md-5">
+              <h6 class="font-poppins f-size-14 text-secondary">Data de Vigência</h6>
+              <h6 class="f-size-16 text-dark">{{convenio?.validityDate}}</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12 my-4">
+        <h4>Resumo da proposta</h4>
+      </div>
+
+      <div class="col-md-12 col-lg-12 col-xl-10 mb-5">
+        <div class="d-flex justify-content-end">
+          <div class="d-flex align-items-center winning-proposal-border px-3 py-1">
+            <img class="pr-2" style="width: 25px;" src="../../../assets/images/filled-star-icon.svg">
+            <span class="winning-proposal-text text-white">Proposta vencedora</span>
+          </div>
+        </div>
+        <div class="row p-3 association-data-border">
+
+          <div class="col-12 col-md-12">
+            <h3 class="text-dark">2258 / 2023</h3>
+          </div>
+
+          <div class="row col-12 p-2">
+            <div class="col-12 col-md-10">
+              <h6 class="font-poppins f-size-14 text-secondary">Convênio</h6>
+              <h6 class="f-size-16">0000000</h6>
+            </div>
+            <div class="col-12 col-md-2">
+              <h6 class="font-poppins f-size-14 text-secondary">Valor total</h6>
+              <h6 class="f-size-16">120,000.00</h6>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <hr>
+            <h4>Lista de itens e propostas</h4>
+          </div>
+
+          <div class="row mt-4 col-12">
+            <div class="col-md-12">
+              <div class="table-responsive-sm">
+                <table class="table table-hover">
+                  <thead>
+                    <tr class="custom-th-contrato">
+                      <th scope="col"></th>
+                      <th scope="col" style="color: black;">Item</th>
+                      <th scope="col"></th>
+                      <th scope="col" style="color: black;">Quantidade</th>
+                      <th scope="col"></th>
+                      <th scope="col" style="color: black;">Valor Unitário</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="bg-first-row">
+                      <th scope="col"></th>
+                      <th class="text-capitalize" scope="row">Microcomputadores i3 4gb</th>
+                      <th scope="col"></th>
+                      <td class="text-capitalize">1 Unidade(s)</td>
+                      <th scope="col"></th>
+                      <td>R$ 00,00</td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr class="bg-first-row">
+                      <th scope="col"></th>
+                      <th class="text-capitalize" scope="row">Notebook i3 4g</th>
+                      <th scope="col"></th>
+                      <td class="text-capitalize">1 Unidade(s)</td>
+                      <th scope="col"></th>
+                      <td>R$ 00,00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column align-items-end mt-3">
+          <h5 class="text-dark">Valor frete</h5>
+          <h6>R$ 10,00</h6>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

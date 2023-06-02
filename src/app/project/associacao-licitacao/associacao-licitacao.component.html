@@ -1,0 +1,56 @@
+<div class="container-fluid">
+	<div class="container-fluid">
+		<div class="row mt-5">
+			<div class="col-md-12">
+				<h1>Licitações</h1>
+				<hr class="bg-primary">
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-md-9">
+				<input type="text" class="form-control text-secondary input-height-border"
+					placeholder="Busque por status, data ou número">
+			</div>
+			<div class="col-md-3">
+				<button type="button" class="btn btn-secondary btn-lg btn-block"
+					[routerLink]="['/pages/licitacoes/licitacao-register']">Nova Licitação</button>
+			</div>
+
+		</div>
+
+		<div *ngFor="let item of licitacoesList; let i= index;" class="row p-3 user-data-border mt-5 cursor-pointer"
+			(click)="detailBids(item);">
+
+			<div class="row col-12 p-2">
+				<div class="col-12 col-md-10">
+					<h5 class="text-dark"> <b> Licitação nº {{item.bid_count}}/2022 </b></h5>
+				</div>
+				<div class="col-12 col-md-2">
+					<h6 class="font-poppins f-size-14 text-secondary">Status</h6>
+					<h5 *ngIf="item.status ==='awaiting'" class="f-size-16 text-warning">Aguardando Liberação</h5>
+					<h5 *ngIf="item.status ==='tiebreaker'" class="f-size-16 text-warning">Aguardando desempate</h5>
+					<h5 *ngIf="item.status ==='analysis'" class="f-size-16 text-info">Em Análise</h5>
+					<h5 *ngIf="item.status ==='deserted'" class="f-size-16 text-danger">Deserta</h5>
+					<h5 *ngIf="item.status ==='canceled'" class="f-size-16 text-danger">Cancelada</h5>
+					<h5 *ngIf="item.status ==='failed'" class="f-size-16 text-danger">Falhou</h5>
+					<h5 *ngIf="item.status ==='draft'" class="f-size-16 text-dark">Em Rascunho</h5>
+					<h5 *ngIf="item.status ==='released'" class="f-size-16 text-success">Lançada</h5>
+					<h5 *ngIf="item.status ==='open'" class="f-size-16 text-success">Aberta</h5>
+					<h5 *ngIf="item.status ==='completed'" class="f-size-16 text-success">Concluida</h5>
+					<h5 *ngIf="item.status ==='reopened'" class="f-size-16 text-success">Reaberta</h5>
+				</div>
+			</div>
+
+			<div class="col-12 col-lg-12 p-2 text-capitalize">
+				<h6 class="font-poppins f-size-16 text-secondary">{{item.description}}</h6>
+			</div>
+
+			<div class="col-12 col-lg-12 p-2 text-capitalize">
+				<h6 class="font-poppins f-size-14 text-dark">Período</h6>
+				<h6 class="font-poppins f-size-16 text-secondary">{{item.start_at | date: 'dd/MM/yyyy'}} - {{item.end_at | date: 'dd/MM/yyyy'}}</h6>
+			</div>
+
+		</div>
+
+	</div>
+</div>

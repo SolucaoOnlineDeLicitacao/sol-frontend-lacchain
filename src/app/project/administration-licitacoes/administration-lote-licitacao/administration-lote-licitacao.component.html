@@ -1,0 +1,63 @@
+<div class="container mb-5">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h1><strong>Lotes da Licitação</strong></h1>
+            <hr class="bg-primary">
+        </div>
+    </div>
+    <div class="col-md-11 border mt-3 br-10 py-3 ">
+        <div class="row px-2">
+            <div class="col-md-10">
+                <h2 class="mb-0 text-dark"><strong>{{datamock.getDataLicitacao().numero}}</strong></h2>
+            </div>
+            <div class="col-md-2 text-capitaliz">
+                <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
+                <h5 *ngIf="datamock.getDataLicitacao().status ==='Aberta'" class="f-size-16 text-primary">{{datamock.getDataLicitacao().status}}</h5>
+                <h5 *ngIf="datamock.getDataLicitacao().status ==='Cancelada'" class="f-size-16 text-danger">{{datamock.getDataLicitacao().status}}</h5>
+                <h5 *ngIf="datamock.getDataLicitacao().status ==='Deserta'" class="f-size-16 text-danger">{{datamock.getDataLicitacao().status}}</h5>
+                <h5 *ngIf="datamock.getDataLicitacao().status ==='Concluída '" class="f-size-16 text-success">{{datamock.getDataLicitacao().status}}</h5>
+                <h5 *ngIf="datamock.getDataLicitacao().status ==='Em Rascunho'" class="f-size-16 text-dark">{{datamock.getDataLicitacao().status}}</h5>
+                <h5 *ngIf="datamock.getDataLicitacao().status ==='Aguardando Liberação'" class="f-size-16" style="color: #F1CF1C">{{datamock.getDataLicitacao().status}}</h5>
+                <h5 *ngIf="datamock.getDataLicitacao().status ==='Em Análise'" class="f-size-16 text-warning">{{datamock.getDataLicitacao().status}}</h5>
+            </div>
+            <div class="col-md-12 mt-3 ">
+                <h6 class="font-poppins f-size-14 text-secondary">Nº de lote</h6>
+                <h5 class="f-size-16">{{datamock.getDataLicitacao().lote}}</h5>
+            </div>
+            <div class="col-md-8 mt-3 text-capitaliz">
+                <h6 class="font-poppins f-size-14 text-secondary">Itens 1</h6>
+                <h5 class="f-size-16">{{datamock.getDataLicitacao().modalidade}}</h5>
+            </div>
+            <div class="col-md-4 mt-3 text-capitaliz">
+                <button (click)="open('proposal')" class="br-10 w-100 h50 border btn w3-white text-dark">Visualizar Propostas</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-11 px-0 mt-4">
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th class="bg-pattern text-light br-tabele" scope="col">Item de Custo</th>
+                <th class="bg-pattern text-light br-tabele2" scope="col">Quantidade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border">
+                <td class="text-capitalize text-dark" scope="row">{{datamock.getDataLicitacao().Item}}</td>
+                <td class="text-capitalize textdark">{{datamock.getDataLicitacao().quantity}}</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+    <div class="col-md-11">
+        <div class="w-100">
+            <strong>Arquivos do lote</strong>
+            <br/>
+            <br/>
+            <h6 class="h6 text-secondary">Não há arquivos</h6>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button (click)="open('proposal')" class="br-10 h50 border border-dark btn w3-white text-dark">Visualizar Esclarecimentos</button>
+        </div>
+    </div>
+</div>

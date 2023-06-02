@@ -1,0 +1,40 @@
+<div class="container-fluid">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <h1>Detalhes do Grupo</h1>
+      <hr class="bg-primary">
+    </div>
+  </div>
+  <form>
+    <div class="row mt-4 mb-0">
+      <div class="col-md-11">
+        <div class="row bg-blur  bg-opacity-50 border mx-0 br-16 p-3">
+          <div class="col-6">
+            <p>Nome do grupo</p>
+            <th>Office suplice</th>
+          </div>
+          <div class="mb-0">
+            <p>Total de itens de custo</p>
+            <th>02</th>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="mt-5 table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Itens de custo</th>
+          <th scope="col">Quantidade disponivel/Total</th>
+          <th scope="col">Custo estimado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of itemgroupListt">
+          <th class="text-capitalize" scope="row">{{item.itemconsumo}}</th>
+          <td class="text-capitalize">{{item.quantidade}}</td>
+          <td class="text-capitalize">{{item.custo}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>

@@ -1,0 +1,65 @@
+<div class="container-fluid">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <h1>Usuários Administração</h1>
+      <hr class="bg-primary">
+    </div>
+  </div>
+  <form>
+    <div class="row mt-4">
+      <div class="col-md-9">
+        <input type="text" class="form-control text-secondary input-height-border"
+          placeholder="Busque por nome, CPF, telefone ou email do usuário">
+      </div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-secondary btn-lg btn-block"
+          [routerLink]="['/pages/controle-admin/registrar-usuario']">Novo usuário</button>
+      </div>
+
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="table-responsive-sm">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Função</th>
+                <th scope="col">E-mail</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of userList | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }, let i = index;">
+                <th [routerLink]="['/pages/controle-admin/dados-usuario/' + item._id]" class="text-capitalize" scope="row">{{item.name}}</th>
+                <td [routerLink]="['/pages/controle-admin/dados-usuario/' + item._id]" class="text-capitalize">{{item.roles}}</td>
+                <td [routerLink]="['/pages/controle-admin/dados-usuario/' + item._id]">{{item.email}}</td>
+                <td [routerLink]="['/pages/controle-admin/dados-usuario/' + item._id]"></td>
+                <td class="table_icon">
+                  <button [routerLink]="['/pages/controle-admin/editar-usuario/' + item._id]"
+                    class="btn col-lg-12 btn-outline-secondary">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                  </button>
+                </td>
+                <td class="table_icon">
+                  <button class="btn col-lg-12 btn-danger" (click)="openModal(i)">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </button>
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+          <div class="row">
+            <div class="col-md-12"> <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

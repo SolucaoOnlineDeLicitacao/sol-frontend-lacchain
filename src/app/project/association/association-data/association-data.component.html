@@ -1,0 +1,150 @@
+<div class="container-fluid mb-5">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h1>Dados da associação</h1>
+            <hr class="bg-primary">
+        </div>
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-12">
+            <i class="fa fa-arrow-left f-size-24 cursor-pointer" [routerLink]="['/pages/associacao']"
+                aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="col-md-12 col-lg-12 col-xl-10">
+                <div class="row p-3 user-data-border">
+
+                    <div class="col-12 col-lg-6 p-2 text-capitalize">
+                        <h6 class="font-poppins f-size-14 text-secondary">Nome</h6>
+                        <h5 class="f-size-16">{{association?.name}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-6 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">CNPJ</h6>
+                        <h5 class="f-size-16">{{association?.cnpj! | mask : '00.000.000/0000-00'}}</h5>
+                    </div>
+
+                    <div class="col-12 p-2 mt-5">
+                        <h5> <b> Endereço </b></h5>
+                        <hr>
+                    </div>
+
+                    <div class="col-12 col-lg-4 p-2 text-capitalize">
+                        <h6 class="font-poppins f-size-14 text-secondary">CEP</h6>
+                        <h5 class="f-size-16">{{association?.address?.zipCode! | mask : '00.000-000'}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2 text-capitalize">
+                        <h6 class="font-poppins f-size-14 text-secondary">Estado</h6>
+                        <h5 class="f-size-16">{{association?.address?.state}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Município</h6>
+                        <h5 class="f-size-16">{{association?.address?.city}}</h5>
+                    </div>
+
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Bairro</h6>
+                        <h5 class="f-size-16">{{association?.address?.neighborhood}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Logradouro</h6>
+                        <h5 class="f-size-16">{{association?.address?.publicPlace}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Número</h6>
+                        <h5 class="f-size-16">{{association?.address?.number}}</h5>
+                    </div>
+
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Complemento</h6>
+                        <h5 class="f-size-16">{{association?.address?.complement}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Ponto de referência</h6>
+                        <h5 class="f-size-16">{{association?.address?.referencePoint}}</h5>
+                    </div>
+
+                </div>
+
+                <div class="row mt-5 p-3 user-data-border">
+
+                    <div class="col-12 p-3">
+                        <h5><b>Representante Legal (Dados para contrato)</b></h5>
+                        <hr>
+                    </div>
+
+                    <div class="col-12 col-lg-4 p-2 text-capitalize">
+                        <h6 class="font-poppins f-size-14 text-secondary">Nome</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.name}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2 text-capitalize">
+                        <h6 class="font-poppins f-size-14 text-secondary">CPF</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.cpf! | mask : '000.000.000-00'}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">RG</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.rg}}</h5>
+                    </div>
+
+                    <div class="col-12 col-lg-4 p-2 text-capitalize">
+                        <h6 class="font-poppins f-size-14 text-secondary">Nacionalidade</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.nationality}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2 text-capitalize">
+                        <h6 class="font-poppins f-size-14 text-secondary">Estado Civil</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.maritalStatus}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Data de Vigência</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.validityData | date: 'dd/mm/yyyy'}}</h5>
+                    </div>
+
+                    <div class="col-12 p-2 mt-5">
+                        <h5> <b> Endereço </b></h5>
+                        <hr>
+                    </div>
+
+                    <div class="col-12 col-lg-4 p-2 text-capitalize">
+                        <h6 class="font-poppins f-size-14 text-secondary">CEP</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.address?.zipCode! | mask : '00.000-000'}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2 text-capitalize">
+                        <h6 class="font-poppins f-size-14 text-secondary">Estado</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.address?.state}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Município</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.address?.city}}</h5>
+                    </div>
+
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Bairro</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.address?.neighborhood}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Logradouro</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.address?.publicPlace}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Número</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.address?.number}}</h5>
+                    </div>
+
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Complemento</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.address?.complement}}</h5>
+                    </div>
+                    <div class="col-12 col-lg-4 p-2">
+                        <h6 class="font-poppins f-size-14 text-secondary">Ponto de referência</h6>
+                        <h5 class="f-size-16">{{association?.legalRepresentative?.address?.referencePoint}}</h5>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

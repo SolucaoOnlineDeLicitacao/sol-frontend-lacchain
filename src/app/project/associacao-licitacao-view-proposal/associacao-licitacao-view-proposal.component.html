@@ -1,0 +1,137 @@
+<div class="container-fluid mb-6">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h1>Visualizar propostas</h1>
+            <hr class="bg-primary">
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <h4>Informática</h4>
+    </div>
+
+    <div class="my-4 text-center unblock-messege py-1 d-flex justify-content-center">
+        <div class="pr-1"><img src="../../../../assets/images/icon-alert-blue.svg"></div>
+        <div class="unblock-text">Valor total estimado: R$ 5,00</div>
+    </div>
+
+    <div class="col-md-12 col-lg-12">
+        <div class="d-flex justify-content-end">
+            <div class="d-flex align-items-center winning-proposal-border px-3 py-1">
+                <img class="pr-2" style="width: 25px;" src="../../../assets/images/filled-star-icon.svg">
+                <span class="winning-proposal-text text-white">Proposta vencedora</span>
+            </div>
+        </div></div>
+
+    <div class="row col-12 col-md-12 p-0 m-0 association-data-border">
+        <div class="col-12 py-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="col-md-4 p-0">
+                    <h6 class="text-dark">Fornecedor</h6>
+                    <h6>Fornecedor 1</h6>
+                </div>
+                <div class="col-md-3 p-0">
+                    <h6 class="text-dark">Valor total</h6>
+                    <h6>R$ 10,000.00</h6>
+                </div>
+                <div class="col-md-1 p-0 d-flex justify-content-end">
+                    <img (click)="toggleSectionOne()" style="width: 16px;"
+                        [src]="isSectionOneOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
+                        alt="Ícone"
+                        class="opener-icon cursor-pointer">
+                </div>
+            </div>
+
+            <div class="content" [ngClass]="{ 'open': isSectionOneOpen }">
+                <hr>
+                <h4 class="pb-3">Lista de itens e propostas</h4>
+                <div class="row col-12 mb-3">
+                    <div class="col-md-12">
+                        <div class="table-responsive-sm">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr class="custom-th-contrato">
+                                        <th scope="col" style="color: black;">Item</th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <td class="text-capitalize">1 Unidade(s)</td>
+                                        <th scope="col"></th>
+                                        <th scope="col" style="color: black;">Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-first-row">
+                                        <th class="text-capitalize" scope="row">Microcomputadores i3 4gb</th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <td class="text-capitalize">1 Unidade(s)</td>
+                                        <th scope="col"></th>
+                                        <td class="text-capitalize">R$ 10,000.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-12 col-md-12 p-0 mt-4 mx-0 user-data-border">
+        <div class="col-12 py-3">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="col-md-6 p-0">
+                    <h6 class="text-dark">Fornecedor</h6>
+                    <h6>Fornecedor 1</h6>
+                </div>
+                <div class="col-md-2 p-0">
+                    <h6 class="text-dark">Valor total</h6>
+                    <h6>R$ 5000,00</h6>
+                </div>
+                <div class="col-md-3 p-0">
+                    <h6 class="refused-proposal-text">Proposta recusada</h6>
+                </div>
+                <div class="col-md-1 p-0 d-flex justify-content-end">
+                    <img (click)="toggleSectionTwo()" style="width: 16px;"
+                        [src]="isSectionTwoOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
+                        alt="Ícone"
+                        class="opener-icon cursor-pointer">
+                </div>
+            </div>
+
+            <div class="content" [ngClass]="{ 'open': isSectionTwoOpen }">
+                <hr>
+                <h4 class="pb-3">Lista de itens e propostas</h4>
+                <div class="row col-12 mb-3">
+                    <div class="col-md-12">
+                        <div class="table-responsive-sm">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr class="custom-th-contrato">
+                                        <th scope="col" style="color: black;">Item</th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <td class="text-capitalize">1 Unidade(s)</td>
+                                        <th scope="col"></th>
+                                        <th scope="col" style="color: black;">Valor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-first-row">
+                                        <th class="text-capitalize" scope="row">Microcomputadores i3 4gb</th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <td class="text-capitalize">1 Unidade(s)</td>
+                                        <th scope="col"></th>
+                                        <td class="text-capitalize">R$ 5000,00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

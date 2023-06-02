@@ -1,0 +1,493 @@
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h1>Editar Fornecedor</h1>
+            <hr class="bg-primary">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xl-10">
+            <section>
+
+                <form class="mr-5" [formGroup]="form">
+
+                    <div class="row">
+                        <div class="col-12 mt-3">
+                            <h5>Dados do Fornecedor</h5>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-sm-12 col-md-6 mt-3">
+                            <label for="name"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Nome</b></label>
+                            <input type="text" formControlName="name" style="text-indent:20px;" class="form-control"
+                                id="name" placeholder="Nome">
+
+                            <div *ngIf="form.controls['name'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Nome é obrigatório!</p>
+                            </div>
+                            <div *ngIf="form.controls['name'].errors?.['maxlength'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Nome deve conter no máximo 50 caracteres!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 mt-3">
+                            <label for="cnpj"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>CNPJ</b></label>
+                            <input type="text" formControlName="cnpj" style="text-indent:20px;" class="form-control"
+                                mask="00.000.000/0000-00" id="cnpj" placeholder="00.000.000/0000-00">
+
+                            <div *ngIf="form.controls['cnpj'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">CNPJ é obrigatório!</p>
+                            </div>
+                            <div *ngIf="form.controls['cnpj'].errors?.['minlength'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">CNPJ inválido!</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+
+                <div class="row">
+                    <div class="col-12 mt-5">
+                        <h5>Endereço</h5>
+                    </div>
+                </div>
+
+                <form class="mr-5" [formGroup]="formAddress">
+
+                    <div class="row">
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="zipCode"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>CEP</b></label>
+                            <input type="text" formControlName="zipCode" style="text-indent:20px;" class="form-control"
+                                mask="00.000-000" id="zipCode" placeholder="00.000-000">
+
+                            <div *ngIf="formAddress.controls['zipCode'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">CEP é obrigatório!</p>
+                            </div>
+                            <div *ngIf="formAddress.controls['zipCode'].errors?.['minlength'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">CEP inválido!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-5 mt-3">
+                            <label for="publicPlace"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Logradouro</b></label>
+                            <input type="text" formControlName="publicPlace" style="text-indent:20px;"
+                                class="form-control" id="publicPlace" placeholder="Logradouro">
+
+                            <div *ngIf="formAddress.controls['publicPlace'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Logradouro é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-3 mt-3">
+                            <label for="number"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Número</b></label>
+                            <input type="text" formControlName="number" style="text-indent:20px;" class="form-control"
+                                id="number" placeholder="000">
+
+                            <div *ngIf="formAddress.controls['number'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Número é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="state"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Estado</b></label>
+                            <input type="text" formControlName="state" style="text-indent:20px;" class="form-control"
+                                id="state" placeholder="Estado">
+
+                            <div *ngIf="formAddress.controls['state'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Estado é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="city"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Município</b></label>
+                            <input type="text" formControlName="city" style="text-indent:20px;" class="form-control"
+                                id="city" placeholder="Município">
+
+                            <div *ngIf="formAddress.controls['city'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Município é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="neighborhood"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Bairro</b></label>
+                            <input type="text" formControlName="neighborhood" style="text-indent:20px;"
+                                class="form-control" id="neighborhood" placeholder="Bairro">
+
+                            <div *ngIf="formAddress.controls['neighborhood'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Bairro é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 mt-3">
+                            <label for="latitude"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Latitude</b></label>
+                            <input type="text" formControlName="latitude" style="text-indent:20px;" class="form-control"
+                                id="latitude" placeholder="Latitude">
+
+                            <div *ngIf="formAddress.controls['latitude'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Latitude é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 mt-3">
+                            <label for="longitude"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Longitude</b></label>
+                            <input type="text" formControlName="longitude" style="text-indent:20px;"
+                                class="form-control" id="longitude" placeholder="Longitude">
+
+                            <div *ngIf="formAddress.controls['longitude'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Longitude é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 mt-3">
+                            <label for="complement"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Complemento</b></label>
+                            <input type="text" formControlName="complement" style="text-indent:20px;"
+                                class="form-control" id="complement" placeholder="Complemento">
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 mt-3">
+                            <label for="referencePoint"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Ponto de
+                                    Referência</b></label>
+                            <input type="text" formControlName="referencePoint" style="text-indent:20px;"
+                                class="form-control" id="referencePoint" placeholder="Ponto de Referência">
+                        </div>
+
+                    </div>
+
+                </form>
+
+                <div class="row">
+                    <div class="col-12 mt-5">
+                        <h5>Representante Legal (Dados para contrato)</h5>
+                    </div>
+                </div>
+
+                <form class="mr-5" [formGroup]="formLegalRepresentative">
+
+                    <div class="row">
+
+                        <div class="col-sm-12 col-md-5 mt-3">
+                            <label for="name"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Nome</b></label>
+                            <input type="text" formControlName="name" style="text-indent:20px;" class="form-control"
+                                id="name" placeholder="Nome">
+
+                            <div *ngIf="formLegalRepresentative.controls['name'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Nome é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="nationality"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Nacionalidade</b></label>
+                            <input type="text" formControlName="nationality" style="text-indent:20px;"
+                                class="form-control" id="nationality" placeholder="Nacionalidade">
+
+                            <div *ngIf="formLegalRepresentative.controls['nationality'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Nacionalidade é obrigatória!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-3 mt-3">
+                            <label for="maritalStatus"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Estado
+                                    Civil</b></label>
+                            <select type="text" formControlName="maritalStatus" style="text-indent:20px;"
+                                class="form-control" id="maritalStatus">
+                                <option selected readonly disabled [value]="''">Selecione...</option>
+                                <option value="solteiro">Solteiro(a)</option>
+                                <option value="casado">Casado(a)</option>
+                                <option value="separado">Separado(a)</option>
+                                <option value="divorciado">Divorciado(a)</option>
+                                <option value="viuvo">Viúvo(a)</option>
+                            </select>
+
+                            <div *ngIf="formLegalRepresentative.controls['maritalStatus'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Estado Civil é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="cpf"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>CPF</b></label>
+                            <input type="text" formControlName="cpf" style="text-indent:20px;" class="form-control"
+                                mask="000.000.000-00" id="cpf" placeholder="000.000.000-00">
+
+                            <div *ngIf="formLegalRepresentative.controls['cpf'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">CPF é obrigatório!</p>
+                            </div>
+                            <div *ngIf="formLegalRepresentative.controls['cpf'].errors?.['minlength'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">CPF inválido!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="rg"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>RG</b></label>
+                            <input type="text" formControlName="rg" style="text-indent:20px;" class="form-control"
+                                oninput="this.value= this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                                id="rg" placeholder="000.000.000-00">
+
+                            <div *ngIf="formLegalRepresentative.controls['rg'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">RG é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="validityData"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Data de
+                                    Vigência</b></label>
+                            <input type="date" formControlName="validityData" style="text-indent:20px;"
+                                class="form-control" id="validityData">
+
+                            <div *ngIf="formLegalRepresentative.controls['validityData'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Data de Vigência é obrigatória!</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+
+                <form class="mr-5" [formGroup]="formLegalRepresentativeAddress">
+
+                    <div class="row">
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="zipCode"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>CEP</b></label>
+                            <input type="text" formControlName="zipCode" style="text-indent:20px;" class="form-control"
+                                mask="00.000-000" id="zipCode" placeholder="00.000-000">
+
+                            <div *ngIf="formLegalRepresentativeAddress.controls['zipCode'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">CEP é obrigatório!</p>
+                            </div>
+                            <div *ngIf="formLegalRepresentativeAddress.controls['zipCode'].errors?.['minlength'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">CEP inválido!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-5 mt-3">
+                            <label for="publicPlace"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Logradouro</b></label>
+                            <input type="text" formControlName="publicPlace" style="text-indent:20px;"
+                                class="form-control" id="publicPlace" placeholder="Logradouro">
+
+                            <div *ngIf="formLegalRepresentativeAddress.controls['publicPlace'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Logradouro é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-3 mt-3">
+                            <label for="number"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Número</b></label>
+                            <input type="text" formControlName="number" style="text-indent:20px;" class="form-control"
+                                id="number" placeholder="000">
+
+                            <div *ngIf="formLegalRepresentativeAddress.controls['number'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Número é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="state"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Estado</b></label>
+                            <input type="text" formControlName="state" style="text-indent:20px;" class="form-control"
+                                id="state" placeholder="Estado">
+
+                            <div *ngIf="formLegalRepresentativeAddress.controls['state'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Estado é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="city"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Município</b></label>
+                            <input type="text" formControlName="city" style="text-indent:20px;" class="form-control"
+                                id="city" placeholder="Município">
+
+                            <div *ngIf="formLegalRepresentativeAddress.controls['city'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Município é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 mt-3">
+                            <label for="neighborhood"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Bairro</b></label>
+                            <input type="text" formControlName="neighborhood" style="text-indent:20px;"
+                                class="form-control" id="neighborhood" placeholder="Bairro">
+
+                            <div *ngIf="formLegalRepresentativeAddress.controls['neighborhood'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Bairro é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 mt-3">
+                            <label for="latitude"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Latitude</b></label>
+                            <input type="text" formControlName="latitude" style="text-indent:20px;" class="form-control"
+                                id="latitude" placeholder="Latitude">
+
+                            <div *ngIf="formLegalRepresentativeAddress.controls['latitude'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Latitude é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 mt-3">
+                            <label for="longitude"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Longitude</b></label>
+                            <input type="text" formControlName="longitude" style="text-indent:20px;"
+                                class="form-control" id="longitude" placeholder="Longitude">
+
+                            <div *ngIf="formLegalRepresentativeAddress.controls['longitude'].errors?.['required'] && isSubmit"
+                                class="div-msg-error mt-2">
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
+                                <p class="font-poppins font-size-14 m-0">Longitude é obrigatório!</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 mt-3">
+                            <label for="complement"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Complemento</b></label>
+                            <input type="text" formControlName="complement" style="text-indent:20px;"
+                                class="form-control" id="complement" placeholder="Complemento">
+                        </div>
+
+                        <div class="col-sm-12 col-md-6 mt-3">
+                            <label for="referencePoint"
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Ponto de
+                                    Referência</b></label>
+                            <input type="text" formControlName="referencePoint" style="text-indent:20px;"
+                                class="form-control" id="referencePoint" placeholder="Ponto de Referência">
+                        </div>
+
+                    </div>
+
+                </form>
+
+                <form class="mr-5 mt-4" [formGroup]="formCategoryAndSegments">
+
+                    <div class="row">
+                        <div class="col-12 mt-3">
+                            <h5>Categorias e Segmentos</h5>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-8">
+                            <select type="text" formControlName="categories" style="text-indent:20px;"
+                                class="form-control" id="categories">
+                                <option selected readonly disabled [value]="''">Selecione...</option>
+                                <option value="100 - Bens / Papelaria">100 - Bens / Papelaria</option>
+                                <option value="101 - Bens / Papelaria">101 - Bens / Papelaria</option>
+                                <option value="102 - Bens / Papelaria">102 - Bens / Papelaria</option>
+                                <option value="103 - Bens / Papelaria">103 - Bens / Papelaria</option>
+                                <option value="104 - Bens / Papelaria">104 - Bens / Papelaria</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button (click)="handleCategories();" type="submit" class="btn btn-secondary btn-lg btn-block mb-4">+ Adicionar</button>
+                        </div>
+
+                        <div *ngFor="let item of fornecedor?.categories; let i = index" class="col-sm-12 col-md-8">
+                            <div class="categories-card mb-3 p-2 d-flex justify-content-between">
+                                <div class="pl-4 f-size-16 text-dark">
+                                    {{item}}
+                                </div>
+                                <div (click)="removeCategory(i);" class="cursor-pointer">
+                                    <img src="../../../assets/images/delete-X-icon.svg" class="img-msg-error" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="mt-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="button" class="bg-light btn-lg btn-block mb-4"
+                                    [routerLink]="['/pages/fornecedor']">Cancelar</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button (click)="onSubmit();" type="submit" class="btn btn-secondary btn-lg btn-block mb-4">Salvar</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </section>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <h1 class="text-dark"><strong>Itens de Custo</strong></h1>
+      <hr class="bg-primary">
+    </div>
+  </div>
+  <form>
+    <div class="row mt-4">
+      <div class="col-md-9">
+        <input class="form-control text-secondary input-height-border" type="search" name="search"
+          [(ngModel)]="filterTerm" placeholder="Busque por Nome, Categoria ou Unidade">
+      </div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-dark br-10 h50 btn-lg btn-block"
+          [routerLink]="['/pages/itens-custo/registrar-item']"><strong>Novo Item</strong></button>
+      </div>
+
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="table-responsive-sm">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th class="br-tabele bg-pattern text-light" scope="col">Nome</th>
+                <th class="bg-pattern text-light" scope="col">Categoria/Segmento</th>
+                <th class="bg-pattern text-light" scope="col">Unidade</th>
+                <th class="br-tabele2 bg-pattern text-light" scope="col">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-right border-left"
+                *ngFor="let item of costItemsList | filter: filterTerm | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }">
+                <th (click)="dataItem(item, 'detail')" class="text-capitalize" scope="row">{{item.name}}</th>
+                <td (click)="dataItem(item, 'detail')" class="text-capitalize">{{item.category?.category_name}} - {{item.category?.segment}}</td>
+                <td (click)="dataItem(item, 'detail')" class="text-capitalize">{{item.unitMeasure}}</td>
+                <td class="table_icon d-flex justify-content-between align-items-center">
+                  <i (click)="dataItem(item, 'edit')" class="fa color-pattern h4 mb-0 fa-pencil-square-o"
+                    aria-hidden="true"></i>
+                  <i class="fa text-danger h4 mb-0 fa-trash-o" (click)="delete(item, item._id)" aria-hidden="true"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="row">
+            <div class="col-md-12"> <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

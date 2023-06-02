@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <h1 class="text-dark"><strong>Categorias/Segmentos</strong></h1>
+        <hr class="bg-primary">
+      </div>
+    </div>
+    <form>
+      <div class="row mt-4">
+        <div class="col-md-9">
+          <input class="form-control text-secondary input-height-border"  type="search" name="search" [(ngModel)]="filterTerm"
+            placeholder="Busque por categorias ou segmentos">
+        </div>
+        <div class="col-md-3">
+          <button type="button" class="btn btn-dark br-10 h50 btn-lg btn-block" [routerLink]="['/pages/categorias/registrar-categoria']"><strong>Nova Categoria</strong></button>
+        </div>
+  
+      </div>
+  
+      <div class="row mt-4">
+        <div class="col-md-12">
+          <div class="table-responsive-sm">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th class="br-tabele bg-pattern text-light" scope="col">ID</th>
+                  <th class="bg-pattern text-light" scope="col">Categorias</th>
+                  <th class="bg-pattern text-light" scope="col">Segmentos</th>
+                  <th class="br-tabele2 bg-pattern text-light" scope="col">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-right border-left" *ngFor="let item of categoryList | filter: filterTerm | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }">
+                  <th class="text-capitalize" scope="row">{{item.identifier}}</th>
+                  <td class="text-capitalize">{{item.category_name}}</td>
+                  <td class="text-capitalize">{{item.segment}}</td>
+                  <td class="table_icon d-flex justify-content-between align-items-center">
+                      <i (click)="editCategory(item)" class="fa color-pattern h4 mb-0 fa-pencil-square-o" aria-hidden="true"></i>
+                      <i class="fa text-danger h4 mb-0 fa-trash-o"  (click)="delete(item, item._id)" aria-hidden="true"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="row">
+              <div class="col-md-12"> <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
