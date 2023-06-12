@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageEnum } from 'src/app/interface/localstorage.enum';
+import { LocalStorageKeysEnum } from 'src/enums/local-storage-keys.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,11 @@ export class LocalStorageService {
     return data === null ? undefined : JSON.parse(data);
   }
 
+  getDataPlano() {
+    const data = localStorage.getItem(LocalStorageEnum.plano);
+    return data === null ? undefined : JSON.parse(data);
+  }
+
   getDataCostItems() {
     const data = localStorage.getItem(LocalStorageEnum.editcostitems);
     return data === null ? undefined : JSON.parse(data);
@@ -47,6 +53,11 @@ export class LocalStorageService {
 
   getDataCategoria() {
     const data = localStorage.getItem(LocalStorageEnum.editcategoria);
+    return data === null ? undefined : JSON.parse(data);
+  }
+
+  getDataUser() {
+    const data = localStorage.getItem(LocalStorageKeysEnum.user);
     return data === null ? undefined : JSON.parse(data);
   }
 }

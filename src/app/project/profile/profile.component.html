@@ -75,8 +75,8 @@
 								(click)="exit()">Cancelar</button>
 						</div>
 						<div class="col-md-6 mt-4">
-							<button type="button" class="bg-light btn-lg btn-block mb-4 text-small"
-								(click)="exit()">Salvar</button>
+							<button [disabled]="changePassword.invalid" type="button" class="bg-light btn-lg btn-block mb-4 text-small"
+								(click)="savePassword()">Salvar</button>
 						</div>
 					</div>
 				</form>

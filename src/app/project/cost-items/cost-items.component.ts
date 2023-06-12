@@ -53,7 +53,7 @@ export class CostItemsComponent implements OnInit {
       this.router.navigate([`pages/itens-custo/editar-item/${i._id}`]);
     } else if (value === 'detail') {
       localStorage.setItem('editcostitems', JSON.stringify(i));
-      this.router.navigate(['pages/itens-custo/dados-item']);
+      this.router.navigate([`pages/itens-custo/dados-item/${i._id}`]);
     }
   }
 

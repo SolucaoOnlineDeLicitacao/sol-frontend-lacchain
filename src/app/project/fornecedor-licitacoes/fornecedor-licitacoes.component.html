@@ -45,40 +45,47 @@
             </div>
         </div>
 
-        <div *ngFor="let item of licitacoesList | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }; let i= index;" (click)="detailBids(item)" class="col-md-11 border mt-2 br-10 py-3 m-3">
+        <div *ngFor="let item of licitacoesId | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }; let i= index;" (click)="detailBids(item)" class="col-md-11 cursor-pointer border mt-2 br-10 py-3 m-3">
             <div class="row">
                 <div class="col-md-10">
-                    <h2 class="mb-0 text-dark"><strong>{{item.numero}}</strong></h2>
+                    <h2 class="mb-0 text-dark"><strong>Licitação n° {{item.bid_count}} / {{item.createdAt | date: 'yyyy'}}</strong></h2>
                 </div>
                 <div class="col-md-2 text-capitaliz">
                     <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
-                    <h5 *ngIf="item.status ==='Aberta'" class="f-size-16 text-primary">{{item.status}}</h5>
-                    <h5 *ngIf="item.status ==='Cancelada'" class="f-size-16 text-danger">{{item.status}}</h5>
-                    <h5 *ngIf="item.status ==='Deserta'" class="f-size-16 text-danger">{{item.status}}</h5>
-                    <h5 *ngIf="item.status ==='Concluída'" class="f-size-16 text-success">{{item.status}}</h5>
-                    <h5 *ngIf="item.status ==='Em Rascunho'" class="f-size-16 text-dark">{{item.status}}</h5>
-                    <h5 *ngIf="item.status ==='Aguardando Liberação'" class="f-size-16" style="color: #F1CF1C">{{item.status}}</h5>
-                    <h5 *ngIf="item.status ==='Em Análise'" class="f-size-16 text-warning">{{item.status}}</h5>
+                    <h5 *ngIf="item.status ==='awaiting'" style="color: #F1CF1C" class="f-size-16">Aguardando Liberação</h5>
+                    <h5 *ngIf="item.status ==='tiebreaker'" class="f-size-16 text-warning">Aguardando desempate</h5>
+                    <h5 *ngIf="item.status ==='analysis'" class="f-size-16 text-info">Em Análise</h5>
+                    <h5 *ngIf="item.status ==='deserted'" class="f-size-16 text-danger">Deserta</h5>
+                    <h5 *ngIf="item.status ==='canceled'" class="f-size-16 text-danger">Cancelada</h5>
+                    <h5 *ngIf="item.status ==='failed'" class="f-size-16 text-danger">Falhou</h5>
+                    <h5 *ngIf="item.status ==='draft'" class="f-size-16 text-dark">Em Rascunho</h5>
+                    <h5 *ngIf="item.status ==='released'" class="f-size-16 text-success">Lançada</h5>
+                    <h5 *ngIf="item.status ==='open'" class="f-size-16 text-success">Aberta</h5>
+                    <h5 *ngIf="item.status ==='completed'" class="f-size-16 text-success">Concluida</h5>
+                    <h5 *ngIf="item.status ==='reopened'" class="f-size-16 text-success">Reaberta</h5>
                 </div>
                 <div class="col-md-12 mt-2 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
-                    <h5 class="f-size-16">{{item.association}}</h5>
+                    <ng-container *ngIf="associateListInfo && associateListInfo[i]"> 
+                        <h5>{{ associateListInfo[i] }}</h5> 
+                      </ng-container> 
                 </div>
                 <div class="col-md-4 mt-2 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Data de
                         Início</h6>
-                    <h5 class="f-size-16">{{item.datastart}}</h5>
+                    <h5 class="f-size-16">{{item.start_at | date: 'dd/MM/yyyy'}}</h5>
                 </div>
                 <div class="col-md-4 mt-2 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Data de
                         encerramento</h6>
-                    <h5 class="f-size-16">{{item.dataend}}</h5>
+                    <h5 class="f-size-16">{{item.end_at | date: 'dd/MM/yyyy'}}</h5>
                 </div>
             </div>
         </div>
         <div class="col-md-12">
             <div class="col-md-12 d-flex justify-content-end">
-                <pagination-controls (pageChange)="currentPage= $event"></pagination-controls>
+                <pagination-controls (pageChange)="currentPage= $event"
+                previousLabel="Anterior" nextLabel="Próximo"></pagination-controls>
             </div>
         </div>
 

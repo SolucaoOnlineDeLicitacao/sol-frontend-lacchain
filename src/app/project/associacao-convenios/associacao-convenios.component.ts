@@ -1,11 +1,8 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AllContrato } from 'src/services/association-contrato.mock';
+import { ConvenioResponseDto } from 'src/dtos/convenio/convenio-response.dto';
 import { convenioList } from 'src/services/association-convenio.mock';
 import { licitacaoList } from 'src/services/association-licitacao.mock';
-import { AuthService } from 'src/services/auth.service';
+import { ConvenioService } from 'src/services/convenio.service';
 
 @Component({
   selector: 'app-associacao-convenios',
@@ -14,48 +11,24 @@ import { AuthService } from 'src/services/auth.service';
 })
 export class AssociacaoConveniosComponent {
 
-  convenios = convenioList;
-
-  convenio!: AllContrato | undefined;
-  blockSupplier!: FormGroup;
-  idSupplier!: boolean;
+  convenios: ConvenioResponseDto[] = [];
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private modalService: NgbModal,
-    private formBuilder: FormBuilder,
-    public authService: AuthService,
+    private conveniosService: ConvenioService,
   ) {
-    this.blockSupplier = this.formBuilder.group({
-      message: [''],
-    });
+
   }
 
   ngOnInit(): void {
-    console.log(this.authService.getAuthenticatedUser());
-
-
-    const convenioId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    this.convenio = convenioList.find(convenio => convenio._id === convenioId);
-  }
-
-  open(contentBlocked: any) {
-    this.modalService.open(contentBlocked, { size: 'lg' });
-  }
-
-  openUnblockModal(contentUnBlocked: any) {
-    this.modalService.open(contentUnBlocked, { size: 'lg' });
-  }
-
-  exit() {
-    this.modalService.dismissAll();
-  }
-
-  isSectionOpen: boolean = false;
-
-  toggleSection() {
-    this.isSectionOpen = !this.isSectionOpen;
+    this.conveniosService.getConvenio().subscribe({
+      next: data => {
+        this.convenios = data;
+        console.log(data)
+      },
+      error: error => {
+        console.error(error)
+      }
+    })
   }
 
 }
-

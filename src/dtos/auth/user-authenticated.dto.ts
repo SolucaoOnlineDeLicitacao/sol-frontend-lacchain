@@ -1,5 +1,6 @@
 export abstract class UserAuthenticatedDto {
   constructor(
+    public _id: string,
     public email: string,
     public name: string,
     public token: string,

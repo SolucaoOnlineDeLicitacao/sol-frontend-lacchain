@@ -34,27 +34,38 @@ export class AuthService extends BaseService {
     );
   }
 
-  refreshToken() {
-    return this.httpClient.post<UserAuthenticatedDto>(
-      `${this.url}/refresh`,
-      undefined,
-      this.refreshHeader
-    );
+
+  getAuthenticatedUserId(): string | null {
+    const authenticatedUser = localStorage.getItem(LocalStorageKeysEnum.user);
+    if (authenticatedUser) {
+      const parsedUser = JSON.parse(authenticatedUser) as UserAuthenticatedDto;
+      return parsedUser._id;
+    }
+    return null;
   }
+
+
+  // refreshToken() {
+  //   return this.httpClient.post<UserAuthenticatedDto>(
+  //     `${this.url}/refresh`,
+  //     undefined,
+  //     this.refreshHeader
+  //   );
+  // }
 
   setAuthenticatedUser(dto: UserAuthenticatedDto) {
     localStorage.setItem(LocalStorageKeysEnum.user, JSON.stringify(dto));
   }
 
-  setKeepConnected(keepConnected: boolean) {
-    const user = localStorage.getItem(LocalStorageKeysEnum.user);
-    if (!!user) {
-      let userObj = JSON.parse(user);
-      localStorage.setItem(LocalStorageKeysEnum.user, JSON.stringify(Object.assign(userObj, { keepConnected })));
-    } else {
-      localStorage.setItem(LocalStorageKeysEnum.user, JSON.stringify(keepConnected));
-    }
-  }
+  // setKeepConnected(keepConnected: boolean) {
+  //   const user = localStorage.getItem(LocalStorageKeysEnum.user);
+  //   if (!!user) {
+  //     let userObj = JSON.parse(user);
+  //     localStorage.setItem(LocalStorageKeysEnum.user, JSON.stringify(Object.assign(userObj, { keepConnected })));
+  //   } else {
+  //     localStorage.setItem(LocalStorageKeysEnum.user, JSON.stringify(keepConnected));
+  //   }
+  // }
 
   getAuthenticatedUser() {
     const user = localStorage.getItem(LocalStorageKeysEnum.user);
@@ -65,9 +76,9 @@ export class AuthService extends BaseService {
     localStorage.removeItem(LocalStorageKeysEnum.user);
   }
 
-  logoutServer() {
-     this.httpClient.post(`${this.url}/logout`, undefined, this.authorizedHeader).subscribe();
-   }
+  // logoutServer() {
+  //   this.httpClient.post(`${this.url}/logout`, undefined, this.authorizedHeader).subscribe();
+  // }
 
   getPayloadFromJWT() {
     return jwt_decode<JwtPayloadDto>(
@@ -75,11 +86,11 @@ export class AuthService extends BaseService {
     );
   }
 
-  getRefreshTokenFromJWT() {
-    return jwt_decode<JwtPayloadDto>(
-      (this.getAuthenticatedUser() as UserAuthenticatedDto).refreshToken
-    );
-  }
+  // getRefreshTokenFromJWT() {
+  //   return jwt_decode<JwtPayloadDto>(
+  //     (this.getAuthenticatedUser() as UserAuthenticatedDto).refreshToken
+  //   );
+  // }
 
   isJwtValid() {
     const user = this.getAuthenticatedUser();
@@ -94,7 +105,9 @@ export class AuthService extends BaseService {
       return false;
     }
 
-   
+    // if (payload.tfaRegistered && !payload.tfaAuthenticate) {
+    //   return false;
+    // }
 
     return true;
   }

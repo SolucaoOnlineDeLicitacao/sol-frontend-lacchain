@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { BaseService } from './base.service';
 import { AssociationResponseDto } from 'src/dtos/association/association-response.dto';
 import { AssociationRegisterRegisterDto } from 'src/dtos/association/association-register.dto';
+import { Observable, catchError, map } from 'rxjs';
 
 @Injectable()
 export class AssociationService extends BaseService {
@@ -23,6 +24,8 @@ export class AssociationService extends BaseService {
     return this.httpClient
       .get<AssociationResponseDto[]>(`${this.url}/list`, this.authorizedHeader);
   }
+
+
 
   register(dto: AssociationRegisterRegisterDto) {
     return this.httpClient

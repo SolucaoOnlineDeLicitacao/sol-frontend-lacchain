@@ -12,42 +12,42 @@
                 <div class="row p-3 user-data-border">
                     <div class="col-12 col-lg-4 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Número</h6>
-                        <h5 class="f-size-16">{{localStorage.getConvenio().register_number}}</h5>
+                        <h5 class="f-size-16">{{convenio.register_number}}</h5>
                     </div>
                     <div class="col-12 col-lg-4 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Objeto</h6>
-                        <h5 class="f-size-16">{{localStorage.getConvenio().register_object}}</h5>
+                        <h5 class="f-size-16">{{convenio.register_object}}</h5>
                     </div>
                     <div class="col-12 col-lg-4 p-2">
                         <h6 class="font-poppins f-size-14 text-secondary">Situação</h6>
-                        <h5 class="f-size-16">{{localStorage.getConvenio().status}}</h5>
+                        <h5 class="f-size-16">{{convenio.status}}</h5>
                     </div>
                     <div class="col-12 col-lg-4 p-2">
                         <h6 class="font-poppins f-size-14 text-secondary">Município de execução do convênio</h6>
-                        <h5 class="f-size-16">{{localStorage.getConvenio().states}} - {{localStorage.getConvenio().city}}</h5>
+                        <h5 class="f-size-16">{{convenio.states}} - {{convenio.city}}</h5>
                     </div>
                     <div class="col-12 col-lg-4 p-2">
                         <h6 class="font-poppins f-size-14 text-secondary">Valor do Convênio (R$)</h6>
-                        <h5 class="f-size-16">{{localStorage.getConvenio().value | currency: 'BRL'}}</h5>
+                        <h5 class="f-size-16">{{convenio.value | currency: 'BRL'}}</h5>
                     </div>
                     <div class="col-12 col-lg-4 p-2"></div>
                     <div class="col-12 col-lg-4 p-2">
                         <h6 class="font-poppins f-size-14 text-secondary">Data da Assinatura</h6>
-                        <h5 class="f-size-16">{{localStorage.getConvenio().signature_date | mask: '00/00/0000'}}</h5>
+                        <h5 class="f-size-16">{{convenio.signature_date | date:'dd/MM/yyyy'}}</h5>
                     </div>
                     <div class="col-12 col-lg-4 p-2">
                         <h6 class="font-poppins f-size-14 text-secondary">Data de Vigência</h6>
-                        <h5 class="f-size-16">{{localStorage.getConvenio().validity_date | mask: '00/00/0000'}}</h5>
+                        <h5 class="f-size-16">{{convenio.validity_date | date:'dd/MM/yyyy'}}</h5>
                     </div>
                     <div class="col-12 col-lg-4 p-2"></div>
                     <div class="col-12 col-lg-4 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
-                        <h5 class="f-size-16">{{localStorage.getConvenio().associate_name}}</h5>
+                        <h5 class="f-size-16">{{convenio.association.name}}</h5>
                     </div>
                     <div class="col-12 col-lg-4 p-2 text-capitalize"></div>
                     <div class="col-12 col-lg-4 p-2">
                         <h6 class="font-poppins f-size-14 text-secondary">Revisor</h6>
-                        <h5 class="f-size-16">{{localStorage.getConvenio().reviewer}}</h5>
+                        <h5 class="f-size-16">{{convenio.reviewer.name}}</h5>
                     </div>
                 </div>
                 <div class="row mt-5 p-3 user-data-border">
@@ -55,32 +55,37 @@
                         <div class="w-100 d-flex justify-content-between
                             align-items-center">
                             <h4><b>Plano de trabalho</b></h4>
-                            <button [routerLink]="['/pages/item-group/new-group']" class="br-10 btn bg-dark text-light py-3 px-4"><h6 class="mb-0">Novo grupo de itens</h6></button>
+                            <button (click)="addGroup()" class="br-10 btn bg-dark text-light py-3 px-4"><h6 class="mb-0">Novo grupo de itens</h6></button>
                         </div>
                         <hr>
                     </div>
-                    <table class="table table-hover">
+                    <table *ngIf="convenio.workPlan.length > 0"  class="table table-hover">
                         <thead>
                             <tr>
                                 <th class="br-tabele bg-pattern text-light" scope="col">Nome do Grupo</th>
-                                <th class=" bg-pattern text-light" scope="col">Total de Itens de custo</th>
+                                <th class="bg-pattern text-light" scope="col">Total de Itens de custo</th>
                                 <th class="bg-pattern text-light" scope="col"></th>
                                 <th class="br-tabele2 bg-pattern text-light" scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- <tr class="border" *ngFor="let item of costItemsList">
-                                <td [routerLink]="['/pages/item-group']" class="text-capitalize">{{item._id}}&nbsp; - &nbsp;{{item.name}}</td>
-                                <td [routerLink]="['/pages/item-group']" class="text-capitalize">{{item.number}}</td>
+                            <tr class="border" *ngFor="let item of convenio.workPlan">
+                                <td (click)="detailGroup(item)" class="text-capitalize">{{item.name}}</td>
+                                <td  (click)="detailGroup(item)"  > 
+                                    <span class="text-capitalize" >{{item.product.length || 0}}</span> 
+                                  </td> 
                                 <td class="table_icon">
-                                    <i class="fa h4 text-pattern mb-0 fa-pencil-square-o"(click)="editPlano(item)" [routerLink]="['/pages/item-group/edit-group']" aria-hidden="true"></i>
+                                    <i class="fa h4 text-pattern mb-0 fa-pencil-square-o" (click)="editPlano(item)" [routerLink]="['/pages/item-group/edit-group']" aria-hidden="true"></i>
                                 </td>
                                 <td class="table_icon">
-                                    <i class="fa h4 text-danger mb-0 fa-close" aria-hidden="true"  (click)="openModal(item)"></i>
+                                    <i class="fa h4 text-danger mb-0 fa-close" aria-hidden="true"  (click)="deleteGroup(item)"></i>
                                 </td>
-                            </tr> -->
+                            </tr>
                         </tbody>
                     </table>
+                    <div *ngIf="convenio.workPlan.length <= 0"  class="col-md-12 text-center">
+                        <p class="">Nenhum plano criado ainda :(</p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -4,11 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { forkJoin } from 'rxjs';
 import { AssociationBidService } from 'src/services/association-bid.service';
 import { AllLicitacao, licitacaoList } from 'src/services/association-licitacao.mock';
 import { AssociationService } from 'src/services/association.service';
 import { AuthService } from 'src/services/auth.service';
 import { AllSuppliers, supplierList } from 'src/services/supplier.mock';
+import { SupplierService } from 'src/services/supplier.service';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-associacao-licitacao-data',
@@ -22,7 +25,8 @@ export class AssociacaoLicitacaoDataComponent {
   idSupplier!: boolean;
   isSectionOneOpen: boolean = false;
   isSectionTwoOpen: boolean = false;
-
+  invitedSuppliersIds: any;
+  invitedSuppliersInfo: any;
   response: any;
   prazoEmdias: number;
 
@@ -35,6 +39,8 @@ export class AssociacaoLicitacaoDataComponent {
     private route: ActivatedRoute,
     private toastrService: ToastrService,
     private router: Router,
+    private userService: UserService,
+    private supplierService: SupplierService
   ) {
     this.blockSupplier = this.formBuilder.group({
       message: [''],
@@ -45,11 +51,14 @@ export class AssociacaoLicitacaoDataComponent {
     this.route.data.subscribe({
       next: (data) => {
         this.response = data["bid"];
+        console.log(this.response);
+        this.invitedSuppliersIds = this.response.invited_suppliers;
+        this.findSuppliersById();
+        this.response.add_allotment.forEach((allotment: any) => {
+          allotment.isSectionOpen = false;
+        });
       }
     })
-    // const licitacaoId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    // this.licitacao = licitacaoList.find(licitacao => licitacao._id === licitacaoId);
-
     this.prazoEmdias = this.calcularPrazoEmDias(this.response.start_at, this.response.end_at)
   }
 
@@ -77,12 +86,26 @@ export class AssociacaoLicitacaoDataComponent {
     this.modalService.dismissAll();
   }
 
-  toggleSectionOne() {
-    this.isSectionOneOpen = !this.isSectionOneOpen;
+  toggleSectionOne(allotment: any) {
+    allotment.isSectionOpen = !allotment.isSectionOpen;
   }
 
   toggleSectionTwo() {
     this.isSectionTwoOpen = !this.isSectionTwoOpen;
+  }
+
+  findSuppliersById() {
+    const observables = this.invitedSuppliersIds.map((id: string) => this.supplierService.getById(id));
+
+    forkJoin(observables).subscribe({
+      next: (responses) => {
+        console.log(responses);
+        this.invitedSuppliersInfo = responses;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 
   cancelStatus() {
@@ -92,10 +115,11 @@ export class AssociacaoLicitacaoDataComponent {
     this.associationBidService.changeStatus(this.response._id, request).subscribe({
       next: data => {
         const toastr = this.toastrService.success('Licitação cancelada com sucesso!', '', { progressBar: true });
+        this.modalService.dismissAll();
         if (toastr) {
           toastr.onHidden.subscribe(() => {
             this.modalService.dismissAll();
-            this.router.navigate(['/pages/associacao/licitacoes'])
+            this.router.navigate(['/pages/associacao/licitacoes']);
           });
         }
       },
@@ -105,6 +129,22 @@ export class AssociacaoLicitacaoDataComponent {
     })
   }
 
+  downloadFile(base64: string) {
+    const byteCharacters = atob(base64.substr(base64.indexOf(',') + 1));
+    const byteNumbers = new Array(byteCharacters.length);
 
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'file.pdf';
+    link.click();
+  }
 
 }

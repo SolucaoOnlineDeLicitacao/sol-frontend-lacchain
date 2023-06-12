@@ -1,7 +1,13 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { forkJoin } from 'rxjs';
+import { AssociationResponseDto } from 'src/dtos/association/association-response.dto';
+import { UserTypeEnum } from 'src/enums/user-type.enum';
+import { AssociationBidService } from 'src/services/association-bid.service';
+import { AssociationService } from 'src/services/association.service';
 import { AuthService } from 'src/services/auth.service';
-import { DatamockService } from 'src/services/datamock.service';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-fornecedor-licitacoes',
@@ -12,31 +18,67 @@ export class FornecedorLicitacoesComponent {
   @ViewChild('de') de: ElementRef;
   @ViewChild('ate') ate: ElementRef;
 
-  licitacoesList!: any[];
   currentPage: number = 1;
   itensPerPage: number = 6;
   searchTool = false;
   ATEaLERT = 'Valor até';
   DEaLERT = 'Valor de';
   VALUEaLERT = false;
+  licitacoesList: any = [];
+  licitacoesId: any;
+  associationList: AssociationResponseDto[];
+  userList: any[];
+  associateListInfo: any;
   constructor(
-    private datamockService: DatamockService,
     private authbase: AuthService,
+    private userService: UserService,
+    private spinnerService: NgxSpinnerService,
+    private _associationBidService: AssociationBidService,
+    private association: AssociationService,
     private router: Router
   ) {
   }
 
   ngOnInit(): void {
-    this.licitacoesList = this.datamockService.licitacoes;
     if (this.authbase.getAuthenticatedUser().type !== 'fornecedor') this.router.navigate(['/pages/dashboard']);
+    this._associationBidService.list().subscribe({
+      next: (data: any[]) => {
+        this.licitacoesList = data;
+        console.log(this.licitacoesList);
+        const filterList = this.licitacoesList.filter((licitacao: { invited_suppliers: string[]; }) => {
+          if (licitacao.invited_suppliers && Array.isArray(licitacao.invited_suppliers)) {
+            return licitacao.invited_suppliers.includes(this.authbase.getAuthenticatedUser().id);
+          }
+          return false;
+        });
+        console.log(filterList);
+        this.licitacoesId = filterList;
+        const listFiltred = this.licitacoesId.map((association: any) => { return this.userService.getById(association.association);});
+        forkJoin(listFiltred).subscribe({
+          next: (success: any) => {
+            this.associateListInfo = success.map((item: any) => item.name);
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+    
+        this.spinnerService.hide();
+      },
+      error: (error: any) => {
+        this.spinnerService.hide();
+      }
+    });
+    
   }
 
   toolSearch() {
     this.searchTool = !this.searchTool
   }
 
+
   detailBids(i: any) {
-    this.router.navigate(['/pages/fornecedor/detalhes-licitacoes']);
+    this.router.navigate(['/pages/fornecedor/licitacoes/detalhes-licitacoes/' + i._id]);
     localStorage.setItem('licitacao', JSON.stringify(i));
   }
 

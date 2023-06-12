@@ -124,7 +124,7 @@
         </div>
 
         <div class="row col-12 col-md-6 ml-auto float-right mt-4 p-0">
-          <button (click)="cancelStatus();" type="button" class="btn-block-supplier btn-lg btn-block mb-4 text-small border-0 text-white">Cancelar
+          <button (click)="open(content);" type="button" class="btn-block-supplier btn-lg btn-block mb-4 text-small border-0 text-white">Cancelar
             Licitação</button>
         </div>
 
@@ -132,30 +132,30 @@
           <h4>Lotes e itens</h4>
         </div>
 
-        <div class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border">
+        <div *ngFor="let allotment of response.add_allotment" class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border">
           <div class="col-12 py-2">
             <div class="d-flex align-items-center justify-content-between">
               <div class="col-md-3 p-0">
                 <h6>Nº de lote</h6>
-                <h6>3 - lote 4</h6>
+                <h6>{{response.bid_count}}</h6>
               </div>
               <div class="col-md-3 p-0">
                 <h6>Itens</h6>
-                <h6>{{response.add_allotment[0].add_item[0].quantity}}</h6>
+                <h6>{{allotment.add_item.length}}</h6>
               </div>
               <div class="col-md-3 p-0">
                 <h6>Status</h6>
                 <h6 class="text-success">Adjudicado</h6>
               </div>
               <div class="col-md-1 p-0 d-flex justify-content-end">
-                <img (click)="toggleSectionOne()" style="width: 16px;"
-                  [src]="isSectionOneOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
+                <img (click)="toggleSectionOne(allotment)" style="width: 16px;"
+                  [src]="allotment.isSectionOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
                   alt="Ícone"
                   class="opener-icon cursor-pointer">
               </div>
             </div>
 
-            <div class="content" [ngClass]="{ 'open': isSectionOneOpen }">
+            <div class="content" [ngClass]="{ 'open': allotment.isSectionOpen }">
               <hr>
               <h4 class="pb-3">Lista de itens e propostas</h4>
               <div class="row col-12 mb-3">
@@ -172,12 +172,12 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr class="bg-first-row">
-                          <th class="text-capitalize" scope="row">Microcomputadores i3 4gb</th>
+                        <tr class="bg-first-row" *ngFor="let itens of allotment.add_item">
+                          <th class="text-capitalize" scope="row">{{ itens.item }}</th>
                           <th scope="col"></th>
                           <th scope="col"></th>
                           <th scope="col"></th>
-                          <td class="text-capitalize">1 Unidade(s)</td>
+                          <td class="text-capitalize">{{ itens.quantity }} Unidade(s)</td>
                         </tr>
                       </tbody>
                     </table>
@@ -187,10 +187,10 @@
               <div class="d-flex align-items-center justify-content-between p-0">
                 <div class="col-md-4 p-0">
                   <h6>Arquivos do lote</h6>
-                  <h6 class="text-primary cursor-pointer">teste.png</h6>
+                  <h6 (click)="downloadFile(allotment.files)" class="text-primary cursor-pointer">arquivo.pdf</h6>
                 </div>
                 <div class="col-md-3 mt-4">
-                  <button type="button" routerLink='/associacao/licitacoes/view-proposal/' class="bg-dark btn-lg btn-block mb-4 text-small text-white">Visualizar
+                  <button type="button" routerLink="/associacao/licitacoes/view-proposal/" class="bg-dark btn-lg btn-block mb-4 text-small text-white">Visualizar
                     propostas</button>
                 </div>
               </div>
@@ -202,17 +202,17 @@
           <h4>Fornecedores convidados</h4>
         </div>
 
-        <div class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border mb-5">
+        <div class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border mb-5" *ngFor="let response of invitedSuppliersInfo">
           <div class="col-12 py-2">
             <div class="d-flex align-items-center justify-content-between">
               <div class="col-md-9 p-0">
                 <h6>Fornecedor</h6>
-                <h6>{{response.invited_suppliers}}</h6>
+                <h6>{{response.name}}</h6>
               </div>
               <div class="col-md-3 p-0 d-flex justify-content-end">
                 <div class="pr-5">
                   <h6>Documento</h6>
-                  <h6>000.000.000-00</h6>
+                  <h6>{{response.document | mask : '00.000.000/0000-00'}}</h6>
                 </div>
                 <img (click)="toggleSectionTwo()" style="width: 16px;"
                   [src]="isSectionTwoOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
@@ -254,3 +254,27 @@
     </div>
   </div>
 </div>
+
+<ng-template class="container-fluid" #content let-modal>
+  <div class="p-5 bg-light">
+    <div class="col-12 d-flex justify-content-between">
+      <h3 class="tfa-title m-0">Cancelar Licitação</h3>
+      <h5 (click)="exit()" class="cursor-pointer">X</h5>
+    </div>
+
+    <div class="my-4 text-center block-messege py-1 d-flex justify-content-center">
+      <div class="pr-1"><img src="../../../../assets/images/icon-alert.svg" (click)="exit()"></div>
+      <div class="danger-text">Esta ação irá cancelar a licitação</div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <div class="col-md-6 mt-4">
+        <button type="button" class="bg-light btn-lg btn-block mb-4 text-small border-0" (click)="exit();">Voltar</button>
+      </div>
+
+      <div class="col-md-6 mt-4">
+        <button type="button" class="btn-block-supplier text-white btn-lg btn-block mb-4 text-small border-0" (click)="cancelStatus();">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

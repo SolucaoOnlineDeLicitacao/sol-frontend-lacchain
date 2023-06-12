@@ -14,6 +14,7 @@ import { RegisterPasswordFirstAccessComponent } from './register-password-first-
 import { CommonModule } from "@angular/common";
 import { AssociationService } from "src/services/association.service";
 import { CostItemsService } from "src/services/cost-items.service";
+import { SupplierService } from "src/services/supplier.service";
 
 @NgModule({
     declarations: [
@@ -35,7 +36,8 @@ import { CostItemsService } from "src/services/cost-items.service";
         AuthService,
         UserService,
         AssociationService,
-        CostItemsService
+        CostItemsService,
+        SupplierService
     ]
 })
 export class AccountModule { }

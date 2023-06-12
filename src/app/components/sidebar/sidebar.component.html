@@ -49,12 +49,14 @@
     <button [routerLink]="['/pages/convenios']" routerLinkActive="active" class="border-0 bg-transparent d-flex align-items-center list-group-item
       list-group-item-action text-white">
       <i class="bi bi-clipboard2-data mb-0 h4" aria-hidden="true" style="width: 28px"></i>&nbsp;Convênios</button>
-    <button [routerLink]="['/pages/integracoes']" routerLinkActive="active" class="border-0 bg-transparent d-flex align-items-center list-group-item
-      list-group-item-action text-white">
+    <button routerLinkActive="active" class="color-gray border-0 bg-transparent d-flex align-items-center list-group-item">
       <i class="bi bi-diagram-2 mb-0 h4" aria-hidden="true" style="width: 28px"></i>&nbsp;Integrações</button>
     <button [routerLink]="['/pages/licitacoes']" routerLinkActive="active" class="border-0 bg-transparent d-flex align-items-center list-group-item
       list-group-item-action text-white">
       <i class="bi bi-clipboard-pulse mb-0 h4" aria-hidden="true" style="width: 28px"></i>&nbsp;Licitações</button>
+    <button routerLinkActive="active" class="border-0 bg-transparent d-flex align-items-center list-group-item
+      list-group-item-action text-white">
+      <i class="bi bi-clipboard2-data mb-0 h4" aria-hidden="true" style="width: 28px"></i>&nbsp;Contratos</button>
 
     <div class="dropright">
       <button routerLinkActive="active" (click)="reportToggle()" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false" class="border-0
@@ -62,14 +64,14 @@
         <i class="bi bi-list-check h4 mb-0" aria-hidden="true" style="width: 28px"></i>&nbsp; Relatórios<i [ngClass]="showReport ? 'fa-minus' : 'fa-plus'"
           class="fa fa ml-5 pr-2" aria-hidden="true" style="width: 28px"></i></button>
       <div class="bg-sidebar" *ngIf="showReport" aria-labelledby="dropdownMenuButton">
-        <a class="border-0 bg-transparent d-flex ml-4 align-items-center list-group-item list-group-item-action text-white"
-          style="font-size: 15px;" [routerLink]="['/pages/controle-associacao']">Licitações</a>
+        <!-- <a class="border-0 bg-transparent d-flex ml-4 align-items-center list-group-item list-group-item-action text-white"
+          style="font-size: 15px;" [routerLink]="['/pages/controle-associacao']">Licitações</a> -->
         <a class="border-0 bg-transparent d-flex ml-4 align-items-center list-group-item list-group-item-action text-white"
           style="font-size: 15px;" [routerLink]="['/pages/contracts']">Contratos</a>
-        <a class="border-0 bg-transparent d-flex ml-4 align-items-center list-group-item list-group-item-action text-white"
+        <!-- <a class="border-0 bg-transparent d-flex ml-4 align-items-center list-group-item list-group-item-action text-white"
           style="font-size: 15px;" [routerLink]="['/pages/controle-admin']">Relatórios Gerais</a>
         <a class="border-0 bg-transparent d-flex ml-4 align-items-center list-group-item list-group-item-action text-white"
-          style="font-size: 15px;" [routerLink]="['/pages/controle-admin']">Relatórios Gerados</a>
+          style="font-size: 15px;" [routerLink]="['/pages/controle-admin']">Relatórios Gerados</a> -->
       </div>
     </div>
   </section>

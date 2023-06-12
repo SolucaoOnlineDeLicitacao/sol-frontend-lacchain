@@ -58,10 +58,15 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    // this.ngxSpinnerService.show();
+
+    if (this.authService.getAuthenticatedUser().type == 'administrador' || this.authService.getAuthenticatedUser().type == 'fornecedor') {
+      this.ngxSpinnerService.hide();
+    }
     this.licitacoesList = this.datamockService.licitacoes;
 
     if (this.authService.getAuthenticatedUser().type == 'associacao') {
-      this.ngxSpinnerService.show();
+      // this.ngxSpinnerService.show();
       this._associationBidService.list().subscribe({
         next: data => {
           this.ngxSpinnerService.hide();
@@ -83,6 +88,15 @@ export class DashboardComponent implements AfterViewInit {
   detailBids(i: any) {
     this.router.navigate(['/pages/fornecedor/detalhes-licitacoes']);
     localStorage.setItem('licitacao', JSON.stringify(i));
+  }
+
+  associationDetailBids(i: any) {
+    this.router.navigate(['/pages/licitacoes/licitacao-data', i._id]);
+    localStorage.setItem('licitacao', JSON.stringify(i));
+  }
+
+  editBids(i: any) {
+    this.router.navigate(['/pages/licitacoes/licitacao-edit', i._id]);
   }
 
 }

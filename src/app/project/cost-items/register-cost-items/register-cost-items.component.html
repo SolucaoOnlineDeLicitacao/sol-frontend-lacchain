@@ -95,7 +95,7 @@
                         <div class="col-sm-12 col-md-12 mt-3">
                             <label for="specification"
                                 class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Especificação</b></label>
-                            <input type="text" formControlName="specification" class="form-control" id="specification"
+                            <input type="text" formControlName="specification" class="form-control h50 br-10" id="specification"
                                 placeholder="Especificação">
 
                             <div *ngIf="form.controls['specification'].errors?.['required'] && isSubmit"
@@ -107,7 +107,7 @@
                         <div class="col-md-12 mt-3">
                             <div class="form-check cursor-pointer">
                                 <input class="form-check-input cursor-pointer"
-                                    style="height: 20px !important; width: 20px !important;"
+                                    style="height: 20px !important; width: 20px !important;"  
                                     formControlName="sustainable" type="checkbox" value="sustainable" id="sustainable">
                                 <label class="form-check-label cursor-pointer pl-2 pt-1" for="sustainable">
                                     Marque aqui se o item for sustentável

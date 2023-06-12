@@ -96,6 +96,10 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { CostItemGetByIdResolve } from '../resolvers/get-cost-item-by-ic.resolver';
 import { CostItemsService } from 'src/services/cost-items.service';
 import { DeleteConvenioComponent } from './convenios/delete-convenio/delete-convenio.component';
+import { AgreementGetByIdResolve } from '../resolvers/agreement-get-by-id.resolver';
+import { AssociacaoEditLicitacaoComponent } from './associacao-edit-licitacao/associacao-edit-licitacao.component';
+import { WorkPlanService } from 'src/services/work-plan.service';
+import { WorkPlanGetByIdResolve } from '../resolvers/workplan-get-by-id.resolver';
 
 @NgModule({
     declarations: [
@@ -182,6 +186,7 @@ import { DeleteConvenioComponent } from './convenios/delete-convenio/delete-conv
         EditProdutoComponent,
         DeleteProdutoComponent,
         DeleteConvenioComponent,
+        AssociacaoEditLicitacaoComponent,
     ],
     imports: [
         CommonModule,
@@ -204,7 +209,10 @@ import { DeleteConvenioComponent } from './convenios/delete-convenio/delete-conv
         AssociationBidService,
         BidGetByIdResolve,
         CostItemGetByIdResolve,
-        CostItemsService
+        CostItemsService,
+        AgreementGetByIdResolve,
+        WorkPlanService,
+        WorkPlanGetByIdResolve
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,

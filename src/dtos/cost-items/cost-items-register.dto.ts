@@ -8,4 +8,5 @@ export abstract class CostItemsRegisterDto {
     productId: string;
     specification: string;
     sustainable: boolean;
+    product_relation: string
 }

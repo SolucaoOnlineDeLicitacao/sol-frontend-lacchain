@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { BaseService } from './base.service';
 import { AssociationBidRequestDto } from 'src/dtos/association/association-bid.dto';
 import { BidChangeStatusRequestDto } from 'src/dtos/bid/bid-change-status-request.dto';
+import { Observable, catchError, map } from 'rxjs';
 
 @Injectable()
 export class AssociationBidService extends BaseService {
@@ -21,9 +22,11 @@ export class AssociationBidService extends BaseService {
             .post<AssociationBidRequestDto>(`${this.url}/register`, dto, this.authorizedHeader);
     }
 
-    list() {
+    list(): Observable<any> {
         return this.httpClient
             .get(`${this.url}/list`, this.authorizedHeader)
+            .pipe(map(response => response), catchError(error => { console.log(error); return error; })
+            );
     }
 
     getById(_id: string) {
@@ -33,7 +36,12 @@ export class AssociationBidService extends BaseService {
 
     changeStatus(bidId: string, dto: BidChangeStatusRequestDto) {
         return this.httpClient
-        .put(`${this.url}/change-status/${bidId}`, dto, this.authorizedHeader);
+            .put(`${this.url}/change-status/${bidId}`, dto, this.authorizedHeader);
+    }
+
+    updateBid(bidId: string, dto: AssociationBidRequestDto) {
+        return this.httpClient
+            .put(`${this.url}/update/${bidId}`, dto, this.authorizedHeader);
     }
 
 }

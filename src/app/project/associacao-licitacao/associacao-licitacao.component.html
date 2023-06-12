@@ -18,10 +18,9 @@
 
 		</div>
 
-		<div *ngFor="let item of licitacoesList; let i= index;" class="row p-3 user-data-border mt-5 cursor-pointer"
-			(click)="detailBids(item);">
+		<div *ngFor="let item of licitacoesList; let i= index;" class="row p-3 user-data-border mt-5 cursor-pointer">
 
-			<div class="row col-12 p-2">
+			<div class="row col-12 p-2" (click)="detailBids(item);">
 				<div class="col-12 col-md-10">
 					<h5 class="text-dark"> <b> Licitação nº {{item.bid_count}}/2022 </b></h5>
 				</div>
@@ -41,16 +40,20 @@
 				</div>
 			</div>
 
-			<div class="col-12 col-lg-12 p-2 text-capitalize">
+			<div class="col-12 col-lg-12 p-2 text-capitalize" (click)="detailBids(item);">
 				<h6 class="font-poppins f-size-16 text-secondary">{{item.description}}</h6>
 			</div>
 
-			<div class="col-12 col-lg-12 p-2 text-capitalize">
-				<h6 class="font-poppins f-size-14 text-dark">Período</h6>
-				<h6 class="font-poppins f-size-16 text-secondary">{{item.start_at | date: 'dd/MM/yyyy'}} - {{item.end_at | date: 'dd/MM/yyyy'}}</h6>
+			<div class="row col-12 p-2">
+				<div class="col-12 col-md-10" (click)="detailBids(item);">
+					<h6 class="font-poppins f-size-14 text-dark">Período</h6>
+					<h6 class="font-poppins f-size-16 text-secondary">{{item.start_at | date: 'dd/MM/yyyy'}} - {{item.end_at | date: 'dd/MM/yyyy'}}</h6>
+				</div>
+				<div class="col-12 col-md-2">
+					<button (click)="editBids(item);" *ngIf="item.status ==='draft'" type="button" class="bg-light btn-lg btn-block mb-4 text-small text-dark">Adicionar
+						lote</button>
+				</div>
 			</div>
-
 		</div>
-
 	</div>
 </div>

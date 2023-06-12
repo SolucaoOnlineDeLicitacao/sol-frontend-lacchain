@@ -4,6 +4,9 @@ import { Observable, map, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BaseService } from './base.service';
 import { ItemGroupRequestDto } from 'src/dtos/item-group/itemgroup-request.dto';
+import { ItemsItemGroupRequestDto } from 'src/dtos/item-group/item-of-group/item-itemgroup-request.dto';
+import { ItemsItemGroupResponseDto } from 'src/dtos/item-group/item-of-group/item-itemgroup-response.dto';
+import { ItemGroupRegisterResponseDto } from 'src/dtos/item-group/item-group-register-response.dto';
 import { ItemGroupResponseDto } from 'src/dtos/item-group/itemgroup-response.dto';
 
 @Injectable({
@@ -26,17 +29,38 @@ export class ItemGroupService extends BaseService {
       );
   }
 
-  register(dto: ItemGroupRequestDto): Observable<ItemGroupResponseDto> {
+  register(dto: ItemGroupRequestDto): Observable<ItemGroupRegisterResponseDto> {
     return this.httpClient
       .post(`${this.url}/register`, dto, this.authorizedHeader)
       .pipe(map(this.extractData), catchError(this.serviceError));
   }
+
+  getById(id: string): Observable<any> {
+    return this.httpClient
+      .get(`${this.url}/get-by-id/${id}`, this.authorizedHeader)
+      .pipe(map(response => response), catchError(error => { console.log(error); return error; })
+      );
+  }
+
 
   update(Id: string, dto: ItemGroupRequestDto): Observable<ItemGroupResponseDto> {
     return this.httpClient
       .put(`${this.url}/update/${Id}`, dto, this.authorizedHeader)
       .pipe(map(this.extractData), catchError(this.serviceError));
   }
+
+  updateItem(Id: string, dto: ItemsItemGroupRequestDto): Observable<ItemsItemGroupResponseDto> {
+    return this.httpClient
+      .put(`${this.url}/update/add-item/${Id}`, dto, this.authorizedHeader)
+      .pipe(map(this.extractData), catchError(this.serviceError));
+  }
+
+  deleteItem(Id: string, dto: ItemsItemGroupRequestDto): Observable<ItemsItemGroupResponseDto> {
+    return this.httpClient
+      .put(`${this.url}/update/remove-item/${Id}`, dto, this.authorizedHeader)
+      .pipe(map(this.extractData), catchError(this.serviceError));
+  }
+
 
   delete(_id: string) {
     return this.httpClient

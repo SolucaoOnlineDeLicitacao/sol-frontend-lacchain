@@ -7,7 +7,7 @@
     </div>
     <div class="row mt-1">
         <div class="col-12">
-            <i class="fa fa-arrow-left f-size-24 cursor-pointer" [routerLink]="['/pages/itens-custo']" aria-hidden="true"></i>
+            <i class="fa fa-arrow-left f-size-24 cursor-pointer" (click)="goBack()" aria-hidden="true"></i>
         </div>
     </div>
     <div class="row mt-3">
@@ -16,23 +16,23 @@
                 <div class="row p-3 user-data-border">
                     <div class="col-12 col-lg-12 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Código</h6>
-                        <h5 class="f-size-16">{{localStorage.getDataCostItems().code}}</h5>
+                        <h5 class="f-size-16">{{costItems.code}}</h5>
                     </div>
                     <div class="col-12 col-lg-6 p-2">
                         <h6 class="font-poppins f-size-14 text-secondary">Nome</h6>
-                        <h5 class="f-size-16">{{localStorage.getDataCostItems().name}}</h5>
+                        <h5 class="f-size-16">{{costItems.name}}</h5>
                     </div>
                     <div class="col-12 col-lg-6 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Unidade</h6>
-                        <h5 class="f-size-16">{{localStorage.getDataCostItems().unitMeasure}}</h5>
+                        <h5 class="f-size-16">{{costItems.unitMeasure}}</h5>
                     </div>
                     <div class="col-12 col-lg-6 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Categoria/Segmento</h6>
-                        <h5 class="f-size-16">{{localStorage.getDataCostItems().product?.product_name}}</h5>
+                        <h5 class="f-size-16">{{costItems.product?.product_name}}</h5>
                     </div>
                     <div class="col-12 col-lg-6 p-2">
                         <h6 class="font-poppins f-size-14 text-secondary">Especificações</h6>
-                        <h5 class="f-size-16">{{localStorage.getDataCostItems().specification}}</h5>
+                        <h5 class="f-size-16">{{costItems.specification}}</h5>
                     </div>
                 </div>
             </div>

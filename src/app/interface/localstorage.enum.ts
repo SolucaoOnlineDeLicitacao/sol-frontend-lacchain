@@ -5,6 +5,7 @@ export enum LocalStorageEnum {
     lote = 'lote',
     enviarproposta = 'enviarproposta',
     contrato = 'contrato',
+    plano = 'plano',
     editcostitems = 'editcostitems',
     editcategoria = 'editcategoria',
     editprodutos = 'editprodutos'

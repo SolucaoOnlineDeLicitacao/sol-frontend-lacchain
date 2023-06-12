@@ -1,81 +1,85 @@
 <div class="container mb-5">
     <div class="row mt-5">
         <div class="col-md-12">
-            <h1><strong>Licitações</strong></h1>
+            <h1><strong>Dados da Licitação</strong></h1>
             <hr class="bg-primary">
         </div>
 
         <div class="col-md-11 border mt-3 br-10 py-3 ">
             <div class="row px-2">
                 <div class="col-md-10">
-                    <h2 class="mb-0 text-dark"><strong>{{datamock.getDataLicitacao().numero}}</strong></h2>
+                    <h2 class="mb-0 text-dark"><strong>{{response.bid_count}} / {{response.createdAt | date: 'yyyy'}}</strong></h2>
                 </div>
                 <div class="col-md-2 text-capitaliz">
                     <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
-                    <h5 *ngIf="datamock.getDataLicitacao().status ==='Aberta'" class="f-size-16 text-primary">{{datamock.getDataLicitacao().status}}</h5>
-                    <h5 *ngIf="datamock.getDataLicitacao().status ==='Cancelada'" class="f-size-16 text-danger">{{datamock.getDataLicitacao().status}}</h5>
-                    <h5 *ngIf="datamock.getDataLicitacao().status ==='Deserta'" class="f-size-16 text-danger">{{datamock.getDataLicitacao().status}}</h5>
-                    <h5 *ngIf="datamock.getDataLicitacao().status ==='Concluída'" class="f-size-16 text-success">{{datamock.getDataLicitacao().status}}</h5>
-                    <h5 *ngIf="datamock.getDataLicitacao().status ==='Em Rascunho'" class="f-size-16 text-dark">{{datamock.getDataLicitacao().status}}</h5>
-                    <h5 *ngIf="datamock.getDataLicitacao().status ==='Aguardando Liberação'" class="f-size-16" style="color: #F1CF1C">{{datamock.getDataLicitacao().status}}</h5>
-                    <h5 *ngIf="datamock.getDataLicitacao().status ==='Em Análise'" class="f-size-16 text-warning">{{datamock.getDataLicitacao().status}}</h5>
+                    <h5 *ngIf="response.status ==='awaiting'" style="color: #F1CF1C" class="f-size-16">Aguardando Liberação</h5>
+                    <h5 *ngIf="response.status ==='tiebreaker'" class="f-size-16 text-warning">Aguardando desempate</h5>
+                    <h5 *ngIf="response.status ==='analysis'" class="f-size-16 text-info">Em Análise</h5>
+                    <h5 *ngIf="response.status ==='deserted'" class="f-size-16 text-danger">Deserta</h5>
+                    <h5 *ngIf="response.status ==='canceled'" class="f-size-16 text-danger">Cancelada</h5>
+                    <h5 *ngIf="response.status ==='failed'" class="f-size-16 text-danger">Falhou</h5>
+                    <h5 *ngIf="response.status ==='draft'" class="f-size-16 text-dark">Em Rascunho</h5>
+                    <h5 *ngIf="response.status ==='released'" class="f-size-16 text-success">Lançada</h5>
+                    <h5 *ngIf="response.status ==='open'" class="f-size-16 text-success">Aberta</h5>
+                    <h5 *ngIf="response.status ==='completed'" class="f-size-16 text-success">Concluida</h5>
+                    <h5 *ngIf="response.status ==='reopened'" class="f-size-16 text-success">Reaberta</h5>
                 </div>
                 <div class="col-md-10 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().association}}</h5>
+                    <h5 class="f-size-16">{{response.association || '--'}}</h5>
                 </div>
                 <div class="col-md-2 mt-3 text-capitaliz">
                     <h6 class="font-poppins f-size-14 text-secondary">Revisor</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().revisor}}</h5>
+                    <h5 class="f-size-16">{{response.statusrevisor || '--'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Modalidade</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().modalidade}}</h5>
+                    <h5 class="f-size-16">{{response.modality || '--'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Classificação</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().class}}</h5>
+                    <h5 class="f-size-16">{{response.classification || '--'}}</h5>
                 </div>
                 <div class="col-md-4"></div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Data de Início</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().datastart}}</h5>
+                    <h5 class="f-size-16">{{response.start_at | date: 'dd/MM/yyyy'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Data de encerramento</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().dataend}}</h5>
+                    <h5 class="f-size-16">{{response.end_at | date: 'dd/MM/yyyy'}}</h5>
                 </div>
                 <div class="col-md-4">
                     <h6 class="font-poppins f-size-14 text-secondary">Prazo para entrega/execução (dias)</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().prazo}}</h5>
+                    <h5 class="f-size-16">{{response.days_to_delivery  | date: 'dd/MM/yyyy'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Local de Entrega</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().local}}</h5>
+                    <h5 class="f-size-16">{{response.local_to_delivery || '--'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Dias corridos para desempate</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().dias}}</h5>
+                    <h5 class="f-size-16">{{response.days_to_tiebreaker || '--'}}</h5>
                 </div>
                 <div class="col-md-4"></div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Tipo de Licitação</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().tipo}}</h5>
+                    <h5 class="f-size-16">{{response.agreement || '--'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Convênio</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().convenio}}</h5>
+                    <h5 class="f-size-16">{{response.agreement || '--'}}</h5>
                 </div>
                 <div class="col-md-8 mt-3">
                     <h6 class="font-poppins f-size-14 text-secondary">Detalhes</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().description}}</h5>
+                    <h5 class="f-size-16">{{response.description || '--'}}</h5>
                 </div>
                 <div  class="col-md-4 mt-3 d-flex align-self-end">
                     <button (click)="openModal('edital')" class="br-10 w-100 h50 border btn btn-light"><strong>Baixar Edital</strong></button>
                 </div>
                 <div class="col-md-8 mt-3">
                     <h6 class="font-poppins f-size-14 text-secondary">Site adicional</h6>
-                    <h5 class="f-size-16">{{datamock.getDataLicitacao().site}}</h5>
+                    <h5 class="f-size-16">{{response.aditional_site || '--'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 d-flex align-self-end">
                     <button (click)="openModal('ata')" class="br-10 w-100 h50 border btn"><strong class="color-clear">Ata não disponível</strong></button>
@@ -92,12 +96,12 @@
                     <div class="row">
                         <div class="col-md-2">
                             <h6 class="font-poppins f-size-14 text-secondary">Nº de lote</h6>
-                            <h5 class="f-size-16">{{item.numero}}</h5>
+                            <h5 class="f-size-16">{{loteListIndex + 1}} - Lote 0{{loteListIndex + 1}}</h5>
                         </div>
                         <div class="col-md-5  d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="font-poppins f-size-14 text-secondary">Itens</h6>
-                            <h5 class="f-size-16">{{item.itens}}</h5>
+                            <h5 class="f-size-16">{{item.add_item.length}}</h5>
                         </div>
                         <span *ngIf="item.situation ==='Adjudicado'" class="bg-success text-dark rounded-pill p-2">Adjudicado</span>
                         <span *ngIf="item.situation ==='Deserto'" class="bg-warning text-dark rounded-pill py-2 px-4">Deserto</span>
@@ -134,15 +138,15 @@
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td >{{datamock.getDataLicitacao().Item}}</td>
-                                    <td >{{datamock.getDataLicitacao()._id}}</td>
-                                    <td>{{datamock.getDataLicitacao().quantity | currency: 'BRL' }}</td>
+                                    <td >{{response.statusItem}}</td>
+                                    <td >{{response.status_id}}</td>
+                                    <td>{{response.statusquantity | currency: 'BRL' }}</td>
                                   </tr>
                                 </tbody>
                                 </table>
                             </div>
                             <div class="col-md-12">
-                                <div *ngIf="datamock.getDataLicitacao().status ==='Em Análise'" class="row" >
+                                <div *ngIf="response.statusstatus ==='Em Análise'" class="row" >
                                     <div class="col-md-4">
                                         <h6 class="font-poppins f-size-14 text-secondary">Valor do frete</h6>
                                         <h5 class="f-size-16">{{item.frete | currency : 'BRL'}}</h5>
@@ -154,7 +158,7 @@
                                         <button (click)="viewProposal(item, 'create')"  class="btn btn-dark br-10 w-100" type="button"><strong>Preencher proposta</strong></button>
                                     </div>
                                 </div>
-                                <div *ngIf="datamock.getDataLicitacao().status ==='Aberta'" class="row d-lfex justify-content-end">
+                                <div *ngIf="response.statusstatus ==='Aberta'" class="row d-lfex justify-content-end">
                                     <div class="col-md-4">
                                         <button (click)="delete(item)" class="btn btn-outline-danger br-10 w-100" type="button"><strong>Remover proposta</strong></button>
                                     </div>
@@ -162,7 +166,7 @@
                                         <button (click)="viewProposal(item, 'edit')" class="btn btn-outline-dark br-10 w-100" type="button"><strong>Editar proposta</strong></button>
                                     </div>
                                 </div>
-                                <div *ngIf="datamock.getDataLicitacao().status ==='Concluída'" class="row d-lfex justify-content-end">
+                                <div *ngIf="response.statusstatus ==='Concluída'" class="row d-lfex justify-content-end">
                                     <div class="col-md-4">
                                         <button (click)="viewProposal(item, 'proposal')" class="btn btn-dark  br-10 w-100" type="button"><strong>Visualizar propostas</strong></button>
                                     </div>

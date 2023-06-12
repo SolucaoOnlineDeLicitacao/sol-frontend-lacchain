@@ -4,10 +4,9 @@ export abstract class ConvenioRequestDto {
     status: string;
     city: string;
     states: string
-    value: string;
-    signature_date: string;
-    validity_date: string;
-    associate_name: string;
-    reviewer: string;
-    work_plan: string;
+    value: number;
+    signature_date: Date;
+    validity_date: Date;
+    associationId: string;
+    reviewerId: string;
 }

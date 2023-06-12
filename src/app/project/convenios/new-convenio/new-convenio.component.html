@@ -10,7 +10,7 @@
         <div class="col-md-3">
           <label class="text-dark text-capitalize" for="number"><strong>{{numberalert}}</strong></label>
           <input type="tel" [maxlength]="50" #number class="form-control br-10 py-4"
-            formControlName="number" id="number" mask="00000000000" [suffix]="'/' + year" placeholder="Digite seu número">
+            formControlName="number" id="number" mask="0000000" [suffix]="'/' + year" placeholder="Digite seu número">
         </div>
         <div class="col-md-9">
           <label class="text-dark text-capitalize" for="object"><strong>{{objectalert}}</strong></label>
@@ -51,25 +51,21 @@
         <div class="col-md-4 mt-4">
           <label class="text-dark text-capitalize" for="situation"><strong>{{situationalert}}</strong></label>
           <select  formControlName="situation" #situation class="form-control br-10 h50" id="situation">
-            <option  class="f-size-16 text-primary">Aberta</option>
-            <option  class="f-size-16 text-danger">Cancelada</option>
-            <option  class="f-size-16 text-danger">Deserta</option>
-            <option  class="f-size-16 text-success">Concluída</option>
-            <option  class="f-size-16 text-dark">Em Rascunho</option>
-            <option  class="f-size-16" style="color:#F1CF1C">Aguardando Liberação</option> 
-            <option  class="f-size-16 text-warning">Em Análise</option>
+            <option [value]="agreementStatusEnum.canceled"  class="f-size-16 text-danger">Cancelada</option>
+            <option [value]="agreementStatusEnum.concluded" class="f-size-16 text-success">Concluída</option>
+            <option [value]="agreementStatusEnum.inExecution" class="f-size-16 text-warning">Em Execução</option>
           </select>
         </div>
         <div class="col-md-12 mt-4">
           <label class="text-dark text-capitalize" for="association"><strong>{{associationalert}}</strong></label>
           <select formControlName="association" #association class="form-control br-10 h50" id="association">
-            <option *ngFor="let item of associationList" [value]="item.name">{{item.name}}</option>
+            <option *ngFor="let item of associationList" [value]="item._id">{{item.name}}</option>
           </select>
         </div>
         <div class="col-md-12 mt-4">
           <label class="text-dark text-capitalize" for="review"><strong>{{reviewalert}}</strong></label>
           <select formControlName="review" #review class="form-control br-10 h50" id="review">
-            <option  *ngFor="let item of userList" [value]="item.name">{{item.name}}</option>
+            <option  *ngFor="let item of userList" [value]="item._id">{{item.name}}</option>
           </select>
         </div>
         <div class="col-12 mb-5">

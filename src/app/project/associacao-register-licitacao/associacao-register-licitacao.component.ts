@@ -4,7 +4,12 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AllotmentRequestDto, ItemRequestDto } from 'src/app/interface/licitacao.interface';
 import { AssociationBidRequestDto } from 'src/dtos/association/association-bid.dto';
+import { UserListResponseDto } from 'src/dtos/user/user-list-response.dto';
+import { UserTypeEnum } from 'src/enums/user-type.enum';
 import { AssociationBidService } from 'src/services/association-bid.service';
+import { ConvenioService } from 'src/services/convenio.service';
+import { SupplierService } from 'src/services/supplier.service';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-associacao-register-licitacao',
@@ -18,6 +23,7 @@ export class AssociacaoRegisterLicitacaoComponent {
   isSubmit: boolean = false;
   selectedFile: File | null = null;
   invitedSupplier: string[] = [];
+  invitedSupplierId: string[] = [];
   supplierImg: string = '';
   selectedImageUrl: string;
   notImage = true;
@@ -25,12 +31,18 @@ export class AssociacaoRegisterLicitacaoComponent {
   totalFiles: File[] = [];
   lots: any[] = [];
   item: any[] = [];
+  userList: any;
+  // userList!: UserListResponseDto[];
+  convenioList: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private toastrService: ToastrService,
     private router: Router,
-    private associationBidService: AssociationBidService
+    private associationBidService: AssociationBidService,
+    private userService: UserService,
+    private convenioService: ConvenioService,
+    private supplierService: SupplierService
   ) {
     this.form = this.formBuilder.group({
       description: ['', [Validators.required]],
@@ -57,6 +69,38 @@ export class AssociacaoRegisterLicitacaoComponent {
   }
 
   ngOnInit(): void {
+    this.supplierService.supplierList().subscribe({
+      next: (data) => {
+        this.userList = data;
+        console.log(this.userList);
+
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
+
+    this.userService.listByType(UserTypeEnum.fornecedor).subscribe({
+      next: (data) => {
+        this.userList = data;
+        console.log(this.userList, 'lisat de fornecedores');
+
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
+
+    this.convenioService.getConvenio().subscribe({
+      next: (data) => {
+        this.convenioList = data;
+        console.log('sdgfksdnmgosdngojkn',this.convenioList);
+
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
   }
 
   generateRandomId() {
@@ -89,7 +133,7 @@ export class AssociacaoRegisterLicitacaoComponent {
         modality: this.form.controls['modality'].value,
         aditional_site: this.form.controls['adicionalSite'].value,
         add_allotment: this.lots,
-        invited_suppliers: this.invitedSupplier,
+        invited_suppliers: this.invitedSupplierId,
       };
     } else {
       newBid = {
@@ -106,9 +150,11 @@ export class AssociacaoRegisterLicitacaoComponent {
         modality: this.form.controls['modality'].value,
         aditional_site: this.form.controls['adicionalSite'].value,
         add_allotment: this.lots,
-        invited_suppliers: this.invitedSupplier,
+        invited_suppliers: this.invitedSupplierId,
       };
     }
+
+    console.log(newBid);
 
     this.associationBidService.bidRegister(newBid).subscribe({
       next: (data) => {
@@ -124,7 +170,12 @@ export class AssociacaoRegisterLicitacaoComponent {
   }
 
   isFormValid(): boolean {
-    return this.formAddLots.controls['item'].valid && this.formAddLots.controls['quantity'].valid;
+    const itemValid = this.formAddLots.controls['item'].valid;
+    const quantityValid = this.formAddLots.controls['quantity'].valid;
+    const isIndividualPrice = this.form.controls['biddingType'].value === 'individualPrice';
+    const isOneItem = this.item.length === 1;
+
+    return itemValid && quantityValid && !(isIndividualPrice && isOneItem);
   }
 
   isLotFormValid(): boolean {
@@ -150,6 +201,12 @@ export class AssociacaoRegisterLicitacaoComponent {
     const supplier = this.formAddLots.controls['inviteSuppliers'].value;
     if (supplier.trim() !== '' && !this.invitedSupplier.includes(supplier)) {
       this.invitedSupplier.push(supplier);
+    }
+
+    const supplierId = this.formAddLots.controls['inviteSuppliers'].value;
+    const selectedSupplier = this.userList.find((user: any) => user.name === supplierId);
+    if (selectedSupplier && !this.invitedSupplier.includes(selectedSupplier._id)) {
+      this.invitedSupplierId.push(selectedSupplier._id);
     }
   }
 
@@ -185,9 +242,12 @@ export class AssociacaoRegisterLicitacaoComponent {
     this.item.push(newItem);
     this.formAddLots.controls['item'].reset();
     this.formAddLots.controls['quantity'].reset();
+    this.formAddLots.markAsPristine();
   }
 
   addLot() {
+    console.log(this.lots);
+
     if (this.item.length > 0) {
       const newAllotment: AllotmentRequestDto = {
         allotment_name: this.formAddLots.controls['batchName'].value,
@@ -198,13 +258,14 @@ export class AssociacaoRegisterLicitacaoComponent {
         add_item: [...this.item],
       };
 
-      this.lots.push(newAllotment);
+      this.lots.push({ ...newAllotment });
       this.item = [];
       this.formAddLots.reset();
       this.supplierImg = '';
     } else {
       this.toastrService.error('É necessário adicionar pelo menos um item ao lote', '', { progressBar: true });
     }
+    this.formAddLots.markAsPristine();
   }
 
   removeLot(index: number) {

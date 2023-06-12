@@ -18,7 +18,14 @@ export class RegisterUserAssociacaoComponent implements OnInit {
   isSubmit: boolean = false;
   associationList!: AssociationResponseDto[];
 
- 
+  offices = [
+    { id: 1, name: 'cargo 1' },
+    { id: 2, name: 'cargo 2' },
+    { id: 3, name: 'cargo 3' },
+    { id: 4, name: 'cargo 4' },
+    { id: 5, name: 'cargo 5' }
+  ];
+
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,

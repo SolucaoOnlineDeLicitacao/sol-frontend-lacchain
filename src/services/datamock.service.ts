@@ -42,19 +42,7 @@ export class DatamockService {
   }
 
   convenios: ConveniosInterface[] = [
-    {
-      _id: 1,
-      name: 'Mohamed Ali Gusta de Alencar Alves Prado',
-      object: 'Convênio2020',
-      association: 'Associação para Testes',
-      review: 'Adm Geral',
-      number: 47328472384293,
-      local: 'Monte Santo / BA',
-      datesub: '11/09/2001',
-      datemat: '12/12/2012',
-      value: '983475',
-      situation: 'Em espera'
-    },
+
     {
       _id: 2,
       name: 'Mohamed Ali Gusta de Alencar Alves Prado',

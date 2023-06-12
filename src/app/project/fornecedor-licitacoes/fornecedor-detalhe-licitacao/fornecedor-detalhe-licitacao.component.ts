@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DatamockService } from 'src/services/datamock.service';
 import { CancelarLicitacaoComponent } from '../../administration-licitacoes/administration-detail-licitacao/cancelar-licitacao/cancelar-licitacao.component';
 import { FracassarLicitacaoComponent } from '../../administration-licitacoes/administration-detail-licitacao/fracassar-licitacao/fracassar-licitacao.component';
 import { RecusarLicitacaoComponent } from '../../administration-licitacoes/administration-detail-licitacao/recusar-licitacao/recusar-licitacao.component';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-fornecedor-detalhe-licitacao',
@@ -15,15 +16,29 @@ import { ToastrService } from 'ngx-toastr';
 export class FornecedorDetalheLicitacaoComponent {
 
   oneStep: number | null = null;
-  loteList: any;
+  loteListIndex: any;
+  loteList: any[];
+  response: any;
+
   constructor(
     public datamock: DatamockService,
+    private router: Router,
     private toastrService: ToastrService,
-    private router: Router
+    private route: ActivatedRoute,
+    private spinnerService: NgxSpinnerService,
 
   ) { }
   ngOnInit(): void {
-    this.loteList = this.datamock.lotes
+    this.route.data.subscribe({
+      next: (data) => {
+        this.response = data["bid"];
+        let listadd_allotment: any[]
+        this.loteList = this.response.add_allotment;
+        listadd_allotment = this.response.add_allotment;
+        listadd_allotment.map((item, index) => this.loteListIndex = index);
+        this.spinnerService.hide();
+      }
+    })
   }
 
 

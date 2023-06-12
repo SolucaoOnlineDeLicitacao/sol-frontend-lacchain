@@ -105,10 +105,12 @@ export class UpdateCostItemsComponent implements OnInit {
       unitMeasure: this.form.controls['unitMeasure'].value,
       categoryId: this.form.controls['category'].value,
       productId: this.form.controls['product'].value,
+      product_relation:'string',
       specification: this.form.controls['specification'].value,
       sustainable: this.form.controls['sustainable'].value,
     }
-    this.costItemsService.update(this.localStorage.getDataCostItems()._id, this.request).subscribe({
+    console.log(this.request)
+    this.costItemsService.update(this.response._id, this.request).subscribe({
       next: (success) => {
         this.toastrService.success('Item editado com sucesso!', '', { progressBar: true });
         this.router.navigate(['/pages/itens-custo']);

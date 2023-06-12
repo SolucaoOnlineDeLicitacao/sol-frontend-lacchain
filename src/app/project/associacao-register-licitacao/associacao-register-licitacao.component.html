@@ -34,11 +34,7 @@
 							<select type="text" formControlName="insurance" style="text-indent:20px;"
 								class="form-control" id="insurance">
 								<option selected readonly disabled [value]="''">Selecione...</option>
-								<option value="Convênio 1">Convênio 1</option>
-								<option value="Convênio 2">Convênio 2</option>
-								<option value="Convênio 3">Convênio 3</option>
-								<option value="Convênio 4">Convênio 4</option>
-								<option value="Convênio 5">Convênio 5</option>
+								<option *ngFor="let user of convenioList" [value]="user.association.name">{{ user.association.name }}</option>
 							</select>
 
 							<div *ngIf="form.controls['insurance'].errors?.['required'] && isSubmit"
@@ -335,27 +331,23 @@
 							</div>
 						</div>
 
-						<div class="col-12 mt-3">
+						<div *ngIf="form.controls['modality'].value !== 'openClosed'" class="col-12 mt-3">
 							<h4>Convidar Fornecedores</h4>
 						</div>
 
-						<div class="col-sm-12 col-md-9 mt-3">
+						<div *ngIf="form.controls['modality'].value !== 'openClosed'" class="col-sm-12 col-md-9 mt-3">
 							<div class="input-group">
 								<input type="text" formControlName="inviteSuppliers" class="form-control" placeholder="Busque por fornecedores">
 								<div class="input-group-append">
 									<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
 									<div class="dropdown-menu">
-										<a class="dropdown-item" (click)="selectSupplier('Fornecedor 1')">Fornecedor 1</a>
-										<a class="dropdown-item" (click)="selectSupplier('Fornecedor 2')">Fornecedor 2</a>
-										<a class="dropdown-item" (click)="selectSupplier('Fornecedor 3')">Fornecedor 3</a>
-										<a class="dropdown-item" (click)="selectSupplier('Fornecedor 4')">Fornecedor 4</a>
-										<a class="dropdown-item" (click)="selectSupplier('Fornecedor 5')">Fornecedor 5</a>
+										<a class="dropdown-item" *ngFor="let user of userList" (click)="selectSupplier(user.name)">{{ user.name }}</a>
 									</div>
 								</div>
 							</div>
 						</div>
 
-						<div class="d-flex align-self-end w100 col-md-3">
+						<div *ngIf="form.controls['modality'].value !== 'openClosed'" class="d-flex align-self-end w100 col-md-3">
 							<button class="w-100 py-2 br-10 align-self-end com btn btn-dark" (click)="addSupplier()">
 								+ Adicionar
 							</button>
@@ -380,7 +372,7 @@
 				<div class="mt-5">
 					<div class="row">
 						<div class="col-md-6">
-							<a href="/pages/fornecedor" type="button" class="bg-light btn-lg btn-block mb-4 text-center">
+							<a href="/pages/dashboard" type="button" class="bg-light btn-lg btn-block mb-4 text-center">
 								Cancelar
 							</a>
 						</div>

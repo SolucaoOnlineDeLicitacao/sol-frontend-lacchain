@@ -22,7 +22,6 @@ export class AssociacaoLicitacaoComponent {
   }
 
   ngOnInit(): void {
-    this.ngxSpinnerService.show();
     this._associationBidService.list().subscribe({
       next: data => {
         this.ngxSpinnerService.hide();
@@ -34,6 +33,10 @@ export class AssociacaoLicitacaoComponent {
 
   detailBids(i: any) {
     this.router.navigate(['/pages/licitacoes/licitacao-data', i._id]);
+  }
+
+  editBids(i: any) {
+    this.router.navigate(['/pages/licitacoes/licitacao-edit', i._id]);
   }
 
 }

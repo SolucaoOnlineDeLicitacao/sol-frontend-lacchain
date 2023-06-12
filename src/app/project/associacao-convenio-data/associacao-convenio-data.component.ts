@@ -1,46 +1,50 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AllConvenios, convenioList } from 'src/services/association-convenio.mock';
-import { AuthService } from 'src/services/auth.service';
+import { Component } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ConvenioResponseDto, WorkPlanInterface } from "src/dtos/convenio/convenio-response.dto";
+import { AllConvenios, convenioList } from "src/services/association-convenio.mock";
+import { AuthService } from "src/services/auth.service";
 
 @Component({
-  selector: 'app-associacao-convenio-data',
-  templateUrl: './associacao-convenio-data.component.html',
-  styleUrls: ['./associacao-convenio-data.component.scss']
+  selector: "app-associacao-convenio-data",
+  templateUrl: "./associacao-convenio-data.component.html",
+  styleUrls: ["./associacao-convenio-data.component.scss"],
 })
 export class AssociacaoConvenioDataComponent {
-
   convenio!: AllConvenios | undefined;
   blockSupplier!: FormGroup;
   idSupplier!: boolean;
+
+  response: ConvenioResponseDto;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     public authService: AuthService,
+    private route: ActivatedRoute
   ) {
     this.blockSupplier = this.formBuilder.group({
-      message: [''],
+      message: [""],
     });
   }
 
   ngOnInit(): void {
-    console.log(this.authService.getAuthenticatedUser());
-
-
-    const convenioId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    this.convenio = convenioList.find(convenio => convenio._id === convenioId);
+    this.route.data.subscribe({
+      next: data => {
+        this.response = data["agreement"];
+        console.log(this.response);
+      },
+    });
   }
 
   open(contentBlocked: any) {
-    this.modalService.open(contentBlocked, { size: 'lg' });
+    this.modalService.open(contentBlocked, { size: "lg" });
   }
 
   openUnblockModal(contentUnBlocked: any) {
-    this.modalService.open(contentUnBlocked, { size: 'lg' });
+    this.modalService.open(contentUnBlocked, { size: "lg" });
   }
 
   exit() {
@@ -53,4 +57,11 @@ export class AssociacaoConvenioDataComponent {
     this.isSectionOpen = !this.isSectionOpen;
   }
 
+  sumValues(item: WorkPlanInterface[]) {
+    return item.reduce((ac, item) => ac + item.product.reduce((acc, curr) => acc + curr.unitValue, 0), 0);
+  }
+
+  sum(item:{ quantity: number; unitValue: number; costItems: any; _id: string }[]){
+    return item.reduce((ac, item) => ac + item.quantity * item.unitValue, 0);
+  }
 }

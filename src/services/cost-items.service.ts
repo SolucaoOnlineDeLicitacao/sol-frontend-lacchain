@@ -38,9 +38,10 @@ export class CostItemsService extends BaseService {
       .pipe(map(this.extractData), catchError(this.serviceError));
   }
 
-  update(_id: string, dto: CostItemsRegisterDto) {
+  update(_id: string, dto: CostItemsRegisterDto): Observable<ConvenioResponseDto> {
     return this.httpClient
-      .put<CostItemsResponseDto>(`${this.url}/update-by-id/${_id}`, dto, this.authorizedHeader);
+      .put(`${this.url}/update-by-id/${_id}`, dto, this.authorizedHeader)
+      .pipe(map(this.extractData), catchError(this.serviceError));
   }
 
   delete(_id: string) {

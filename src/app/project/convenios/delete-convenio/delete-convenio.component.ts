@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { ConvenioResponseDto } from 'src/dtos/convenio/convenio-response.dto';
 import { ConvenioService } from 'src/services/convenio.service';
 import { LocalStorageService } from 'src/services/local-storage.service';
 
@@ -12,10 +13,11 @@ import { LocalStorageService } from 'src/services/local-storage.service';
 })
 export class DeleteConvenioComponent implements OnInit {
 
+  @Input() convenio: ConvenioResponseDto;
+
 
   constructor(
     private ngxSpinnerService: NgxSpinnerService,
-    public localStorage: LocalStorageService,
     private toastrService: ToastrService,
     private ngbModal: NgbModal,
     private convenioService: ConvenioService,
@@ -26,7 +28,7 @@ export class DeleteConvenioComponent implements OnInit {
   }
 
   deleteItem() {
-    this.convenioService.deleteConvenio(this.localStorage.getEditConvenio()).subscribe({
+    this.convenioService.deleteConvenio(this.convenio._id).subscribe({
       next: success => {
         this.toastrService.success('Exluido com sucesso!', '', { progressBar: true });
         this.ngbModal.dismissAll();

@@ -85,6 +85,7 @@ export class RegisterCostItemsComponent implements OnInit {
       unitMeasure: this.form.controls['unitMeasure'].value,
       categoryId: this.form.controls['category'].value,
       productId: this.form.controls['product'].value,
+      product_relation: 'string',
       specification: this.form.controls['specification'].value,
       sustainable: this.form.controls['sustainable'].value,
     }

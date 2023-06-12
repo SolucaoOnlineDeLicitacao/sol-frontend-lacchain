@@ -2,7 +2,7 @@ import { UnitMeasureEnum } from "src/enums/unit-measure.enum";
 
 export abstract class CostItemsResponseDto {
 
-    _id?: string;
+    _id: string;
     code?: string;
     name?: string;
     unitMeasure?: UnitMeasureEnum;
@@ -10,4 +10,5 @@ export abstract class CostItemsResponseDto {
     product?: any;
     specification?: string;
     sustainable?: string;
+    product_relation?: string
 }
