@@ -9,5 +9,4 @@ export class ContractsComponent {
   situationWaiting: boolean = true;
   situationWaitingSupplier: boolean = false;
   situationDone: boolean = false;
-
 }

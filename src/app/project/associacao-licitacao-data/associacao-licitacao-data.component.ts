@@ -99,7 +99,6 @@ export class AssociacaoLicitacaoDataComponent {
 
     forkJoin(observables).subscribe({
       next: (responses) => {
-        console.log(responses);
         this.invitedSuppliersInfo = responses;
       },
       error: (err) => {

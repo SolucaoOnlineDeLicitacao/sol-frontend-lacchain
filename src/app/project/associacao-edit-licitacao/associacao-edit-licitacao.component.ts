@@ -7,6 +7,7 @@ import { AssociationBidRequestDto } from 'src/dtos/association/association-bid.d
 import { UserListResponseDto } from 'src/dtos/user/user-list-response.dto';
 import { UserTypeEnum } from 'src/enums/user-type.enum';
 import { AssociationBidService } from 'src/services/association-bid.service';
+import { SupplierService } from 'src/services/supplier.service';
 import { UserService } from 'src/services/user.service';
 
 @Component({
@@ -29,7 +30,8 @@ export class AssociacaoEditLicitacaoComponent {
   totalFiles: File[] = [];
   lots: any[] = [];
   item: any[] = [];
-  userList!: UserListResponseDto[];
+  // userList!: UserListResponseDto[];
+  userList: any;
   licitacaoId: any;
 
   constructor(
@@ -39,6 +41,7 @@ export class AssociacaoEditLicitacaoComponent {
     private associationBidService: AssociationBidService,
     private userService: UserService,
     private route: ActivatedRoute,
+    private supplierService: SupplierService
   ) {
     this.form = this.formBuilder.group({
       description: ['', [Validators.required]],
@@ -66,7 +69,7 @@ export class AssociacaoEditLicitacaoComponent {
 
   ngOnInit(): void {
 
-    this.userService.listByType(UserTypeEnum.fornecedor).subscribe({
+    this.supplierService.supplierList().subscribe({
       next: (data) => {
         this.userList = data;
         console.log(this.userList);
@@ -76,6 +79,17 @@ export class AssociacaoEditLicitacaoComponent {
         console.error(err);
       }
     })
+
+    // this.userService.listByType(UserTypeEnum.fornecedor).subscribe({
+    //   next: (data) => {
+    //     this.userList = data;
+    //     console.log(this.userList);
+
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //   }
+    // })
     this.licitacaoId = this.route.snapshot.paramMap.get('_id');
 
     if (this.licitacaoId) {
@@ -206,7 +220,7 @@ export class AssociacaoEditLicitacaoComponent {
     }
 
     const supplierId = this.formAddLots.controls['inviteSuppliers'].value;
-    const selectedSupplier = this.userList.find(user => user.name === supplierId);
+    const selectedSupplier = this.userList.find((user: any) => user.name === supplierId);
     if (selectedSupplier && !this.invitedSupplier.includes(selectedSupplier._id)) {
       this.invitedSupplierId.push(selectedSupplier._id);
     }
@@ -256,7 +270,6 @@ export class AssociacaoEditLicitacaoComponent {
         files: this.supplierImg,
         add_item: [...this.item],
       };
-
       this.lots.push(newAllotment);
       this.item = [];
       this.formAddLots.reset();

@@ -29,9 +29,6 @@ export class AssociacaoContratosDataComponent {
   }
 
   ngOnInit(): void {
-    console.log(this.authService.getAuthenticatedUser());
-
-
     const convenioId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
     this.convenio = convenioList.find(convenio => convenio._id === convenioId);
   }

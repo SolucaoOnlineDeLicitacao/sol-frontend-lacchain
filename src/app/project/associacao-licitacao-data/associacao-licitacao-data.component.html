@@ -212,7 +212,7 @@
               <div class="col-md-3 p-0 d-flex justify-content-end">
                 <div class="pr-5">
                   <h6>Documento</h6>
-                  <h6>{{response.document | mask : '00.000.000/0000-00'}}</h6>
+                  <h6>{{response.cpf | mask : '000.000.000-00'}}</h6>
                 </div>
                 <img (click)="toggleSectionTwo()" style="width: 16px;"
                   [src]="isSectionTwoOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
@@ -227,23 +227,23 @@
               <div class="d-flex align-items-center justify-content-between p-0">
                 <div class="col-md-4 p-0">
                   <h6>Longradouro</h6>
-                  <h6>Rua Maria Cândida Aparecida</h6>
+                  <h6>{{response.address.complement}}</h6>
                 </div>
                 <div class="col-md-2 p-0">
                   <h6>Número</h6>
-                  <h6>191</h6>
+                  <h6>{{response.address.number}}</h6>
                 </div>
                 <div class="col-md-2 p-0">
                   <h6>Bairro</h6>
-                  <h6>Vila são josé</h6>
+                  <h6>{{response.address.neighborhood}}</h6>
                 </div>
                 <div class="col-md-2 p-0">
                   <h6>Cidade</h6>
-                  <h6>São Paulo</h6>
+                  <h6>{{response.address.city}}</h6>
                 </div>
                 <div class="col-md-2 p-0">
                   <h6>Cep</h6>
-                  <h6>00000-000</h6>
+                  <h6>{{response.address.zipCode}}</h6>
                 </div>
               </div>
             </div>

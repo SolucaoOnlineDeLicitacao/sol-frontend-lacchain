@@ -34,7 +34,6 @@ export class AssociacaoConvenioDataComponent {
     this.route.data.subscribe({
       next: data => {
         this.response = data["agreement"];
-        console.log(this.response);
       },
     });
   }
@@ -61,7 +60,7 @@ export class AssociacaoConvenioDataComponent {
     return item.reduce((ac, item) => ac + item.product.reduce((acc, curr) => acc + curr.unitValue, 0), 0);
   }
 
-  sum(item:{ quantity: number; unitValue: number; costItems: any; _id: string }[]){
+  sum(item: { quantity: number; unitValue: number; costItems: any; _id: string }[]) {
     return item.reduce((ac, item) => ac + item.quantity * item.unitValue, 0);
   }
 }

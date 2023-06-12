@@ -80,22 +80,20 @@ export class AssociacaoRegisterLicitacaoComponent {
       }
     })
 
-    this.userService.listByType(UserTypeEnum.fornecedor).subscribe({
-      next: (data) => {
-        this.userList = data;
-        console.log(this.userList, 'lisat de fornecedores');
+    // this.userService.listByType(UserTypeEnum.fornecedor).subscribe({
+    //   next: (data) => {
+    //     this.userList = data;
+    //     console.log(this.userList);
 
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //   }
+    // })
 
     this.convenioService.getConvenio().subscribe({
       next: (data) => {
         this.convenioList = data;
-        console.log('sdgfksdnmgosdngojkn',this.convenioList);
-
       },
       error: (err) => {
         console.error(err);
@@ -257,7 +255,6 @@ export class AssociacaoRegisterLicitacaoComponent {
         files: this.supplierImg,
         add_item: [...this.item],
       };
-
       this.lots.push({ ...newAllotment });
       this.item = [];
       this.formAddLots.reset();

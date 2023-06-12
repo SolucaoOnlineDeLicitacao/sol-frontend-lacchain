@@ -23,7 +23,6 @@ export class AssociacaoConveniosComponent {
     this.conveniosService.getConvenio().subscribe({
       next: data => {
         this.convenios = data;
-        console.log(data)
       },
       error: error => {
         console.error(error)

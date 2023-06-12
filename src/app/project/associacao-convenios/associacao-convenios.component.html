@@ -15,7 +15,9 @@
             </div>
             <div class="col-12 col-md-2">
                 <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
-                <h5 class="f-size-16 text-primary">{{item?.status}}</h5>
+                <h5 *ngIf="item?.status ==='canceled'" class="f-size-16 text-danger">Cancelada</h5>
+                <h5 *ngIf="item?.status ==='concluded'" class="f-size-16 text-success">Concluida</h5>
+                <h5 *ngIf="item?.status ==='inExecution'" class="f-size-16 text-warning">Em execução</h5>
             </div>
         </div>
 
