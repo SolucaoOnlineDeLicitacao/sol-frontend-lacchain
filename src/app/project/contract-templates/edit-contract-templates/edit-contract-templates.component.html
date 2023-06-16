@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h1 class="text-dark"><strong>Editar Modelo de Contrato</strong></h1>
+            <hr class="bg-primary">
+        </div>
+    </div>
+    <div class="col-md-9">
+        <form [formGroup]="form" class="row" (ngSubmit)="onSubmit()">
+            <div class="col-md-6 mt-2">
+                <label class="text-dark" for="name"><strong>Nome</strong></label>
+                <input type="text" class="form-control br-10 py-4" formControlName="name" id="name" placeholder="nome">
+            </div>
+            <div class="col-md-6 mt-2">
+                <label class="text-dark text-capitalize" for="licitacoes"><strong>Licitações</strong></label>
+                <select formControlName="licitacoes" #licitacoes class="form-control br-10 h50" id="licitacoes">
+                    <option selected readonly disabled [value]="''">Selecione...</option>
+                    <option *ngFor="let item of licitacoesList " value="{{item._id}}" [selected] = "item._id === licitacoes">Licitação {{item.bid_count}}/{{item.createdAt | date:'yyyy'}}</option>
+                </select>
+            </div>
+            <div class="col-12 mb-5">
+                <label class="text-dark text-capitalize" for="licitacoes"><strong>Modelo de contrato</strong></label>
+                <angular-editor [(ngModel)]="htmlContent" formControlName="contract" [config]="config"></angular-editor>
+                <div class="row d-flex justify-content-end">
+                    <div class="col-md-4 mt-4 ">
+                        <button (click)="backContact()" type="button"
+                            class="btn btn-light br-10 w-100 color-patter h50">
+                            <strong>Cancelar</strong>
+                        </button>
+                    </div>
+                    <div class="col-md-4 mt-4 ">
+                        <button type="submit" class="btn bg-pattern text-light br-10 w-100 h50">
+                            <strong>Salvar</strong>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

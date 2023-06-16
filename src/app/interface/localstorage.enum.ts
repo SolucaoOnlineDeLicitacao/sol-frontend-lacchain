@@ -8,7 +8,8 @@ export enum LocalStorageEnum {
     plano = 'plano',
     editcostitems = 'editcostitems',
     editcategoria = 'editcategoria',
-    editprodutos = 'editprodutos'
+    editprodutos = 'editprodutos',
+    editModelContracitems= 'editModelContracitems'
 
   }
   

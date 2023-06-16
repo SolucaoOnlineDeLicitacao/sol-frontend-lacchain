@@ -46,6 +46,11 @@ export class LocalStorageService {
     return data === null ? undefined : JSON.parse(data);
   }
 
+  getDataModelContractId() {
+    const data = localStorage.getItem(LocalStorageEnum.editModelContracitems);
+    return data === null ? undefined : JSON.parse(data);
+  }
+
   getDataProdutos() {
     const data = localStorage.getItem(LocalStorageEnum.editprodutos);
     return data === null ? undefined : JSON.parse(data);

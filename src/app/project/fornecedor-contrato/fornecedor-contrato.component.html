@@ -19,7 +19,7 @@
         <div *ngFor="let item of contratosList | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }; let i= index;" class="col-md-11 border mt-2 br-10 py-3 m-3">
             <div class="row">
                 <div class="col-md-12">
-                    <h2 class="mb-0 text-dark"><strong>Contrato {{item.titulo}}</strong></h2>
+                    <h2 class="mb-0 text-dark"><strong>Contrato</strong></h2>
                 </div>
                 <div class="col-md-12">
                     <div class="row d-flex justify-content-between">
@@ -27,11 +27,11 @@
                             <div class="row">
                                 <div class="col-md-4 mt-2 ">
                                     <h6 class="font-poppins f-size-14 text-secondary">Licitação</h6>
-                                    <h5 class="f-size-16">{{item.licitacao}}</h5>
+                                    <h5 class="f-size-16">{{item.contract_number}}</h5>
                                 </div>
                                 <div class="col-md-2 mt-2 ">
                                     <h6 class="font-poppins f-size-14 text-secondary">Valor</h6>
-                                    <h5 class="f-size-16">{{item.valor | currency: 'BRL'}}</h5>
+                                    <h5 class="f-size-16">{{item.value }}</h5>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +40,8 @@
                                 <div class="col-md-4 text-capitalize">
                                     <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
                                     <h5 *ngIf="item.status ==='Assinado'" class="f-size-16 text-primary">{{item.status}}</h5>
-                                    <h5 *ngIf="item.status ==='Aguardando Assinatura'" class="f-size-16 text-dark"> {{item.status}}</h5>
+                                    <h5 *ngIf="item.status ==='aguardando_assinaturas'" class="f-size-16 text-dark"> Aguardando Assinaturas</h5>
+                                    <h5 *ngIf="item.status ==='concluido'" class="f-size-16 text-dark"> {{item.status}}</h5>
                                 </div>
                                 <div class="col-md-5 d-flex align-items-center">
                                     <button type="button" (click)="detailContract(item)" class=" w-100 h50 br-10 btn btn-dark"><strong>Detalhes</strong></button>

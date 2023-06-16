@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { UserListResponseDto } from 'src/dtos/user/user-list-response.dto';
+import { SupplierService } from 'src/services/supplier.service';
 import { UserService } from 'src/services/user.service';
 
 @Component({
@@ -15,18 +17,13 @@ export class RegisterUserFornecedorComponent implements OnInit {
   form!: FormGroup;
   isSubmit: boolean = false;
 
-  supplierList = [
-    { id: 1, name: 'Fornecedor 1' },
-    { id: 2, name: 'Fornecedor 2' },
-    { id: 3, name: 'Fornecedor 3' },
-    { id: 4, name: 'Fornecedor 4' },
-    { id: 5, name: 'Fornecedor 5' }
-  ];
+  supplierList: any = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
     private ngxSpinnerService: NgxSpinnerService,
+    private supplierService: SupplierService,
     private toastrService: ToastrService,
     private router: Router
   ) {
@@ -42,7 +39,14 @@ export class RegisterUserFornecedorComponent implements OnInit {
 
 
   ngOnInit(): void {
-
+    this.supplierService.supplierList().subscribe({
+      next: (success) => {
+        this.supplierList = success;
+      },
+      error: (error) => {
+        console.error(error.error.errors[0]);
+      }
+    });
   }
 
   onSubmit() {

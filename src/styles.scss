@@ -65,8 +65,19 @@ table th {
   font-weight: 500;
 }
 
+button:focus,
+input:focus {
+  box-shadow: 0 0 0 0 !important;
+  outline: none !important;
+}
+
 .modal-open .modal {
   backdrop-filter: blur(19px);
+}
+
+.modal-custom {
+  background-color: white !important;
+  border-radius: 16px !important;
 }
 
 .modal-content {
@@ -122,6 +133,7 @@ table th {
 .bg-pattern {
   background: var(--color-pattern);
 }
+
 .b-pattern {
   border: 1px solid var(--color-pattern);
 }
@@ -277,9 +289,11 @@ a:hover {
 .f-size-10 {
   font-size: 10px;
 }
+
 .h60 {
   height: 60px;
 }
+
 .bg-third {
   background: var(--color-third);
 }
@@ -491,6 +505,11 @@ button[disabled] {
   border-radius: 6px;
 }
 
+.accept-messege {
+  border: 1px solid #4ea5d7;
+  border-radius: 6px;
+}
+
 .danger-text {
   color: #f34c41;
   font-size: 14px;
@@ -543,8 +562,9 @@ button[disabled] {
 }
 
 .winning-proposal-border {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  // border-top-left-radius: 8px;
+  // border-top-right-radius: 8px;
+  border-radius: 8px !important;
   border: 1px solid #2cce71;
   background-color: #2cce71;
 }

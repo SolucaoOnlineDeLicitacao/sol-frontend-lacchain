@@ -1,14 +1,14 @@
 <div class="container">
     <div class="row mt-5">
         <div class="col-md-12">
-                            <h1 class="text-dark"><strong>Licitações</strong></h1>
+            <h1 class="text-dark"><strong>Licitações</strong></h1>
             <hr class="bg-primary">
         </div>
     </div>
     <div class="row ">
         <div class="col-md-8 mt-2">
-            <input type="text" class="form-control h50 br-10 text-dark" 
-                placeholder="Busque por nome, CPF, telefone ou e-mail do usuário"/>
+            <input type="text" class="form-control h50 br-10 text-dark"
+                placeholder="Busque por nome, CPF, telefone ou e-mail do usuário" />
         </div>
         <div class="col-md-3 mt-2">
             <div class="form-group">
@@ -22,37 +22,46 @@
 
         <div class="col-md-11">
             <div class="w-100 d-flex justify-content-end align-items-center">
-                <a (click)="toolSearch()" class="text-decoration-underline cursor-pointer align-self-end text-primary">Mais opções de pesquisa &nbsp; <i class="bi bi-caret-down-fill"></i></a>
+                <a (click)="toolSearch()"
+                    class="text-decoration-underline cursor-pointer align-self-end text-primary">Mais opções de pesquisa
+                    &nbsp; <i class="bi bi-caret-down-fill"></i></a>
             </div>
-            <br/>
+            <br />
             <div class="row" *ngIf="searchTool">
                 <div *ngIf="VALUEaLERT" class="col-md-12">
-                    <label class="f-size-14 text-danger"><strong>Valor inicial deve ser menor que o limite!</strong></label>
+                    <label class="f-size-14 text-danger"><strong>Valor inicial deve ser menor que o
+                            limite!</strong></label>
                 </div>
-                <br/>
+                <br />
                 <div class="col-md-3">
                     <label class="f-size-14 text-dark" for="valorde"><strong>{{DEaLERT}}</strong></label>
-                    <input type="tel" placeholder="R$" #de class="form-control w-100 h50 br-16" id="valorde" separatorLimit="100000000" prefix="R$" mask="0000" mask="separator.2" thousandSeparator="," />
+                    <input type="tel" placeholder="R$" #de class="form-control w-100 h50 br-16" id="valorde"
+                        separatorLimit="100000000" prefix="R$" mask="0000" mask="separator.2" thousandSeparator="," />
                 </div>
                 <div class="col-md-3">
                     <label class="f-size-14 text-dark" for="valorde"><strong>{{ATEaLERT}}</strong></label>
-                    <input type="tel" placeholder="R$" #ate class="form-control w-100 h50 br-16" id="valorde" separatorLimit="100000000"  prefix="R$" mask="0000" mask="separator.2" thousandSeparator="," />
+                    <input type="tel" placeholder="R$" #ate class="form-control w-100 h50 br-16" id="valorde"
+                        separatorLimit="100000000" prefix="R$" mask="0000" mask="separator.2" thousandSeparator="," />
                 </div>
                 <div class="col-md-3 mt-4">
-                    <button type="button" (click)="searchValue(de.value , ate.value)" class="bg-pattern mt-1 text-light w-100 h50 br-10"><strong>Pesquisar</strong></button>
+                    <button type="button" (click)="searchValue(de.value , ate.value)"
+                        class="bg-pattern mt-1 text-light w-100 h50 br-10"><strong>Pesquisar</strong></button>
                 </div>
                 <hr class="bg-primary mt-4">
             </div>
         </div>
 
-        <div *ngFor="let item of licitacoesId | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }; let i= index;" (click)="detailBids(item)" class="col-md-11 cursor-pointer border mt-2 br-10 py-3 m-3">
+        <div *ngFor="let item of licitacoesList | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }; let i= index;"
+            (click)="detailBids(item)" class="col-md-11 cursor-pointer border mt-2 br-10 py-3 m-3">
             <div class="row">
                 <div class="col-md-10">
-                    <h2 class="mb-0 text-dark"><strong>Licitação n° {{item.bid_count}} / {{item.createdAt | date: 'yyyy'}}</strong></h2>
+                    <h2 class="mb-0 text-dark"><strong>Licitação n° {{item.bid_count}} / {{item.createdAt | date:
+                            'yyyy'}}</strong></h2>
                 </div>
                 <div class="col-md-2 text-capitaliz">
                     <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
-                    <h5 *ngIf="item.status ==='awaiting'" style="color: #F1CF1C" class="f-size-16">Aguardando Liberação</h5>
+                    <h5 *ngIf="item.status ==='awaiting'" style="color: #F1CF1C" class="f-size-16">Aguardando Liberação
+                    </h5>
                     <h5 *ngIf="item.status ==='tiebreaker'" class="f-size-16 text-warning">Aguardando desempate</h5>
                     <h5 *ngIf="item.status ==='analysis'" class="f-size-16 text-info">Em Análise</h5>
                     <h5 *ngIf="item.status ==='deserted'" class="f-size-16 text-danger">Deserta</h5>
@@ -66,9 +75,7 @@
                 </div>
                 <div class="col-md-12 mt-2 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
-                    <ng-container *ngIf="associateListInfo && associateListInfo[i]"> 
-                        <h5>{{ associateListInfo[i] }}</h5> 
-                      </ng-container> 
+                    <h5>{{ listAssociationInfo?.[i]?.name || '' }}</h5>
                 </div>
                 <div class="col-md-4 mt-2 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Data de
@@ -81,11 +88,54 @@
                     <h5 class="f-size-16">{{item.end_at | date: 'dd/MM/yyyy'}}</h5>
                 </div>
             </div>
+            <div *ngFor="let item of licitacoesList let i= index;" (click)="detailBids(item)">
+                <div *ngIf="item.modalidade === 'open'" class="col-md-11 cursor-pointer border mt-2 br-10 py-3 m-3">
+                 <div class="row">
+                     <div class="col-md-10">
+                         <h2 class="mb-0 text-dark"><strong>Licitação n° {{item.bid_count}} / {{item.createdAt | date: 'yyyy'}}</strong></h2>
+                     </div>
+                     <div class="col-md-2 text-capitaliz">
+                         <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
+                         <h5 *ngIf="item.status ==='awaiting'" style="color: #F1CF1C" class="f-size-16">Aguardando Liberação</h5>
+                         <h5 *ngIf="item.status ==='tiebreaker'" class="f-size-16 text-warning">Aguardando desempate</h5>
+                         <h5 *ngIf="item.status ==='analysis'" class="f-size-16 text-info">Em Análise</h5>
+                         <h5 *ngIf="item.status ==='deserted'" class="f-size-16 text-danger">Deserta</h5>
+                         <h5 *ngIf="item.status ==='canceled'" class="f-size-16 text-danger">Cancelada</h5>
+                         <h5 *ngIf="item.status ==='failed'" class="f-size-16 text-danger">Falhou</h5>
+                         <h5 *ngIf="item.status ==='draft'" class="f-size-16 text-dark">Em Rascunho</h5>
+                         <h5 *ngIf="item.status ==='released'" class="f-size-16 text-success">Lançada</h5>
+                         <h5 *ngIf="item.status ==='open'" class="f-size-16 text-success">Aberta</h5>
+                         <h5 *ngIf="item.status ==='completed'" class="f-size-16 text-success">Concluida</h5>
+                         <h5 *ngIf="item.status ==='reopened'" class="f-size-16 text-success">Reaberta</h5>
+                     </div>
+                     <div class="col-md-12 mt-2 ">
+                         <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
+                         <h5 class="f-size-16">{{item.agreement}}</h5>
+                     </div>
+                     <div class="col-md-4 mt-2 ">
+                         <h6 class="font-poppins f-size-14 text-secondary">Data de
+                             Início</h6>
+                         <h5 class="f-size-16">{{item.start_at | date: 'dd/MM/yyyy'}}</h5>
+                     </div>
+                     <div class="col-md-4 mt-2 ">
+                         <h6 class="font-poppins f-size-14 text-secondary">Data de
+                             encerramento</h6>
+                         <h5 class="f-size-16">{{item.end_at | date: 'dd/MM/yyyy'}}</h5>
+                     </div>
+                 </div>
+             </div>  
+             </div>
+        </div>
+        <div *ngIf="licitacoesId <= 0 || licitacoesList <= 0" class="col-md-11 cursor-pointer  mt-2 br-10 py-3 m-3">
+            <img src="../../../assets/images/notfound.webp" class="w-100 h-auto" />
+            <p class="w-100 text-center">
+                Nenhuma Licitação adicionada
+            </p>
         </div>
         <div class="col-md-12">
             <div class="col-md-12 d-flex justify-content-end">
-                <pagination-controls (pageChange)="currentPage= $event"
-                previousLabel="Anterior" nextLabel="Próximo"></pagination-controls>
+                <pagination-controls (pageChange)="currentPage= $event" previousLabel="Anterior"
+                    nextLabel="Próximo"></pagination-controls>
             </div>
         </div>
 

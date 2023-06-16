@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { supplierList } from 'src/services/supplier.mock';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { EventEmitter } from '@angular/core';
+import { SupplierService } from '../../../../services/supplier.service';
 
 @Component({
   selector: 'app-delete-fornecedor',
@@ -11,17 +11,18 @@ import { EventEmitter } from '@angular/core';
   styleUrls: ['./delete-fornecedor.component.scss']
 })
 export class DeleteFornecedorComponent implements OnInit {
-  @Input() fornecedorId!: number;
+
+  @Input() fornecedor!: any;
   @Output() excluirFornecedor: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(
     private toastrService: ToastrService,
     private ngbModal: NgbModal,
-    public activeModal: NgbActiveModal
+    public activeModal: NgbActiveModal,
+    public _supplierService: SupplierService,
   ) { }
 
   ngOnInit(): void {
-
     let cancel = document.getElementById('cancel');
     cancel?.focus();
   }
@@ -35,15 +36,11 @@ export class DeleteFornecedorComponent implements OnInit {
     this.activeModal.dismiss();
   }
 
-  deleteSupplierById(): void {
+  async deleteSupplierById(): Promise<void> {
+    await this._supplierService.deleteById(this.fornecedor._id).subscribe((response: any) => {
+      if (response.success)
+        this.toastrService.success('Fornecedor excluído com sucesso!');
+    });
 
-    const index = supplierList.findIndex(supplier => supplier._id === this.fornecedorId);
-
-    if (index !== -1) {
-      supplierList.splice(index, 1);
-      this.toastrService.success('Fornecedor excluído com sucesso!');
-    }
   }
-
-
 }

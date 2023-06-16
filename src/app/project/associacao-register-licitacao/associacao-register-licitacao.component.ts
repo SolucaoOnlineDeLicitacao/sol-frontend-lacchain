@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AllotmentRequestDto, ItemRequestDto } from 'src/app/interface/licitacao.interface';
 import { AssociationBidRequestDto } from 'src/dtos/association/association-bid.dto';
-import { UserListResponseDto } from 'src/dtos/user/user-list-response.dto';
-import { UserTypeEnum } from 'src/enums/user-type.enum';
+import { CostItemsResponseDto } from 'src/dtos/cost-items/cost-items-response.dto';
+import { BidStatusEnum } from 'src/enums/bid-status.enum';
 import { AssociationBidService } from 'src/services/association-bid.service';
 import { ConvenioService } from 'src/services/convenio.service';
+import { CostItemsService } from 'src/services/cost-items.service';
 import { SupplierService } from 'src/services/supplier.service';
 import { UserService } from 'src/services/user.service';
 
@@ -22,27 +24,32 @@ export class AssociacaoRegisterLicitacaoComponent {
   formAddLots!: FormGroup;
   isSubmit: boolean = false;
   selectedFile: File | null = null;
-  invitedSupplier: string[] = [];
-  invitedSupplierId: string[] = [];
+  invitedSupplier: any[] = [];
+  invitedSupplierId: any[] = [];
   supplierImg: string = '';
   selectedImageUrl: string;
   notImage = true;
+  notEdital = true;
+  notAta = true;
   selectFile: any = [];
   totalFiles: File[] = [];
   lots: any[] = [];
   item: any[] = [];
   userList: any;
-  // userList!: UserListResponseDto[];
   convenioList: any;
+  costItemsList: CostItemsResponseDto[];
+  selectedEdital: any;
+  selectedAta: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private toastrService: ToastrService,
     private router: Router,
     private associationBidService: AssociationBidService,
-    private userService: UserService,
     private convenioService: ConvenioService,
-    private supplierService: SupplierService
+    private supplierService: SupplierService,
+    private ngxSpinnerService: NgxSpinnerService,
+    private costItemsService: CostItemsService,
   ) {
     this.form = this.formBuilder.group({
       description: ['', [Validators.required]],
@@ -62,38 +69,34 @@ export class AssociacaoRegisterLicitacaoComponent {
       batchName: ['', [Validators.required]],
       deliveryTimeDays: ['', [Validators.required]],
       deliveryPlaceLots: ['', [Validators.required]],
-      quantity: ['', [Validators.required]],
+      quantity: ['20'],
       item: [''],
       inviteSuppliers: [''],
     });
   }
 
   ngOnInit(): void {
+    this.costItemsService.list().subscribe({
+      next: success => {
+        this.costItemsList = success;
+      },
+      error: error => {
+        console.log(error);
+      },
+    });
+
     this.supplierService.supplierList().subscribe({
       next: (data) => {
         this.userList = data;
-        console.log(this.userList);
-
       },
       error: (err) => {
         console.error(err);
       }
     })
 
-    // this.userService.listByType(UserTypeEnum.fornecedor).subscribe({
-    //   next: (data) => {
-    //     this.userList = data;
-    //     console.log(this.userList);
-
-    //   },
-    //   error: (err) => {
-    //     console.error(err);
-    //   }
-    // })
-
     this.convenioService.getConvenio().subscribe({
       next: (data) => {
-        this.convenioList = data;
+        this.convenioList = data.filter((item: any) => !!item.association);
       },
       error: (err) => {
         console.error(err);
@@ -116,28 +119,32 @@ export class AssociacaoRegisterLicitacaoComponent {
 
     let newBid: AssociationBidRequestDto;
 
-    if (!this.lots || this.lots.length === 0) {
+    console.log('teste', this.lots)
+
+    if (!this.item || this.item.length === 0) {
       newBid = {
         description: this.form.controls['description'].value,
-        status: 'draft',
-        agreement: this.form.controls['insurance'].value,
+        status: BidStatusEnum.draft,
+        agreementId: this.form.controls['insurance'].value,
         classification: this.form.controls['classification'].value,
         start_at: this.form.controls['initialDate'].value,
         end_at: this.form.controls['closureDate'].value,
-        days_to_delivery: this.form.controls['executionDays'].value,
-        days_to_tiebreaker: this.form.controls['timebreakerDays'].value,
+        days_to_delivery: this.form.controls['executionDays'].value.toString(),
+        days_to_tiebreaker: this.form.controls['timebreakerDays'].value.toString(),
         local_to_delivery: this.form.controls['deliveryPlace'].value,
         bid_type: this.form.controls['biddingType'].value,
         modality: this.form.controls['modality'].value,
         aditional_site: this.form.controls['adicionalSite'].value,
-        add_allotment: this.lots,
+        add_allotment: this.item,
         invited_suppliers: this.invitedSupplierId,
+        editalFile: this.selectedEdital,
+        ataFile: this.selectedAta,
       };
     } else {
       newBid = {
         description: this.form.controls['description'].value,
-        status: 'awaiting',
-        agreement: this.form.controls['insurance'].value,
+        status: BidStatusEnum.draft,
+        agreementId: this.form.controls['insurance'].value,
         classification: this.form.controls['classification'].value,
         start_at: this.form.controls['initialDate'].value,
         end_at: this.form.controls['closureDate'].value,
@@ -147,22 +154,25 @@ export class AssociacaoRegisterLicitacaoComponent {
         bid_type: this.form.controls['biddingType'].value,
         modality: this.form.controls['modality'].value,
         aditional_site: this.form.controls['adicionalSite'].value,
-        add_allotment: this.lots,
+        add_allotment: this.item,
         invited_suppliers: this.invitedSupplierId,
+        editalFile: this.selectedEdital,
+        ataFile: this.selectedAta,
       };
     }
-
-    console.log(newBid);
+    
+    this.ngxSpinnerService.show();
 
     this.associationBidService.bidRegister(newBid).subscribe({
       next: (data) => {
         this.toastrService.success('Licitação criada com sucesso!', '', { progressBar: true, });
+        this.ngxSpinnerService.hide();
         this.router.navigate(['/pages/dashboard']);
       },
       error: (error) => {
         this.toastrService.error('Não foi possível criar a Licitação, verifique os campos', '', { progressBar: true, });
+        this.ngxSpinnerService.hide();
       }
-
     });
 
   }
@@ -191,25 +201,28 @@ export class AssociacaoRegisterLicitacaoComponent {
     this.selectedFile = event.target.files[0] as File;
   }
 
-  selectSupplier(supplier: string) {
-    this.formAddLots.controls['inviteSuppliers'].setValue(supplier);
+  selectSupplier(supplierId: string) {
+    for (let iterator of this.userList) {
+      if (iterator._id == supplierId) {
+        return { _id: supplierId, name: iterator.name };
+      }
+    }
+
+    return null;
   }
 
   addSupplier() {
-    const supplier = this.formAddLots.controls['inviteSuppliers'].value;
-    if (supplier.trim() !== '' && !this.invitedSupplier.includes(supplier)) {
-      this.invitedSupplier.push(supplier);
-    }
-
     const supplierId = this.formAddLots.controls['inviteSuppliers'].value;
-    const selectedSupplier = this.userList.find((user: any) => user.name === supplierId);
-    if (selectedSupplier && !this.invitedSupplier.includes(selectedSupplier._id)) {
-      this.invitedSupplierId.push(selectedSupplier._id);
+    const supplier = this.selectSupplier(supplierId);
+    if (supplier && !this.invitedSupplierId.includes(supplierId)) {
+      this.invitedSupplierId.push(supplierId);
+      this.invitedSupplier.push(supplier);
     }
   }
 
   removeSupplier(index: number) {
     this.invitedSupplier.splice(index, 1);
+    this.invitedSupplierId.splice(index, 1);
   }
 
   onSelectFileProductImage(event: any) {
@@ -230,22 +243,51 @@ export class AssociacaoRegisterLicitacaoComponent {
     }
   }
 
-  addItem() {
-    const newItem: ItemRequestDto = {
-      group: 'grupo',
-      item: this.formAddLots.controls['item'].value,
-      quantity: this.formAddLots.controls['quantity'].value,
-    };
+  onSelectFileEdital(event: any) {
+    if(event.target.files && event.target.files[0]){
+      this.notEdital = false;
+      var reader = new FileReader();
+      reader.onload = (event: any) => {
+        this.selectedEdital = event.target.result as string;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
 
-    this.item.push(newItem);
-    this.formAddLots.controls['item'].reset();
-    this.formAddLots.controls['quantity'].reset();
-    this.formAddLots.markAsPristine();
+  onSelectFileAta(event: any) {
+    if(event.target.files && event.target.files[0]){
+      this.notAta = false;
+      var reader = new FileReader();
+      reader.onload = (event: any) => {
+        this.selectedAta = event.target.result as string;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  }
+
+  addItem() {
+    const selectedItem = this.costItemsList.find(item => item._id === this.formAddLots.controls['item'].value);
+
+    if (selectedItem) {
+      const newItem: ItemRequestDto = {
+        group: 'grupo',
+        item: selectedItem.name || '',
+        quantity: this.formAddLots.controls['quantity'].value,
+      };
+
+      this.item.push(newItem);
+      this.formAddLots.controls['item'].reset();
+      this.formAddLots.controls['quantity'].reset();
+      this.formAddLots.markAsPristine();
+    }
+  }
+
+  getItemName(itemId: string): string {
+    const item = this.costItemsList.find(item => item._id === itemId);
+    return item && item.name ? item.name : '';
   }
 
   addLot() {
-    console.log(this.lots);
-
     if (this.item.length > 0) {
       const newAllotment: AllotmentRequestDto = {
         allotment_name: this.formAddLots.controls['batchName'].value,

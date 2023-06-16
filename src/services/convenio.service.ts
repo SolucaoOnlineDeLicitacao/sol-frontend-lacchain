@@ -18,10 +18,10 @@ export class ConvenioService extends BaseService {
   ) {
     super();
   }
-  getConvenio(): Observable<any> {
+  getConvenio(): Observable<any[]> {
     return this.httpClient
       .get(`${this.url}`, this.authorizedHeader)
-      .pipe(map(response => response), catchError(this.serviceError));
+      .pipe(map<any,any>(response => response), catchError(this.serviceError));
   }
 
   getConvenioById(convenioId: string): Observable<any> {

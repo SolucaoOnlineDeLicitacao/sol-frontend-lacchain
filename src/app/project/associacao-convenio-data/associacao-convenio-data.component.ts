@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ConvenioResponseDto, WorkPlanInterface } from "src/dtos/convenio/convenio-response.dto";
-import { AllConvenios, convenioList } from "src/services/association-convenio.mock";
 import { AuthService } from "src/services/auth.service";
 
 @Component({
@@ -12,7 +11,7 @@ import { AuthService } from "src/services/auth.service";
   styleUrls: ["./associacao-convenio-data.component.scss"],
 })
 export class AssociacaoConvenioDataComponent {
-  convenio!: AllConvenios | undefined;
+  convenio!: ConvenioResponseDto | undefined;
   blockSupplier!: FormGroup;
   idSupplier!: boolean;
 

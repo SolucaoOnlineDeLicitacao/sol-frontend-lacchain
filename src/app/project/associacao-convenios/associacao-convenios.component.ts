@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { ConvenioResponseDto } from 'src/dtos/convenio/convenio-response.dto';
-import { convenioList } from 'src/services/association-convenio.mock';
-import { licitacaoList } from 'src/services/association-licitacao.mock';
 import { ConvenioService } from 'src/services/convenio.service';
 
 @Component({

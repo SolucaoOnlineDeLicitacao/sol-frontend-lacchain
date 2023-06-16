@@ -9,6 +9,7 @@ import { ItemsItemGroupResponseDto } from 'src/dtos/item-group/item-of-group/ite
 import { ItemGroupRegisterResponseDto } from 'src/dtos/item-group/item-group-register-response.dto';
 import { ConvenioResponseDto, WorkPlanInterface } from 'src/dtos/convenio/convenio-response.dto';
 import { WorkPlanService } from 'src/services/work-plan.service';
+import { AgreementStatusEnum } from 'src/enums/agreement-status.enum';
 
 @Component({
   selector: 'app-dados-convenio',
@@ -22,14 +23,14 @@ export class DadosConvenioComponent {
   countItens: any;
 
   constructor(
-    private workPlanService:WorkPlanService,
+    private workPlanService: WorkPlanService,
     private ngxSpinnerService: NgxSpinnerService,
     private toastrService: ToastrService,
     public localStorage: LocalStorageService,
     private router: Router,
     private route: ActivatedRoute,
   ) {
-    
+
   }
 
   ngOnInit(): void {
@@ -62,7 +63,20 @@ export class DadosConvenioComponent {
 
 
   editPlano(item: WorkPlanInterface) {
-    this.router.navigate(['/pages/item-group/edit-group/'+item._id]);
+    this.router.navigate(['/pages/item-group/edit-group/' + item._id]);
+  }
+
+  handleAgreementStatus(item: AgreementStatusEnum) {
+    switch (item) {
+      case AgreementStatusEnum.canceled:
+        return 'Cancelado'
+      case AgreementStatusEnum.concluded:
+        return 'Concluido'
+      case AgreementStatusEnum.inExecution:
+        return 'Em execução'
+      default:
+        return ''
+    }
   }
 
 }

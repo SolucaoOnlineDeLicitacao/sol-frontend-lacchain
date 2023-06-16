@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { SupplierService } from 'src/services/supplier.service';
 import { UserService } from 'src/services/user.service';
 
 @Component({
@@ -16,19 +17,14 @@ export class UpdateUserFornecedorComponent implements OnInit {
   isSubmit: boolean = false;
   userId!: string;
 
-  supplierList = [
-    { id: 1, name: 'Fornecedor 1' },
-    { id: 2, name: 'Fornecedor 2' },
-    { id: 3, name: 'Fornecedor 3' },
-    { id: 4, name: 'Fornecedor 4' },
-    { id: 5, name: 'Fornecedor 5' }
-  ];
+  supplierList: any = []
 
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
     private ngxSpinnerService: NgxSpinnerService,
     private toastrService: ToastrService,
+    private supplierService: SupplierService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
@@ -66,6 +62,15 @@ export class UpdateUserFornecedorComponent implements OnInit {
           this.ngxSpinnerService.hide();
         }
       });
+    });
+
+    this.supplierService.supplierList().subscribe({
+      next: (success) => {
+        this.supplierList = success;
+      },
+      error: (error) => {
+        console.error(error.error.errors[0]);
+      }
     });
 
   }

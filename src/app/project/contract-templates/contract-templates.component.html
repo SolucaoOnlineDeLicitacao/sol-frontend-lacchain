@@ -1,0 +1,50 @@
+<div class="container-fluid">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h1><strong>Modelos de Contrato</strong></h1>
+            <hr class="bg-primary">
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-9">
+            <input type="text" class="form-control text-secondary input-height-border" placeholder="Busque por nome">
+        </div>
+        <div class="col-md-3">
+            <button [routerLink]="['/pages/modelo-contratos/novo-modelo']" type="button"
+                class="btn btn-dark br-10 btn-lg btn-block">Novo Modelo</button>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="table-responsive-sm">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="br-tabele bg-pattern text-light" scope="col">Nome</th>
+                            <th class="bg-pattern text-light" scope="col">Data de criação</th>
+                            <th class="bg-pattern text-light" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of templateList " class="border-right border-left">
+                            <th class="text-capitalize" scope="row">{{item.name}}</th>
+                            <td class="text-capitalize">{{item.createdAt}}</td>
+                            <td class="table_icon d-flex justify-content-end mx-2 align-items-center">
+                                <i (click)="editContract(item._id)" class="fa color-pattern h4 mb-0 fa-pencil-square-o mx-3"
+                                    aria-hidden="true"></i>
+                                <i (click)="openModalDelete(item, item._id)" class="fa text-danger h4 mb-0 fa-trash-o"
+                                    aria-hidden="true"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="row">
+                    <div class="col-md-12"><pagination-controls (pageChange)="currentPage = $event"
+                            previousLabel="Anterior" nextLabel="Próximo"></pagination-controls>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

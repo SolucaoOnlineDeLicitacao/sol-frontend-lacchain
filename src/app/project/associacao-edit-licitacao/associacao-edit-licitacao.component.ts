@@ -4,9 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AllotmentRequestDto, ItemRequestDto } from 'src/app/interface/licitacao.interface';
 import { AssociationBidRequestDto } from 'src/dtos/association/association-bid.dto';
+import { ConvenioResponseDto } from 'src/dtos/convenio/convenio-response.dto';
+import { CostItemsResponseDto } from 'src/dtos/cost-items/cost-items-response.dto';
 import { UserListResponseDto } from 'src/dtos/user/user-list-response.dto';
+import { BidStatusEnum } from 'src/enums/bid-status.enum';
 import { UserTypeEnum } from 'src/enums/user-type.enum';
 import { AssociationBidService } from 'src/services/association-bid.service';
+import { ConvenioService } from 'src/services/convenio.service';
+import { CostItemsService } from 'src/services/cost-items.service';
 import { SupplierService } from 'src/services/supplier.service';
 import { UserService } from 'src/services/user.service';
 
@@ -33,14 +38,17 @@ export class AssociacaoEditLicitacaoComponent {
   // userList!: UserListResponseDto[];
   userList: any;
   licitacaoId: any;
+  convenioList:ConvenioResponseDto[];
+  costItemsList: CostItemsResponseDto[];
 
   constructor(
     private formBuilder: FormBuilder,
     private toastrService: ToastrService,
     private router: Router,
     private associationBidService: AssociationBidService,
-    private userService: UserService,
+    private convenioService: ConvenioService,
     private route: ActivatedRoute,
+    private costItemsService: CostItemsService,
     private supplierService: SupplierService
   ) {
     this.form = this.formBuilder.group({
@@ -72,37 +80,24 @@ export class AssociacaoEditLicitacaoComponent {
     this.supplierService.supplierList().subscribe({
       next: (data) => {
         this.userList = data;
-        console.log(this.userList);
-
+        console.log(this.userList, 'lista fornecedores');
       },
       error: (err) => {
         console.error(err);
       }
     })
 
-    // this.userService.listByType(UserTypeEnum.fornecedor).subscribe({
-    //   next: (data) => {
-    //     this.userList = data;
-    //     console.log(this.userList);
-
-    //   },
-    //   error: (err) => {
-    //     console.error(err);
-    //   }
-    // })
     this.licitacaoId = this.route.snapshot.paramMap.get('_id');
 
     if (this.licitacaoId) {
       this.associationBidService.getById(this.licitacaoId).subscribe({
         next: (data: any) => {
-          this.licitacaoId
-          console.log(data);
-          const bidData: AssociationBidRequestDto = data as AssociationBidRequestDto;
+          const bidData: any = data;
 
           this.form.patchValue({
             description: bidData.description,
-            status: 'awaiting',
-            insurance: bidData.agreement,
+            status: bidData.status || 'awaiting',
+            insurance: bidData.agreement._id,
             classification: bidData.classification,
             initialDate: bidData.start_at,
             closureDate: bidData.end_at,
@@ -124,6 +119,24 @@ export class AssociacaoEditLicitacaoComponent {
     } else {
       this.toastrService.error('Não foi possível encontrar um ID válido para essa licitação', '', { progressBar: true });
     }
+
+    this.convenioService.getConvenio().subscribe({
+      next: (data) => {
+        this.convenioList = data.filter((item: any) => !!item.association);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
+
+    this.costItemsService.list().subscribe({
+      next: success => {
+        this.costItemsList = success;
+      },
+      error: error => {
+        console.log(error);
+      },
+    });
   }
 
   generateRandomId() {
@@ -144,8 +157,8 @@ export class AssociacaoEditLicitacaoComponent {
     if (!this.lots || this.lots.length === 0) {
       newBid = {
         description: this.form.controls['description'].value,
-        status: 'draft',
-        agreement: this.form.controls['insurance'].value,
+        status: BidStatusEnum.draft,
+        agreementId: this.form.controls['insurance'].value,
         classification: this.form.controls['classification'].value,
         start_at: this.form.controls['initialDate'].value,
         end_at: this.form.controls['closureDate'].value,
@@ -161,8 +174,8 @@ export class AssociacaoEditLicitacaoComponent {
     } else {
       newBid = {
         description: this.form.controls['description'].value,
-        status: 'awaiting',
-        agreement: this.form.controls['insurance'].value,
+        status: BidStatusEnum.draft,
+        agreementId: this.form.controls['insurance'].value,
         classification: this.form.controls['classification'].value,
         start_at: this.form.controls['initialDate'].value,
         end_at: this.form.controls['closureDate'].value,

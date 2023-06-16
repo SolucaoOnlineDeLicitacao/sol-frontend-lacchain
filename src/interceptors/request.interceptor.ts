@@ -29,7 +29,7 @@ export class RequestInterceptor implements HttpInterceptor {
         if (request.url.includes(environment.api.path) || request.url.includes(environment.api.server)) {
           if (resp instanceof HttpResponse) {
             return resp.clone({
-              body: resp.body.data ? resp.body.data : null,
+              body: resp.body.data ? resp.body.data : (resp.body ?? null),
             });
           }
         }

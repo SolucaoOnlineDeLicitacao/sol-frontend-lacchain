@@ -76,6 +76,11 @@ import { CostItemGetByIdResolve } from "../resolvers/get-cost-item-by-ic.resolve
 import { AgreementGetByIdResolve } from "../resolvers/agreement-get-by-id.resolver";
 import { AssociacaoEditLicitacaoComponent } from "./associacao-edit-licitacao/associacao-edit-licitacao.component";
 import { WorkPlanGetByIdResolve } from "../resolvers/workplan-get-by-id.resolver";
+import { NotfoundComponent } from "./notfound/notfound.component";
+import { ContractTemplatesComponent } from "./contract-templates/contract-templates.component";
+import { NewContractTemplatesComponent } from "./contract-templates/new-contract-templates/new-contract-templates.component";
+import { EditContractTemplatesComponent } from "./contract-templates/edit-contract-templates/edit-contract-templates.component";
+import { GetProposalsByBidIdResolve } from "../resolvers/get-proposals-by-bid-id.resolver";
 
 const routerConfig: Routes = [
   {
@@ -141,7 +146,7 @@ const routerConfig: Routes = [
       { path: "associacao/map-associacao", component: AssociacaoMapComponent },
       { path: "associacao/convenios", component: AssociacaoConveniosComponent },
       { path: "associacao/licitacoes", component: AssociacaoLicitacaoComponent },
-      { path: "associacao/licitacoes/view-proposal", component: AssociacaoLicitacaoViewProposalComponent },
+      { path: "associacao/licitacoes/view-proposal/:_id", component: AssociacaoLicitacaoViewProposalComponent, resolve: { proposals: GetProposalsByBidIdResolve } },
       { path: "associacao/contratos", component: AssociacaoContratosComponent },
       { path: "associacao/contrato-data/:id", component: AssociacaoContratosDataComponent },
       { path: "itens-custo", component: CostItemsComponent },
@@ -175,7 +180,7 @@ const routerConfig: Routes = [
       { path: "proposal-screening/proposal-accepted", component: ProposalAcceptedComponent },
       { path: "proposal-screening/proposal-sent", component: ProposalSentComponent },
       { path: "fornecedor/contratos", component: FornecedorContratoComponent },
-      { path: "fornecedor/contratos/contrato-supplier", component: FornecedorContratoSupplierComponent },
+      { path: "fornecedor/contratos/contrato-supplier/:_id", component: FornecedorContratoSupplierComponent },
       { path: "fornecedor/licitacoes", component: FornecedorLicitacoesComponent },
       {
         path: "fornecedor/licitacoes/detalhes-licitacoes/:_id",
@@ -191,6 +196,11 @@ const routerConfig: Routes = [
       { path: "categorias", component: CategoriasComponent },
       { path: "categorias/registrar-categoria", component: NewCategoriasComponent },
       { path: "categorias/editar-categoria", component: EditCategoriasComponent },
+      { path: "categorias/editar-categoria", component: EditCategoriasComponent },
+      { path: "modelo-contratos", component: ContractTemplatesComponent },
+      { path: "modelo-contratos/novo-modelo", component: NewContractTemplatesComponent },
+      { path: "modelo-contratos/editar-modelo/:_id", component: EditContractTemplatesComponent },
+      { path: '**', component: NotfoundComponent },
     ],
 
     canActivate: [AuthGuard],
@@ -201,4 +211,4 @@ const routerConfig: Routes = [
   imports: [RouterModule.forChild(routerConfig)],
   exports: [RouterModule],
 })
-export class PagesRoutingModule {}
+export class PagesRoutingModule { }

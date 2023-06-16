@@ -21,7 +21,7 @@ export class ItemGroupComponent {
 
   ngOnInit(): void {
     this.workPlanService.getById(this.localStorage.getDataPlano()._id).subscribe({ 
-      next: success => (this.response = success ,console.log(success)), 
+      next: success => (this.response = success), 
       error: error => console.error(error), 
     });
   }

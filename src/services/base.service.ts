@@ -5,7 +5,6 @@ import { environment } from "src/environments/environment";
 import CryptoUtil from "src/utils/crypto.util";
 
 export abstract class BaseService {
-
   protected get anonymousHeader() {
     return {
       headers: new HttpHeaders({
@@ -38,6 +37,32 @@ export abstract class BaseService {
     };
   }
 
+  protected get authorizedHeaderBlob() {
+    const userJson = localStorage.getItem("user") as string;
+    const user: UserAuthenticatedDto = JSON.parse(userJson);
+
+    return {
+      headers: new HttpHeaders({
+        "Content-Type": "application/pdf",
+        Authorization: `Bearer ${user?.token}`,
+        responseType: "blob",
+        Accept: "application/pdf",
+        observe: "response",
+      }),
+    };
+  }
+
+  protected get authorizedHeaderFile() {
+    const userJson = localStorage.getItem("user") as string;
+    const user: UserAuthenticatedDto = JSON.parse(userJson);
+
+    return {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${user?.token}`,
+      }),
+    };
+  }
+
   protected extractData(response: any) {
     return response.data || {};
   }
@@ -46,19 +71,18 @@ export abstract class BaseService {
     let customError: string[] = [];
     let customResponse = new Error();
     if (response instanceof HttpErrorResponse) {
-      if (response.statusText === 'Unknown Error') {
-        customError.push('Unknown Error');
+      if (response.statusText === "Unknown Error") {
+        customError.push("Unknown Error");
         response.error.errors = customError;
       }
     }
     if (response.status === 500) {
-      customError.push('Error processing request');
+      customError.push("Error processing request");
       customResponse.error.errors = customError;
       return throwError(customResponse);
     }
     return throwError(response);
   }
-
 
   protected encrypt(data: string) {
     return { payload: CryptoUtil.encrypt(environment.encrypt_key, data) };

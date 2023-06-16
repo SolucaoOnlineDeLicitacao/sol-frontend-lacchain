@@ -14,14 +14,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { RequestInterceptor } from 'src/interceptors/request.interceptor';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AngularEditorModule } from '@kolkov/angular-editor';
 @NgModule({
   declarations: [
     AppComponent,
-
-   
   ],
   imports: [
-
     CommonModule,
     BrowserModule,
     FormsModule,
@@ -34,7 +32,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule,
     NgxSpinnerModule,
     ToastrModule.forRoot(),
-    
+    AngularEditorModule,
+    BrowserModule,
   ],
   providers: [
     {

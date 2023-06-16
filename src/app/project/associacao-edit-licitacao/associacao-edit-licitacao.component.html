@@ -15,13 +15,13 @@
 					<div class="row">
 
 						<div class="mb-2 col-12">
-							<label for="description" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Descrição (Objeto)</b><span
+							<label for="description"
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Descrição (Objeto)</b><span
 									class="f-size-16 text-danger">*</span></label>
 							<textarea formControlName="description" class="form-control custom-textarea" id="message"
 								placeholder="Digite a descrição"></textarea>
 
-							<div *ngIf="form.controls['description'].errors?.['required'] && isSubmit"
-								class="div-msg-error mt-2">
+							<div *ngIf="form.controls['description'].errors?.['required'] && isSubmit" class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
 								<p class="font-poppins font-size-14 m-0">Descrição é obrigatória!</p>
 							</div>
@@ -31,18 +31,13 @@
 							<label for="insurance"
 								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Convênio</b><span class="f-size-16
 									text-danger">*</span></label>
-							<select type="text" formControlName="insurance" style="text-indent:20px;"
-								class="form-control" id="insurance">
+							<select type="text" formControlName="insurance" style="text-indent:20px;" class="form-control"
+								id="insurance">
 								<option selected readonly disabled [value]="''">Selecione...</option>
-								<option value="Convênio 1">Convênio 1</option>
-								<option value="Convênio 2">Convênio 2</option>
-								<option value="Convênio 3">Convênio 3</option>
-								<option value="Convênio 4">Convênio 4</option>
-								<option value="Convênio 5">Convênio 5</option>
+								<option *ngFor="let convenio of convenioList" [value]="convenio._id">{{ convenio.register_number+" - "+convenio.register_object }}</option>
 							</select>
 
-							<div *ngIf="form.controls['insurance'].errors?.['required'] && isSubmit"
-								class="div-msg-error mt-2">
+							<div *ngIf="form.controls['insurance'].errors?.['required'] && isSubmit" class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
 								<p class="font-poppins font-size-14 m-0">Convênio é obrigatório!</p>
 							</div>
@@ -52,44 +47,40 @@
 							<label for="classification"
 								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Classificação</b><span class="f-size-16
 									text-danger">*</span></label>
-							<select type="text" formControlName="classification" style="text-indent:20px;"
-								class="form-control" id="classification">
+							<select type="text" formControlName="classification" style="text-indent:20px;" class="form-control"
+								id="classification">
 								<option selected readonly disabled [value]="''">Selecione...</option>
 								<option value="De Bens">De Bens</option>
 								<option value="De Obras">De Obras</option>
 								<option value="De Serviço">De Serviço</option>
 							</select>
 
-							<div *ngIf="form.controls['classification'].errors?.['required'] && isSubmit"
-								class="div-msg-error mt-2">
+							<div *ngIf="form.controls['classification'].errors?.['required'] && isSubmit" class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
 								<p class="font-poppins font-size-14 m-0">Classificação é obrigatório!</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
-							<label for="initialDate"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Data de início</b><span class="f-size-16
+							<label for="initialDate" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Data
+									de início</b><span class="f-size-16
 									text-danger">*</span></label>
-							<input type="date" formControlName="initialDate" style="text-indent:20px;"
-								class="form-control" id="initialDate">
+							<input type="date" formControlName="initialDate" style="text-indent:20px;" class="form-control"
+								id="initialDate">
 
-							<div *ngIf="form.controls['initialDate'].errors?.['required'] && isSubmit"
-								class="div-msg-error mt-2">
+							<div *ngIf="form.controls['initialDate'].errors?.['required'] && isSubmit" class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
 								<p class="font-poppins font-size-14 m-0">Data de início é obrigatória!</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
-							<label for="closureDate"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Data de encerramento</b><span
-									class="f-size-16
+							<label for="closureDate" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Data
+									de encerramento</b><span class="f-size-16
 									text-danger">*</span></label>
-							<input type="date" formControlName="closureDate" style="text-indent:20px;"
-								class="form-control" id="closureDate">
-							<div *ngIf="form.controls['closureDate'].errors?.['required'] && isSubmit"
-								class="div-msg-error mt-2">
+							<input type="date" formControlName="closureDate" style="text-indent:20px;" class="form-control"
+								id="closureDate">
+							<div *ngIf="form.controls['closureDate'].errors?.['required'] && isSubmit" class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
 								<p class="font-poppins font-size-14 m-0">Data de encerramento é obrigatória!</p>
 							</div>
@@ -97,14 +88,13 @@
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="timebreakerDays"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Dias corridos para desempate</b><span
-									class="f-size-16
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Dias corridos para
+									desempate</b><span class="f-size-16
 									text-danger">*</span></label>
 							<input type="text" formControlName="timebreakerDays" style="text-indent:20px;" class="form-control"
 								id="timebreakerDays" placeholder="Digite">
 
-							<div *ngIf="form.controls['timebreakerDays'].errors?.['required'] && isSubmit"
-								class="div-msg-error mt-2">
+							<div *ngIf="form.controls['timebreakerDays'].errors?.['required'] && isSubmit" class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
 								<p class="font-poppins font-size-14 m-0">Campo obrigatório!</p>
 							</div>
@@ -112,14 +102,13 @@
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="executionDays"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Prazo para a entrega/execução em dias</b><span
-									class="f-size-16
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Prazo para a entrega/execução
+									em dias</b><span class="f-size-16
 									text-danger">*</span></label>
-							<input type="date" formControlName="executionDays" style="text-indent:20px;"
-								class="form-control" id="executionDays">
+							<input type="date" formControlName="executionDays" style="text-indent:20px;" class="form-control"
+								id="executionDays">
 
-							<div *ngIf="form.controls['executionDays'].errors?.['required'] && isSubmit"
-								class="div-msg-error mt-2">
+							<div *ngIf="form.controls['executionDays'].errors?.['required'] && isSubmit" class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
 								<p class="font-poppins font-size-14 m-0">Prazo para a entrega é obrigatória!</p>
 							</div>
@@ -133,19 +122,18 @@
 						</div>
 
 						<div class="col-sm-12 col-md-8 mt-3">
-							<label for="biddingType"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Tipo de licitação</b><span class="f-size-16
+							<label for="biddingType" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Tipo
+									de licitação</b><span class="f-size-16
 									text-danger">*</span></label>
-							<select type="text" formControlName="biddingType" style="text-indent:20px;"
-								class="form-control" id="biddingType">
+							<select type="text" formControlName="biddingType" style="text-indent:20px;" class="form-control"
+								id="biddingType">
 								<option selected readonly disabled [value]="''">Selecione...</option>
 								<option value="individualPrice">Preço individual</option>
 								<option value="allotmentPrice">Preço por lote</option>
 								<option value="globalPrice">Preço global</option>
 							</select>
 
-							<div *ngIf="form.controls['biddingType'].errors?.['required'] && isSubmit"
-								class="div-msg-error mt-2">
+							<div *ngIf="form.controls['biddingType'].errors?.['required'] && isSubmit" class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
 								<p class="font-poppins font-size-14 m-0">Tipo de licitação é obrigatório!</p>
 							</div>
@@ -155,24 +143,23 @@
 							<label for="modality"
 								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Modalidade</b><span class="f-size-16
 									text-danger">*</span></label>
-							<select type="text" formControlName="modality" style="text-indent:20px;"
-								class="form-control" id="modality">
+							<select type="text" formControlName="modality" style="text-indent:20px;" class="form-control"
+								id="modality">
 								<option selected readonly disabled [value]="''">Selecione...</option>
 								<option value="openClosed">Aberta/pública</option>
 								<option value="openInvite">Convite aberto</option>
 								<option value="closedInvite">Convite fechado</option>
 							</select>
 
-							<div *ngIf="form.controls['modality'].errors?.['required'] && isSubmit"
-								class="div-msg-error mt-2">
+							<div *ngIf="form.controls['modality'].errors?.['required'] && isSubmit" class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
 								<p class="font-poppins font-size-14 m-0">Modalidade é obrigatório!</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-12 mt-3">
-							<label for="adicionalSite"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Site adicional</b></label>
+							<label for="adicionalSite" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Site
+									adicional</b></label>
 							<input type="text" formControlName="adicionalSite" style="text-indent:20px;" class="form-control"
 								id="adicionalSite" placeholder="Digite">
 						</div>
@@ -192,15 +179,16 @@
 					<div class="row">
 
 						<div class="col-sm-12 col-md-4 mt-3">
-							<label for="batchName"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Nome do lote</b></label>
+							<label for="batchName" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Nome do
+									lote</b></label>
 							<input type="text" formControlName="batchName" style="text-indent:20px;" class="form-control"
 								id="batchName" placeholder="Digite">
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="deliveryTimeDays"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Prazo para entrega (dias)</b></label>
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Prazo para entrega
+									(dias)</b></label>
 							<input type="text" formControlName="deliveryTimeDays" style="text-indent:20px;" class="form-control"
 								id="deliveryTimeDays" placeholder="Digite">
 						</div>
@@ -217,19 +205,22 @@
 						</div>
 
 						<div class="col-sm-12 col-md-7 mt-3">
-							<input type="text" class="form-control h50 br-10 text-dark"
-								placeholder="Busque por itens de custo" formControlName="item" id="item" />
+							<select type="text" formControlName="item" style="text-indent:20px;" class="form-control" id="item">
+								<option selected readonly disabled [value]="''">Selecione...</option>
+								<option *ngFor="let item of costItemsList" [value]="item.name">{{ item.name }}</option>
+							</select>
 						</div>
 
 						<div class="col-sm-12 col-md-2">
 							<label for="quantity"
 								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Quantidade</b></label>
-							<input type="text" formControlName="quantity" style="text-indent:20px;" class="form-control"
-								id="quantity" placeholder="Digite">
+							<input type="text" formControlName="quantity" style="text-indent:20px;" class="form-control" id="quantity"
+								placeholder="Digite">
 						</div>
 
 						<div class="d-flex align-self-end w100 col-md-3">
-							<button [disabled]="!isFormValid()" (click)="addItem();" class="w-100 py-2 br-10 align-self-end com btn btn-dark">
+							<button [disabled]="!isFormValid()" (click)="addItem();"
+								class="w-100 py-2 br-10 align-self-end com btn btn-dark">
 								+ Adicionar
 							</button>
 						</div>
@@ -249,8 +240,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr
-													*ngFor="let items of item; let i= index;">
+												<tr *ngFor="let items of item; let i= index;">
 													<th class="text-capitalize" scope="row">{{items.item}}</th>
 													<td class="text-capitalize">{{items.quantity}} Unidade(s)</td>
 													<td class="table_icon">
@@ -290,7 +280,8 @@
 						</div>
 
 						<div class="col-md-4 mt-4 float-right ml-auto">
-							<button [disabled]="!isLotFormValid()" type="button" class="bg-light btn-lg btn-block mb-4 text-small" (click)="addLot()">Criar
+							<button [disabled]="!isLotFormValid()" type="button" class="bg-light btn-lg btn-block mb-4 text-small"
+								(click)="addLot()">Criar
 								lote</button>
 						</div>
 
@@ -311,8 +302,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr
-													*ngFor="let lot of lots; let i= index;">
+												<tr *ngFor="let lot of lots; let i= index;">
 													<th class="text-capitalize" scope="row">{{lot.allotment_name}}</th>
 													<td class="text-capitalize">{{lot.add_item.length}}</td>
 													<td class="text-capitalize">{{ 'Arquivo.pdf' }}</td>
@@ -342,12 +332,14 @@
 
 						<div class="col-sm-12 col-md-9 mt-3">
 							<div class="input-group">
-								<input type="text" formControlName="inviteSuppliers" class="form-control" placeholder="Busque por fornecedores">
+								<input type="text" formControlName="inviteSuppliers" class="form-control"
+									placeholder="Busque por fornecedores">
 								<div class="input-group-append">
 									<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown"
 										aria-haspopup="true" aria-expanded="false"></button>
 									<div class="dropdown-menu">
-										<a class="dropdown-item" *ngFor="let user of userList" (click)="selectSupplier(user.name)">{{ user.name }}</a>
+										<a class="dropdown-item" *ngFor="let user of userList" (click)="selectSupplier(user.name)">{{
+											user.name }}</a>
 									</div>
 								</div>
 							</div>
@@ -383,7 +375,8 @@
 							</a>
 						</div>
 						<div class="col-md-6">
-							<button (click)="onSubmit();" type="submit" class="btn btn-secondary btn-lg btn-block mb-4">Editar licitação</button>
+							<button (click)="onSubmit();" type="submit" class="btn btn-secondary btn-lg btn-block mb-4">Editar
+								licitação</button>
 						</div>
 					</div>
 				</div>

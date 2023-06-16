@@ -74,7 +74,7 @@
                             <label for="zipCode"
                                 class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>CEP</b></label>
                             <input type="text" formControlName="zipCode" style="text-indent:20px;" class="form-control"
-                                mask="00.000-000" id="zipCode" placeholder="00.000-000">
+                                mask="00.000-000" id="zipCode" placeholder="00.000-000" (focusout)="searchAssociationAddressByCep($event)">
 
                             <div *ngIf="formAddress.controls['zipCode'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
@@ -105,7 +105,7 @@
                             <label for="number"
                                 class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Número</b></label>
                             <input type="text" formControlName="number" style="text-indent:20px;" class="form-control"
-                                id="number" placeholder="000">
+                                id="number" placeholder="000" #addressnumber (focusout)="getLatLong($event)">
 
                             <div *ngIf="formAddress.controls['number'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
@@ -313,7 +313,7 @@
                             <label for="zipCode"
                                 class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>CEP</b></label>
                             <input type="text" formControlName="zipCode" style="text-indent:20px;" class="form-control"
-                                mask="00.000-000" id="zipCode" placeholder="00.000-000">
+                                mask="00.000-000" id="zipCode" placeholder="00.000-000" (focusout)="searchLegalRepresentativeAddressByCep($event)">
 
                             <div *ngIf="formLegalRepresentativeAddress.controls['zipCode'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
@@ -344,7 +344,7 @@
                             <label for="number"
                                 class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Número</b></label>
                             <input type="text" formControlName="number" style="text-indent:20px;" class="form-control"
-                                id="number" placeholder="000">
+                                id="number" placeholder="000"  #addressnumberlegal >
 
                             <div *ngIf="formLegalRepresentativeAddress.controls['number'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">

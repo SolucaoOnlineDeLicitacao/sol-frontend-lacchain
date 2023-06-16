@@ -8,7 +8,7 @@ export abstract class UserRegisterRequestDto {
     phone?: string;
     type!: UserTypeEnum;
     cpf?: string;
-    office?: string;
+    // office?: string;
     association?: string;
     supplier?: string;
     roles?: UserRolesEnum;

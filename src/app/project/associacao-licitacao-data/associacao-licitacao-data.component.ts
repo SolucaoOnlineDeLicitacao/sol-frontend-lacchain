@@ -1,26 +1,22 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
-import { forkJoin } from 'rxjs';
-import { AssociationBidService } from 'src/services/association-bid.service';
-import { AllLicitacao, licitacaoList } from 'src/services/association-licitacao.mock';
-import { AssociationService } from 'src/services/association.service';
-import { AuthService } from 'src/services/auth.service';
-import { AllSuppliers, supplierList } from 'src/services/supplier.mock';
-import { SupplierService } from 'src/services/supplier.service';
-import { UserService } from 'src/services/user.service';
+import { Component } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ToastrService } from "ngx-toastr";
+import { forkJoin } from "rxjs";
+import { BidStatusEnum } from "src/enums/bid-status.enum";
+import { AllotmentsService } from "src/services/allotments.service";
+import { AssociationBidService } from "src/services/association-bid.service";
+import { AuthService } from "src/services/auth.service";
+import { SupplierService } from "src/services/supplier.service";
 
 @Component({
-  selector: 'app-associacao-licitacao-data',
-  templateUrl: './associacao-licitacao-data.component.html',
-  styleUrls: ['./associacao-licitacao-data.component.scss']
+  selector: "app-associacao-licitacao-data",
+  templateUrl: "./associacao-licitacao-data.component.html",
+  styleUrls: ["./associacao-licitacao-data.component.scss"],
 })
 export class AssociacaoLicitacaoDataComponent {
-
-  licitacao!: AllLicitacao | undefined;
+  licitacao!: any | undefined;
   blockSupplier!: FormGroup;
   idSupplier!: boolean;
   isSectionOneOpen: boolean = false;
@@ -29,9 +25,10 @@ export class AssociacaoLicitacaoDataComponent {
   invitedSuppliersInfo: any;
   response: any;
   prazoEmdias: number;
+  allAllotmentsList: any;
+  date = new Date();
 
   constructor(
-    private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     public authService: AuthService,
@@ -39,27 +36,21 @@ export class AssociacaoLicitacaoDataComponent {
     private route: ActivatedRoute,
     private toastrService: ToastrService,
     private router: Router,
-    private userService: UserService,
-    private supplierService: SupplierService
+    private supplierService: SupplierService,
+    private allotmentsService: AllotmentsService,
   ) {
     this.blockSupplier = this.formBuilder.group({
-      message: [''],
+      message: [""],
     });
   }
 
   ngOnInit(): void {
     this.route.data.subscribe({
-      next: (data) => {
+      next: data => {
         this.response = data["bid"];
-        console.log(this.response);
-        this.invitedSuppliersIds = this.response.invited_suppliers;
-        this.findSuppliersById();
-        this.response.add_allotment.forEach((allotment: any) => {
-          allotment.isSectionOpen = false;
-        });
-      }
-    })
-    this.prazoEmdias = this.calcularPrazoEmDias(this.response.start_at, this.response.end_at)
+      },
+    });
+    this.prazoEmdias = this.calcularPrazoEmDias(this.response.start_at, this.response.end_at);
   }
 
   calcularPrazoEmDias(prazoInicial: any, prazoFinal: any) {
@@ -75,11 +66,11 @@ export class AssociacaoLicitacaoDataComponent {
   }
 
   open(contentBlocked: any) {
-    this.modalService.open(contentBlocked, { size: 'lg' });
+    this.modalService.open(contentBlocked, { size: "lg" });
   }
 
   openUnblockModal(contentUnBlocked: any) {
-    this.modalService.open(contentUnBlocked, { size: 'lg' });
+    this.modalService.open(contentUnBlocked, { size: "lg" });
   }
 
   exit() {
@@ -98,38 +89,59 @@ export class AssociacaoLicitacaoDataComponent {
     const observables = this.invitedSuppliersIds.map((id: string) => this.supplierService.getById(id));
 
     forkJoin(observables).subscribe({
-      next: (responses) => {
+      next: responses => {
         this.invitedSuppliersInfo = responses;
       },
-      error: (err) => {
+      error: err => {
         console.error(err);
-      }
+      },
     });
   }
 
   cancelStatus() {
     let request = {
-      status: 'canceled'
-    }
+      status: "canceled",
+    };
     this.associationBidService.changeStatus(this.response._id, request).subscribe({
       next: data => {
-        const toastr = this.toastrService.success('Licitação cancelada com sucesso!', '', { progressBar: true });
+        const toastr = this.toastrService.success("Licitação cancelada com sucesso!", "", { progressBar: true });
         this.modalService.dismissAll();
         if (toastr) {
           toastr.onHidden.subscribe(() => {
             this.modalService.dismissAll();
-            this.router.navigate(['/pages/associacao/licitacoes']);
+            this.router.navigate(["/pages/associacao/licitacoes"]);
           });
         }
       },
       error: error => {
-        this.toastrService.error('Erro ao recusar licitação!', '', { progressBar: true });
-      }
-    })
+        this.toastrService.error("Erro ao recusar licitação!", "", { progressBar: true });
+      },
+    });
+  }
+
+  acceptStatus() {
+    let request = {
+      status: BidStatusEnum.awaiting,
+    };
+    this.associationBidService.changeStatus(this.response._id, request).subscribe({
+      next: data => {
+        const toastr = this.toastrService.success("Licitação enviada com sucesso!", "", { progressBar: true });
+        this.modalService.dismissAll();
+        if (toastr) {
+          toastr.onHidden.subscribe(() => {
+            this.modalService.dismissAll();
+            this.router.navigate(["/pages/associacao/licitacoes"]);
+          });
+        }
+      },
+      error: error => {
+        this.toastrService.error("Erro ao recusar licitação!", "", { progressBar: true });
+      },
+    });
   }
 
   downloadFile(base64: string) {
-    const byteCharacters = atob(base64.substr(base64.indexOf(',') + 1));
+    const byteCharacters = atob(base64.substr(base64.indexOf(",") + 1));
     const byteNumbers = new Array(byteCharacters.length);
 
     for (let i = 0; i < byteCharacters.length; i++) {
@@ -137,13 +149,67 @@ export class AssociacaoLicitacaoDataComponent {
     }
 
     const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const blob = new Blob([byteArray], { type: "application/pdf" });
 
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = 'file.pdf';
+    link.download = "file.pdf";
     link.click();
   }
 
+  download(_id: string) {
+    this.allotmentsService.download(_id).subscribe((response: any) => {
+      console.log('response', response)
+      const blob = new Blob([response], { type: 'application/pdf' });
+      let url = window.URL.createObjectURL(blob);
+      window.open(url);
+      // const url = URL.createObjectURL(blob);
+      // const link = document.createElement('a');
+      // link.href = url;
+      // link.download = 'file.pdf';
+      // link.click();
+    });
+
+
+  }
+
+  getFileName(filePath: string): string {
+    const splited = filePath.split('/');
+    return splited[splited.length - 1];
+  }
+
+  getClassStatus(status: string) {
+    return '';
+  }
+
+  goViewProposals() {
+    this.router.navigate([`associacao/licitacoes/view-proposal/${this.response._id}`])
+  }
+
+  async downloadEdital(){
+    if(!this.response.editalFile){
+      this.toastrService.error("Não há edital para essa licitação!", "", { progressBar: true });
+      return;
+    }
+
+    const result = await this.associationBidService.download(this.response._id, 'editalFile');
+
+    const file = new Blob([result], {type: 'application/pdf'});
+    const fileURL = URL.createObjectURL(file);
+    window.open(fileURL);
+  }
+
+  async downloadAta(){
+    if(!this.response.ataFile){
+      this.toastrService.error("Não há ata para essa licitação!", "", { progressBar: true });
+      return;
+    }
+    
+    const result = await this.associationBidService.download(this.response._id, 'ataFile');
+
+    const file = new Blob([result], {type: 'application/pdf'});
+    const url = window.URL.createObjectURL(file);
+    window.open(url);
+  }
 }

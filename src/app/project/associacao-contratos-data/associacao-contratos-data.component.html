@@ -21,26 +21,26 @@
           <div class="row col-12 p-2">
             <div class="col-12 col-md-5">
               <h6 class="font-poppins f-size-14 text-secondary">Contrato</h6>
-              <h6 class="f-size-16">{{convenio?.insuranceNumber}}</h6>
+              <h6 class="f-size-16">{{convenio?.register_number}}</h6>
             </div>
             <div class="col-12 col-md-5">
               <h6 class="font-poppins f-size-14 text-secondary">Licitação</h6>
-              <h6 class="f-size-16">{{convenio?.object}}</h6>
+              <h6 class="f-size-16">{{convenio?.register_object}}</h6>
             </div>
             <div class="col-12 col-md-2">
               <h6 class="font-poppins f-size-14 text-secondary">Situação</h6>
-              <h6 class="f-size-16 text-warning">{{convenio?.situation}}</h6>
+              <h6 class="f-size-16 text-warning">{{convenio?.status}}</h6>
             </div>
           </div>
 
           <div class="row col-12 p-2">
             <div class="col-12 col-md-5">
               <h6 class="font-poppins f-size-14 text-secondary">Município de execução do convênio</h6>
-              <p>{{convenio?.executionCounty}}</p>
+              <p>{{convenio?.city+"-"+convenio?.states}}</p>
             </div>
             <div class="col-12 col-md-5">
               <h6 class="font-poppins f-size-14 text-secondary">Valor do Convênio (R$)</h6>
-              <h6 class="f-size-16 text-dark">{{convenio?.insuranceValue}}</h6>
+              <h6 class="f-size-16 text-dark">{{convenio?.value}}</h6>
             </div>
           </div>
 
@@ -52,11 +52,11 @@
           <div class="row col-12 p-2">
             <div class="col-12 col-md-5">
               <h6 class="font-poppins f-size-14 text-secondary">Data da Assinatura</h6>
-              <p>{{convenio?.signatureDate}}</p>
+              <p>{{convenio?.signature_date | date:'dd/MM/yyyy'}}</p>
             </div>
             <div class="col-12 col-md-5">
               <h6 class="font-poppins f-size-14 text-secondary">Data de Vigência</h6>
-              <h6 class="f-size-16 text-dark">{{convenio?.validityDate}}</h6>
+              <h6 class="f-size-16 text-dark">{{convenio?.validity_date| date:'dd/MM/yyyy'}}</h6>
             </div>
           </div>
         </div>
@@ -140,7 +140,27 @@
           <h6>R$ 10,00</h6>
         </div>
 
+        <div class="row mb-5 mt-4">
+          <div class="col-md-12 d-flex justify-content-end px-0">
+              <div class="col-md-3">
+                  <button class="btn br-10 border-light text-light  w-100 py-2"
+                      style="background-color: #F34C41;" (click)="refused()">
+                      Recusar
+                  </button>
+              </div>
+              <div class="col-md-4">
+                  <button class="btn br-10 w-100 py-2 text-light" style="background-color: #2CCE71;"
+                      (click)="approve()">
+                      Aceitar
+                  </button>
+              </div>
+          </div>
       </div>
+
+      </div>
+
+      
+
     </div>
   </div>
 </div>

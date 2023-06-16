@@ -19,13 +19,13 @@ export class UpdateUserAssociacaoComponent implements OnInit {
   userId!: string;
   associationList!: AssociationResponseDto[];
 
-  offices = [
-    { id: 1, name: 'cargo 1' },
-    { id: 2, name: 'cargo 2' },
-    { id: 3, name: 'cargo 3' },
-    { id: 4, name: 'cargo 4' },
-    { id: 5, name: 'cargo 5' }
-  ];
+  // offices = [
+  //   { id: 1, name: 'cargo 1' },
+  //   { id: 2, name: 'cargo 2' },
+  //   { id: 3, name: 'cargo 3' },
+  //   { id: 4, name: 'cargo 4' },
+  //   { id: 5, name: 'cargo 5' }
+  // ];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,7 +40,7 @@ export class UpdateUserAssociacaoComponent implements OnInit {
       name: ['', [Validators.required, Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
       type: ['associacao', [Validators.required]],
-      office: [null, [Validators.required]],
+      // office: [null, [Validators.required]],
       association: [null, [Validators.required]],
       phone: ['', [Validators.required, Validators.minLength(10)]],
       document: ['', [Validators.required]],
@@ -70,7 +70,7 @@ export class UpdateUserAssociacaoComponent implements OnInit {
           this.form.patchValue({
             name: success.name,
             email: success.email,
-            office: success.office,
+            // office: success.office,
             association: success.association?._id,
             phone: success.phone,
             document: success.document

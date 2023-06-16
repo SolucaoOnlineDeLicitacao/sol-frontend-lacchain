@@ -58,11 +58,10 @@ export class EditGroupComponent implements OnInit {
   getCostItems() {
     this.costItemsService.list().subscribe({
       next: (success) => {
-        console.log(success);
         this.costItemsList = success;
       },
       error: (error) => {
-        console.log(error)
+        console.error(error)
       }
     });
   }

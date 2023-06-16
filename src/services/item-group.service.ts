@@ -25,7 +25,7 @@ export class ItemGroupService extends BaseService {
   getGroup(): Observable<any> {
     return this.httpClient
       .get(`${this.url}/list`, this.authorizedHeader)
-      .pipe(map(response => response), catchError(error => { console.log(error); return error; })
+      .pipe(map(response => response), catchError(this.serviceError)
       );
   }
 
@@ -38,7 +38,7 @@ export class ItemGroupService extends BaseService {
   getById(id: string): Observable<any> {
     return this.httpClient
       .get(`${this.url}/get-by-id/${id}`, this.authorizedHeader)
-      .pipe(map(response => response), catchError(error => { console.log(error); return error; })
+      .pipe(map(response => response), catchError(this.serviceError)
       );
   }
 

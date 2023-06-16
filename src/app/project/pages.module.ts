@@ -98,8 +98,23 @@ import { CostItemsService } from 'src/services/cost-items.service';
 import { DeleteConvenioComponent } from './convenios/delete-convenio/delete-convenio.component';
 import { AgreementGetByIdResolve } from '../resolvers/agreement-get-by-id.resolver';
 import { AssociacaoEditLicitacaoComponent } from './associacao-edit-licitacao/associacao-edit-licitacao.component';
+import { ContractTemplatesComponent } from './contract-templates/contract-templates.component';
+import { NewContractTemplatesComponent } from './contract-templates/new-contract-templates/new-contract-templates.component';
+import { DeleteContractTemplatesComponent } from './contract-templates/delete-contract-templates/delete-contract-templates.component';
+import { EditContractTemplatesComponent } from './contract-templates/edit-contract-templates/edit-contract-templates.component';
 import { WorkPlanService } from 'src/services/work-plan.service';
 import { WorkPlanGetByIdResolve } from '../resolvers/workplan-get-by-id.resolver';
+import { NotfoundComponent } from './notfound/notfound.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { ProposalService } from 'src/services/proposal.service';
+import { CepService } from '../../services/cep.service';
+import { GetProposalsByBidIdResolve } from '../resolvers/get-proposals-by-bid-id.resolver';
+import { RecusarPropostaModalComponent } from './associacao-licitacao-view-proposal/components/recusar-proposta-modal/recusar-proposta-modal.component';
+import { VisualizarPropostaModalComponent } from './associacao-licitacao-view-proposal/components/visualizar-proposta-modal/visualizar-proposta-modal.component';
+import { AceitarPropostaModalComponent } from './associacao-licitacao-view-proposal/components/aceitar-proposta-modal/aceitar-proposta-modal.component';
+import { ModelContractService } from 'src/services/model-contract.service';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     declarations: [
@@ -187,6 +202,14 @@ import { WorkPlanGetByIdResolve } from '../resolvers/workplan-get-by-id.resolver
         DeleteProdutoComponent,
         DeleteConvenioComponent,
         AssociacaoEditLicitacaoComponent,
+        NotfoundComponent,
+        ContractTemplatesComponent,
+        NewContractTemplatesComponent,
+        DeleteContractTemplatesComponent,
+        EditContractTemplatesComponent,
+        RecusarPropostaModalComponent,
+        VisualizarPropostaModalComponent,
+        AceitarPropostaModalComponent,
     ],
     imports: [
         CommonModule,
@@ -194,6 +217,7 @@ import { WorkPlanGetByIdResolve } from '../resolvers/workplan-get-by-id.resolver
         PagesRoutingModule,
         FormsModule,
         ReactiveFormsModule,
+        NgbModule,
         LeafletModule,
         LeafletDrawModule,
         NgxPaginationModule,
@@ -202,6 +226,10 @@ import { WorkPlanGetByIdResolve } from '../resolvers/workplan-get-by-id.resolver
         NgxMaskDirective,
         NgxMaskPipe,
         NgxSpinnerModule,
+        CurrencyMaskModule,
+        NgbAccordionModule,
+        AngularEditorModule,
+        NgbModule
     ],
     providers: [
         AuthGuard,
@@ -212,7 +240,11 @@ import { WorkPlanGetByIdResolve } from '../resolvers/workplan-get-by-id.resolver
         CostItemsService,
         AgreementGetByIdResolve,
         WorkPlanService,
-        WorkPlanGetByIdResolve
+        WorkPlanGetByIdResolve,
+        ProposalService,
+        ModelContractService,
+        CepService,
+        GetProposalsByBidIdResolve
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,

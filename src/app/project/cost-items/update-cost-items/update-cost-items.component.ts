@@ -109,7 +109,6 @@ export class UpdateCostItemsComponent implements OnInit {
       specification: this.form.controls['specification'].value,
       sustainable: this.form.controls['sustainable'].value,
     }
-    console.log(this.request)
     this.costItemsService.update(this.response._id, this.request).subscribe({
       next: (success) => {
         this.toastrService.success('Item editado com sucesso!', '', { progressBar: true });

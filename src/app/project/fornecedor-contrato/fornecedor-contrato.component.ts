@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ContractResponseDto } from 'src/dtos/contratos/convenio-response.dto';
 import { AuthService } from 'src/services/auth.service';
+import { ContractsService } from 'src/services/contract.service';
 import { DatamockService } from 'src/services/datamock.service';
 
 @Component({
@@ -9,19 +11,29 @@ import { DatamockService } from 'src/services/datamock.service';
   styleUrls: ['./fornecedor-contrato.component.scss']
 })
 export class FornecedorContratoComponent {
-  contratosList!: any[];
+  contratosList: ContractResponseDto [] = [];
   currentPage: number = 1;
   itensPerPage: number = 6;
   searchTool = false;
   constructor(
-    private datamockService: DatamockService,
     private authbase: AuthService,
-    private router: Router
+    private router: Router,
+    private contractsService: ContractsService,
   ) {
   }
 
   ngOnInit(): void{
-    this.contratosList = this.datamockService.contratos;
+    this.contractsService.getContract().subscribe({
+      next: data => {
+        this.contratosList = data;
+        console.log(data)
+      },
+      error: error => {
+        console.error(error)
+      }
+    })
+   
+    /* this.contratosList = this.datamockService.contratos; */
     if(this.authbase.getAuthenticatedUser().type !== 'fornecedor') this.router.navigate(['/pages/dashboard']);
   }
 
@@ -30,8 +42,8 @@ export class FornecedorContratoComponent {
   }
 
   detailContract(i: any){
-    this.router.navigate(['/pages/fornecedor/contratos/contrato-supplier']);
-    localStorage.setItem('contrato', JSON.stringify(i));
+    this.router.navigate(['/pages/fornecedor/contratos/contrato-supplier/'+i._id]);
+    /* localStorage.setItem('contrato', JSON.stringify(i)); */
   }
 
 

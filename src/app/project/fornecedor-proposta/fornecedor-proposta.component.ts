@@ -19,7 +19,7 @@ export class FornecedorPropostaComponent {
 
   ) { }
   ngOnInit(): void {
-    this.proposalList = this.datamock.lotes
+    this.proposalList = this.datamock.lotes;
   }
 
 
@@ -28,7 +28,7 @@ export class FornecedorPropostaComponent {
     else this.oneStep = value;
   }
 
-  openProposal(){
+  openProposal() {
     this.twoStap = !this.twoStap;
   }
 

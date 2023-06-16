@@ -34,7 +34,7 @@
 							<select type="text" formControlName="insurance" style="text-indent:20px;"
 								class="form-control" id="insurance">
 								<option selected readonly disabled [value]="''">Selecione...</option>
-								<option *ngFor="let user of convenioList" [value]="user.association.name">{{ user.association.name }}</option>
+								<option *ngFor="let convenio of convenioList" [value]="convenio._id">{{ convenio.register_number+" - "+convenio.register_object }}</option>
 							</select>
 
 							<div *ngIf="form.controls['insurance'].errors?.['required'] && isSubmit"
@@ -96,7 +96,7 @@
 								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Dias corridos para desempate</b><span
 									class="f-size-16
 									text-danger">*</span></label>
-							<input type="text" formControlName="timebreakerDays" style="text-indent:20px;" class="form-control"
+							<input type="number" formControlName="timebreakerDays" style="text-indent:20px;" class="form-control"
 								id="timebreakerDays" placeholder="Digite">
 
 							<div *ngIf="form.controls['timebreakerDays'].errors?.['required'] && isSubmit"
@@ -172,6 +172,38 @@
 							<input type="text" formControlName="adicionalSite" style="text-indent:20px;" class="form-control"
 								id="adicionalSite" placeholder="Digite">
 						</div>
+
+						<div class="col-12 mt-3">
+							<h5>Anexar arquivos do edital</h5>
+							<h6>Requisitos - Arquivo PDF. Tamanho máximo: 50 MB</h6>
+						</div>
+						<div class="col-12 upload-file-container cursor-pointer mx-3">
+							<div class="d-flex align-items-center justify-content-center py-4">
+								<div>
+									<img src="../../../assets/images/upload-icon.svg" class="img-msg-error" alt>
+								</div>
+								<div>
+									<input type="file" (change)="onSelectFileEdital($event)" accept=".pdf">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-12 mt-3">
+							<h5>Anexar arquivos do ata</h5>
+							<h6>Requisitos - Arquivo PDF. Tamanho máximo: 50 MB</h6>
+						</div>
+						<div class="col-12 upload-file-container cursor-pointer mx-3">
+							<div class="d-flex align-items-center justify-content-center py-4">
+								<div>
+									<img src="../../../assets/images/upload-icon.svg" class="img-msg-error" alt>
+								</div>
+								<div>
+									<input type="file" (change)="onSelectFileAta($event)" accept=".pdf">
+								</div>
+							</div>
+						</div>
+
+
 					</div>
 				</form>
 
@@ -197,7 +229,7 @@
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="deliveryTimeDays"
 								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Prazo para entrega (dias)</b></label>
-							<input type="text" formControlName="deliveryTimeDays" style="text-indent:20px;" class="form-control"
+							<input type="number" formControlName="deliveryTimeDays" style="text-indent:20px;" class="form-control"
 								id="deliveryTimeDays" placeholder="Digite">
 						</div>
 
@@ -213,14 +245,16 @@
 						</div>
 
 						<div class="col-sm-12 col-md-7 mt-3">
-							<input type="text" class="form-control h50 br-10 text-dark"
-								placeholder="Busque por itens de custo" formControlName="item" id="item" />
+							<select type="text" formControlName="item" style="text-indent:20px;" class="form-control" id="item">
+								<option selected readonly disabled [value]="''">Selecione...</option>
+								<option *ngFor="let item of costItemsList" [value]="item._id">{{ item.name }}</option>
+							</select>
 						</div>
 
 						<div class="col-sm-12 col-md-2">
 							<label for="quantity"
 								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Quantidade</b></label>
-							<input type="text" formControlName="quantity" style="text-indent:20px;" class="form-control"
+							<input type="number" formControlName="quantity" style="text-indent:20px;" class="form-control"
 								id="quantity" placeholder="Digite">
 						</div>
 
@@ -245,14 +279,11 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr
-													*ngFor="let items of item; let i= index;">
-													<th class="text-capitalize" scope="row">{{items.item}}</th>
-													<td class="text-capitalize">{{items.quantity}} Unidade(s)</td>
+												<tr *ngFor="let items of item; let i = index;">
+													<th class="text-capitalize" scope="row">{{ getItemName(items.item) }}</th>
+													<td class="text-capitalize">{{ items.quantity }} Unidade(s)</td>
 													<td class="table_icon">
-														<div class="col-lg-12">
-
-														</div>
+														<div class="col-lg-12"></div>
 													</td>
 													<td class="table_icon">
 														<button class="btn col-lg-12 btn-danger" (click)="removeItem(i)">
@@ -260,7 +291,6 @@
 														</button>
 													</td>
 												</tr>
-
 											</tbody>
 
 										</table>
@@ -335,7 +365,7 @@
 							<h4>Convidar Fornecedores</h4>
 						</div>
 
-						<div *ngIf="form.controls['modality'].value !== 'openClosed'" class="col-sm-12 col-md-9 mt-3">
+						<!-- <div *ngIf="form.controls['modality'].value !== 'openClosed'" class="col-sm-12 col-md-9 mt-3">
 							<div class="input-group">
 								<input type="text" formControlName="inviteSuppliers" class="form-control" placeholder="Busque por fornecedores">
 								<div class="input-group-append">
@@ -345,6 +375,13 @@
 									</div>
 								</div>
 							</div>
+						</div> -->
+
+						<div *ngIf="form.controls['modality'].value !== 'openClosed'" class="col-sm-12 col-md-9 mt-3">
+							<ng-select [items]="userList" notFoundText="Nenhum fornecedor encontrado"
+								bindValue="_id" bindLabel="name" placeholder="Selecione..."
+								formControlName="inviteSuppliers" [closeOnSelect]="true">
+							</ng-select>
 						</div>
 
 						<div *ngIf="form.controls['modality'].value !== 'openClosed'" class="d-flex align-self-end w100 col-md-3">
@@ -357,7 +394,7 @@
 							<div *ngFor="let item of invitedSupplier; let i = index">
 								<div class="d-flex justify-content-between">
 									<div>
-										{{ item }} Convidado.
+										{{ item.name }} Convidado.
 									</div>
 									<div>
 										<div (click)="removeSupplier(i)" class="f-size-16 text-danger">X</div>
@@ -377,8 +414,7 @@
 							</a>
 						</div>
 						<div class="col-md-6">
-							<button (click)="onSubmit();" type="submit" class="btn btn-secondary btn-lg btn-block mb-4">Criar
-								licitação</button>
+							<button (click)="onSubmit();" type="submit" class="btn btn-secondary btn-lg btn-block mb-4">Criar licitação</button>
 						</div>
 					</div>
 				</div>

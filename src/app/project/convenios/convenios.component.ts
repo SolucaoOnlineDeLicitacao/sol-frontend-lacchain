@@ -18,8 +18,8 @@ export class ConveniosComponent {
   itensPerPage: number = 8;
   filterTerm: string;
 
-  conveniosList!: any[];
-  convenioList: any[];
+  // conveniosList!: any[];
+  convenioList: ConvenioResponseDto[];
 
   constructor(
     private authbase: AuthService,
@@ -35,7 +35,7 @@ export class ConveniosComponent {
 
   getConvenio() {
     this.convenioService.getConvenio().subscribe({
-      next: success => (this.convenioList = success),
+      next: success => (this.convenioList = success, console.log(this.convenioList)),
       error: error => console.error(error),
     });
   }

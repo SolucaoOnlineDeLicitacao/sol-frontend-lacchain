@@ -19,12 +19,10 @@ export class CategoryService  extends BaseService {
     super();
   }
 
-
-
   getCategory(): Observable<any> {
     return this.httpClient
       .get(`${this.url}/list`, this.authorizedHeader)
-      .pipe(map(response => response), catchError(error => { console.log(error); return error; })
+      .pipe(map(response => response), catchError(this.serviceError)
       );
   }
 

@@ -4,7 +4,6 @@
             <h1><strong>Dados da Licitação</strong></h1>
             <hr class="bg-primary">
         </div>
-
         <div class="col-md-11 border mt-3 br-10 py-3 ">
             <div class="row px-2">
                 <div class="col-md-10">
@@ -12,7 +11,8 @@
                 </div>
                 <div class="col-md-2 text-capitaliz">
                     <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
-                    <h5 *ngIf="response.status ==='awaiting'" style="color: #F1CF1C" class="f-size-16">Aguardando Liberação</h5>
+                    <h5 *ngIf="response.status ==='awaiting'" style="color: #F1CF1C" class="f-size-16">Aguardando
+                        Liberação</h5>
                     <h5 *ngIf="response.status ==='tiebreaker'" class="f-size-16 text-warning">Aguardando desempate</h5>
                     <h5 *ngIf="response.status ==='analysis'" class="f-size-16 text-info">Em Análise</h5>
                     <h5 *ngIf="response.status ==='deserted'" class="f-size-16 text-danger">Deserta</h5>
@@ -26,15 +26,18 @@
                 </div>
                 <div class="col-md-10 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
-                    <h5 class="f-size-16">{{response.association || '--'}}</h5>
+                    <h5 class="f-size-16">{{response.agreement?.register_object || '--'}}</h5>
                 </div>
                 <div class="col-md-2 mt-3 text-capitaliz">
                     <h6 class="font-poppins f-size-14 text-secondary">Revisor</h6>
-                    <h5 class="f-size-16">{{response.statusrevisor || '--'}}</h5>
+                    <h5 class="f-size-16">{{reviwerInfo?.name || '--'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Modalidade</h6>
-                    <h5 class="f-size-16">{{response.modality || '--'}}</h5>
+                    <h5 *ngIf="response.modality ==='openClosed'" class="f-size-16 text-dark">Aberta/pública</h5>
+                    <h5 *ngIf="response.modality ==='openInvite'" class="f-size-16 text-dark">Convite aberto</h5>
+                    <h5 *ngIf="response.modality ==='closedInvite'" class="f-size-16 text-dark">Convite fechado</h5>
+                    <h5 *ngIf="!response.modality" class="f-size-16">{{'--'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Classificação</h6>
@@ -51,7 +54,7 @@
                 </div>
                 <div class="col-md-4">
                     <h6 class="font-poppins f-size-14 text-secondary">Prazo para entrega/execução (dias)</h6>
-                    <h5 class="f-size-16">{{response.days_to_delivery  | date: 'dd/MM/yyyy'}}</h5>
+                    <h5 class="f-size-16">{{response.days_to_delivery | date: 'dd/MM/yyyy'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Local de Entrega</h6>
@@ -64,25 +67,29 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Tipo de Licitação</h6>
-                    <h5 class="f-size-16">{{response.agreement || '--'}}</h5>
+                    <h5 *ngIf="response.bid_type === 'globalPrice'" class="f-size-16">Preço Global</h5>
+                    <h5 *ngIf="response.bid_type === 'allotmentPrice'" class="f-size-16">Preço por Lote</h5>
+                    <h5 *ngIf="response.bid_type === 'individualPrice'" class="f-size-16">Preço Indivisual</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Convênio</h6>
-                    <h5 class="f-size-16">{{response.agreement || '--'}}</h5>
+                    <h5 class="f-size-16">{{response.agreement.register_number || '--'}}</h5>
                 </div>
                 <div class="col-md-8 mt-3">
                     <h6 class="font-poppins f-size-14 text-secondary">Detalhes</h6>
                     <h5 class="f-size-16">{{response.description || '--'}}</h5>
                 </div>
-                <div  class="col-md-4 mt-3 d-flex align-self-end">
-                    <button (click)="openModal('edital')" class="br-10 w-100 h50 border btn btn-light"><strong>Baixar Edital</strong></button>
+                <div class="col-md-4 mt-3 d-flex align-self-end">
+                    <button (click)="openModal('edital')" class="br-10 w-100 h50 border btn btn-light"><strong>Baixar
+                            Edital</strong></button>
                 </div>
                 <div class="col-md-8 mt-3">
                     <h6 class="font-poppins f-size-14 text-secondary">Site adicional</h6>
                     <h5 class="f-size-16">{{response.aditional_site || '--'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 d-flex align-self-end">
-                    <button (click)="openModal('ata')" class="br-10 w-100 h50 border btn"><strong class="color-clear">Ata não disponível</strong></button>
+                    <button (click)="openModal('ata')" class="br-10 w-100 h50 border btn"><strong
+                            class="color-clear">Ata não disponível</strong></button>
                 </div>
             </div>
         </div>
@@ -92,85 +99,94 @@
                 <div class="col-md-12">
                     <h1><strong>Lotes e itens</strong></h1>
                 </div>
-                <div *ngFor="let item of loteList; let i = index"  class="col-md-12 cursor-pointer border mt-3 br-10 py-3 px-4 ">
+                <div *ngFor="let item of response.add_allotment; let i = index"
+                    class="col-md-12 cursor-pointer border mt-3 br-10 py-3 px-4 ">
                     <div class="row">
                         <div class="col-md-2">
                             <h6 class="font-poppins f-size-14 text-secondary">Nº de lote</h6>
-                            <h5 class="f-size-16">{{loteListIndex + 1}} - Lote 0{{loteListIndex + 1}}</h5>
+                            <h5 class="f-size-16">Lote 0{{i + 1}} </h5>
                         </div>
                         <div class="col-md-5  d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="font-poppins f-size-14 text-secondary">Itens</h6>
-                            <h5 class="f-size-16">{{item.add_item.length}}</h5>
+                                <h5 class="f-size-16">{{item.add_item.length || '0'}}</h5>
+                            </div>
+                            <!-- <span  class="bg-success text-dark rounded-pill p-2">Aguardando</span>
+                        <span  class="bg-warning text-dark rounded-pill py-2 px-4">Deserto</span> -->
                         </div>
-                        <span *ngIf="item.situation ==='Adjudicado'" class="bg-success text-dark rounded-pill p-2">Adjudicado</span>
-                        <span *ngIf="item.situation ==='Deserto'" class="bg-warning text-dark rounded-pill py-2 px-4">Deserto</span>
-                    </div>
                         <div class="col-md-5 d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
-                                <h5 *ngIf="item.status === 'Proposta enviada'"  class="f-size-16 text-success">{{item.status}}</h5>
-                                <h5 *ngIf="item.status === 'Sem proposta'"  class="f-size-16 text-dark">{{item.status}}</h5>
+                                <h5 *ngIf="proposals && proposals.length > 0" class="f-size-16 text-success">
+                                    Proposta enviada</h5>
+                                <h5 *ngIf="proposals && proposals.length <= 0" class="f-size-16 text-dark">Sem
+                                    proposta</h5>
                             </div>
                             <i (click)="openDetail(i)" class="bi h3 bi-arrow-down-short"></i>
                         </div>
-                        <div class="row" *ngIf="oneStep === i">
-                            <hr class="bg-secondary">
-                            <div class="col-md-10">
-                                <h6 class="font-poppins f-size-14 text-secondary">Fornecedor</h6>
-                                <h5 class="f-size-16">{{item.supplier}}</h5>
-                            </div>
-                            <div class="col-md-2">
+                    </div>
+                    <div class="row" *ngIf="oneStep === i">
+                        <hr class="bg-secondary">
+                        <div class="col-md-10">
+                            <h6 class="font-poppins f-size-14 text-secondary">Fornecedor</h6>
+                            <h5 class="f-size-16">{{response.fornecedor?.name}}</h5>
+                        </div>
+                        <!-- <div class="col-md-2">
                                 <h6 class="font-poppins f-size-14 text-secondary">Valor total</h6>
                                 <h5 class="f-size-16">{{item.quantity | currency : 'BRL'}}</h5>
-                            </div>
-                            <div class="col-md-12 my-2">
-                               <h2 class="w-100"><strong>Lista de itens e propostas</strong></h2>
-                            </div>
-                            <div class="col-md-12">
-                                <table class="table table-hover">
+                            </div> -->
+                        <div class="col-md-12 my-2">
+                            <h2 class="w-100"><strong>Lista de itens e propostas</strong></h2>
+                        </div>
+                        <div class="col-md-12 table-responsive">
+                            <table class="table table-hover">
                                 <thead>
-                                  <tr>
-                                    <th class="br-tabele bg-light" scope="col">Item</th>
-                                    <th class="bg-light" scope="col">Quantidade</th>
-                                    <th class="br-tabele2 bg-light" scope="col">Valor unitário</th>
-                                  </tr>
+                                    <tr>
+                                        <th class="br-tabele bg-light" scope="col">Item</th>
+                                        <th class="bg-light" scope="col">Quantidade</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                  <tr>
-                                    <td >{{response.statusItem}}</td>
-                                    <td >{{response.status_id}}</td>
-                                    <td>{{response.statusquantity | currency: 'BRL' }}</td>
-                                  </tr>
+                                    <tr>
+                                        <td>{{item.add_item?.[i]?.item || '--'}}</td>
+                                        <td>{{item.add_item?.[i]?.quantity || '--'}}</td>
+                                    </tr>
                                 </tbody>
-                                </table>
-                            </div>
-                            <div class="col-md-12">
-                                <div *ngIf="response.statusstatus ==='Em Análise'" class="row" >
-                                    <div class="col-md-4">
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <!-- <div class="col-md-4">
                                         <h6 class="font-poppins f-size-14 text-secondary">Valor do frete</h6>
-                                        <h5 class="f-size-16">{{item.frete | currency : 'BRL'}}</h5>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <button (click)="viewProposal(item, 'send')" class="btn btn-outline-dark br-10 w-100 " type="button"><strong>Preencher proposta via planilha</strong></button>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button (click)="viewProposal(item, 'create')"  class="btn btn-dark br-10 w-100" type="button"><strong>Preencher proposta</strong></button>
-                                    </div>
+                                        <h5 class="f-size-16">{{item.quantity | currency : 'BRL'}}</h5>
+                                    </div> -->
+                                <div class="col-12">
                                 </div>
-                                <div *ngIf="response.statusstatus ==='Aberta'" class="row d-lfex justify-content-end">
-                                    <div class="col-md-4">
-                                        <button (click)="delete(item)" class="btn btn-outline-danger br-10 w-100" type="button"><strong>Remover proposta</strong></button>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button (click)="viewProposal(item, 'edit')" class="btn btn-outline-dark br-10 w-100" type="button"><strong>Editar proposta</strong></button>
-                                    </div>
+                                <div class="col-md-6 mt-3">
+                                    <button (click)="viewProposal(item, 'send')"
+                                        class="btn btn-outline-dark br-10 w-100 " type="button"><strong>Preencher
+                                            proposta via planilha</strong></button>
                                 </div>
-                                <div *ngIf="response.statusstatus ==='Concluída'" class="row d-lfex justify-content-end">
-                                    <div class="col-md-4">
-                                        <button (click)="viewProposal(item, 'proposal')" class="btn btn-dark  br-10 w-100" type="button"><strong>Visualizar propostas</strong></button>
-                                    </div>
+                                <div class="col-md-6 mt-3">
+                                    <button (click)="viewProposal(item, 'create')" class="btn btn-dark br-10 w-100"
+                                        type="button"><strong>Preencher proposta</strong></button>
                                 </div>
+                                <!-- <div class="col-md-6 mt-3">
+                                    <button (click)="delete(item)" class="btn btn-outline-danger br-10 w-100"
+                                        type="button"><strong>Remover proposta</strong></button>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <button (click)="viewProposal(item, 'edit')"
+                                        class="btn btn-outline-dark br-10 w-100" type="button"><strong>Editar
+                                            proposta</strong></button>
+                                </div>
+                                <div class="col-md-6">
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <button (click)="viewProposal(item, 'proposal')" class="btn btn-dark  br-10 w-100"
+                                        type="button"><strong>Visualizar
+                                            propostas</strong></button>
+                                </div> -->
                             </div>
                         </div>
                     </div>

@@ -20,7 +20,7 @@
 
           <div class="row col-12 p-2">
             <div class="col-12 col-md-10">
-              <h3 class="text-dark">{{response.bid_count}} / 2022</h3>
+              <h3 class="text-dark">{{response.bid_count+'/'+( date.getFullYear())}}</h3>
             </div>
             <div class="col-12 col-md-2">
               <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
@@ -97,7 +97,8 @@
             </div>
             <div class="col-12 col-md-6">
               <h6 class="font-poppins f-size-14 text-secondary">Convênio</h6>
-              <h6 class="f-size-16 text-dark">{{response.agreement}}</h6>
+              <h6 class="f-size-16 text-dark">{{response.agreement?.register_number+" -
+                "+response.agreement?.register_object }}</h6>
             </div>
           </div>
 
@@ -114,25 +115,32 @@
 
           <div class="row col-12 col-md-6 p-2">
             <div class="col-12">
-              <button type="button" class="bg-light btn-lg btn-block mb-4 text-small">Baixar Edital</button>
+              <button (click)="downloadEdital()" type="button" class="bg-light btn-lg btn-block mb-4 text-small">Baixar Edital</button>
             </div>
             <div class="col-12">
-              <button type="button" class="bg-light btn-lg btn-block mb-4 text-small">Baixar Ata</button>
+              <button (click)="downloadAta()" type="button" class="bg-light btn-lg btn-block mb-4 text-small">Baixar Ata</button>
             </div>
           </div>
 
         </div>
 
-        <div class="row col-12 col-md-6 ml-auto float-right mt-4 p-0">
-          <button (click)="open(content);" type="button" class="btn-block-supplier btn-lg btn-block mb-4 text-small border-0 text-white">Cancelar
+        <div [ngClass]="response.status ==='draft'? 'justify-content-between':'justify-content-end'"
+          class="row col-12 d-flex float-right my-4 p-0 ">
+          <button (click)="open(content);" type="button" [ngClass]="response.status ==='draft'? 'mx-auto':''"
+            class="btn-block-supplier col-md-5 col-12 btn-lg btn-block text-small border-0 text-white py-2">Cancelar
             Licitação</button>
+          <button *ngIf="response.status ==='draft'" (click)="open(contentAccept);" type="button"
+            [ngClass]="response.status ==='draft'? 'mx-auto':''"
+            class="btn-info col-md-5 col-12 btn-lg text-small border-0 text-white py-2">Finalizar e enviar para
+            liberação</button>
         </div>
 
         <div class="row col-12 mt-6">
           <h4>Lotes e itens</h4>
         </div>
 
-        <div *ngFor="let allotment of response.add_allotment" class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border">
+        <div *ngFor="let allotment of response.add_allotment"
+          class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border">
           <div class="col-12 py-2">
             <div class="d-flex align-items-center justify-content-between">
               <div class="col-md-3 p-0">
@@ -145,13 +153,16 @@
               </div>
               <div class="col-md-3 p-0">
                 <h6>Status</h6>
-                <h6 class="text-success">Adjudicado</h6>
+                <h6 [ngClass]="getClassStatus(allotment.status)" class="text-capitalize">{{allotment.status || '-'}}
+                </h6>
               </div>
               <div class="col-md-1 p-0 d-flex justify-content-end">
-                <img (click)="toggleSectionOne(allotment)" style="width: 16px;"
+                <!-- <img (click)="toggleSectionOne(allotment)" style="width: 16px;"
                   [src]="allotment.isSectionOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
-                  alt="Ícone"
-                  class="opener-icon cursor-pointer">
+                  alt="Ícone" class="opener-icon cursor-pointer"> -->
+                <i class="bi"
+                  [ngClass]="{'bi-caret-down-fill': !allotment.isSectionOpen, 'bi-caret-up': allotment.isSectionOpen}"
+                  (click)="toggleSectionOne(allotment)"></i>
               </div>
             </div>
 
@@ -184,16 +195,18 @@
                   </div>
                 </div>
               </div>
-              <div class="d-flex align-items-center justify-content-between p-0">
+              <div *ngIf="response.editalFile" class="d-flex align-items-center justify-content-between p-0">
                 <div class="col-md-4 p-0">
                   <h6>Arquivos do lote</h6>
-                  <h6 (click)="downloadFile(allotment.files)" class="text-primary cursor-pointer">arquivo.pdf</h6>
+                  <h6 (click)="download(allotment._id)" class="text-primary cursor-pointer">
+                    {{getFileName(allotment.files)}}</h6>
                 </div>
                 <div class="col-md-3 mt-4">
-                  <button type="button" routerLink="/associacao/licitacoes/view-proposal/" class="bg-dark btn-lg btn-block mb-4 text-small text-white">Visualizar
-                    propostas</button>
                 </div>
               </div>
+              <button type="button" (click)="goViewProposals()"
+                class="bg-dark btn-lg btn-block mb-4 text-small text-white">Visualizar
+                propostas</button>
             </div>
           </div>
         </div>
@@ -202,7 +215,8 @@
           <h4>Fornecedores convidados</h4>
         </div>
 
-        <div class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border mb-5" *ngFor="let response of invitedSuppliersInfo">
+        <div class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border mb-5"
+          *ngFor="let response of response.invited_suppliers">
           <div class="col-12 py-2">
             <div class="d-flex align-items-center justify-content-between">
               <div class="col-md-9 p-0">
@@ -214,10 +228,12 @@
                   <h6>Documento</h6>
                   <h6>{{response.cpf | mask : '000.000.000-00'}}</h6>
                 </div>
-                <img (click)="toggleSectionTwo()" style="width: 16px;"
-                  [src]="isSectionTwoOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
+                <!-- <img (click)="toggleSectionTwo()" style="width: 16px;"
+                  [src]="isSectionTwoOpen ? '../../../' : '../../../assets/images/arrow-opener.svg'"
                   alt="Ícone"
-                  class="opener-icon cursor-pointer">
+                  class="opener-icon cursor-pointer"> -->
+                <i class="bi" [ngClass]="{'bi-caret-down-fill': !isSectionTwoOpen, 'bi-caret-up': isSectionTwoOpen}"
+                  (click)="toggleSectionTwo()"></i>
               </div>
             </div>
 
@@ -269,11 +285,40 @@
 
     <div class="d-flex justify-content-center">
       <div class="col-md-6 mt-4">
-        <button type="button" class="bg-light btn-lg btn-block mb-4 text-small border-0" (click)="exit();">Voltar</button>
+        <button type="button" class="bg-light btn-lg btn-block mb-4 text-small border-0"
+          (click)="exit();">Voltar</button>
       </div>
 
       <div class="col-md-6 mt-4">
-        <button type="button" class="btn-block-supplier text-white btn-lg btn-block mb-4 text-small border-0" (click)="cancelStatus();">Confirmar</button>
+        <button type="button" class="btn-block-supplier text-white btn-lg btn-block mb-4 text-small border-0"
+          (click)="cancelStatus();">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template class="container-fluid" #contentAccept let-modal>
+  <div class="p-5 bg-light">
+    <div class="col-12 d-flex justify-content-between">
+      <h3 class="tfa-title m-0">Aceitar Licitação</h3>
+      <h5 (click)="exit()" class="cursor-pointer">X</h5>
+    </div>
+
+    <div class="my-4 text-center accept-messege py-1 d-flex justify-content-center">
+      <div class="pr-1"><img src="../../../../assets/images/icon-alert.svg" (click)="exit()"></div>
+      <div class="text-primary">Esta ação irá enviar para liberação a licitação</div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <div class="col-md-6 mt-4">
+        <button type="button" class="bg-light btn-lg btn-block mb-4 text-small border-0"
+          (click)="exit();">Voltar</button>
+      </div>
+
+      <div class="col-md-6 mt-4">
+        <button type="button" class="btn-info text-white btn-lg btn-block mb-4 text-small border-0"
+          (click)="acceptStatus()">Confirmar</button>
       </div>
     </div>
   </div>

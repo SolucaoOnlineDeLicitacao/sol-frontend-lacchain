@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { UserListResponseDto } from 'src/dtos/user/user-list-response.dto';
 import { UserTypeEnum } from 'src/enums/user-type.enum';
 import { UserService } from 'src/services/user.service';
 import { DeleteUserComponent } from '../delete-user/delete-user.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-control-fornecedor',

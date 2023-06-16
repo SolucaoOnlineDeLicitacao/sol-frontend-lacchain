@@ -6,45 +6,53 @@
         </div>
     </div>
 
-    <div class="col-md-12">
-        <h4>Informática</h4>
-    </div>
-
-    <div class="my-4 text-center unblock-messege py-1 d-flex justify-content-center">
+    <div *ngIf="response.proposals.length > 0"
+        class="my-4 text-center unblock-messege py-1 d-flex justify-content-center">
         <div class="pr-1"><img src="../../../../assets/images/icon-alert-blue.svg"></div>
-        <div class="unblock-text">Valor total estimado: R$ 5,00</div>
+        <div *ngIf="response.proposals.length > 1" class="unblock-text">Valor total estimado: {{valueEsteemed |
+            currency: 'R$ '}}</div>
+        <div *ngIf="response.proposals.length === 1" class="unblock-text">Valor total estimado:
+            {{response.proposals[0].total_value |
+            currency: 'R$ '}}</div>
     </div>
 
-    <div class="col-md-12 col-lg-12">
+    <!-- <div class="col-md-12 col-lg-12">
         <div class="d-flex justify-content-end">
             <div class="d-flex align-items-center winning-proposal-border px-3 py-1">
                 <img class="pr-2" style="width: 25px;" src="../../../assets/images/filled-star-icon.svg">
                 <span class="winning-proposal-text text-white">Proposta vencedora</span>
             </div>
-        </div></div>
+        </div>
+    </div> -->
 
-    <div class="row col-12 col-md-12 p-0 m-0 association-data-border">
-        <div class="col-12 py-3">
+    <!-- <div *ngFor="let item of response.proposals"
+        class="row col-12 p-0 m-0 association-data-border position-relative mt-5">
+        <div *ngIf="item.proposalWin" class="space-win-proposal">
+            <div class="d-flex align-items-center winning-proposal-border px-3 py-1">
+                <img class="pr-2" style="width: 25px;" src="../../../assets/images/filled-star-icon.svg">
+                <span class="winning-proposal-text text-white">Proposta vencedora</span>
+            </div>
+        </div> -->
+    <!-- <div class="col-12 py-3">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="col-md-4 p-0">
                     <h6 class="text-dark">Fornecedor</h6>
-                    <h6>Fornecedor 1</h6>
+                    <h6>{{response.bid.fornecedor?.name}}</h6>
                 </div>
                 <div class="col-md-3 p-0">
                     <h6 class="text-dark">Valor total</h6>
-                    <h6>R$ 10,000.00</h6>
+                    <h6 *ngIf="item.total_value">{{item.total_value | currency: 'R$ '}}</h6>
                 </div>
                 <div class="col-md-1 p-0 d-flex justify-content-end">
                     <img (click)="toggleSectionOne()" style="width: 16px;"
                         [src]="isSectionOneOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
-                        alt="Ícone"
-                        class="opener-icon cursor-pointer">
+                        alt="Ícone" class="opener-icon cursor-pointer">
                 </div>
             </div>
 
             <div class="content" [ngClass]="{ 'open': isSectionOneOpen }">
                 <hr>
-                <h4 class="pb-3">Lista de itens e propostas</h4>
+                <h4 class="pb-3">Lista de itens</h4>
                 <div class="row col-12 mb-3">
                     <div class="col-md-12">
                         <div class="table-responsive-sm">
@@ -54,19 +62,17 @@
                                         <th scope="col" style="color: black;">Item</th>
                                         <th scope="col"></th>
                                         <th scope="col"></th>
-                                        <td class="text-capitalize">1 Unidade(s)</td>
+                                        <td class="text-capitalize">Unidade(s)</td>
                                         <th scope="col"></th>
-                                        <th scope="col" style="color: black;">Valor</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr class="bg-first-row">
-                                        <th class="text-capitalize" scope="row">Microcomputadores i3 4gb</th>
+                                <tbody *ngFor="let responseBid of response.bid.add_allotment">
+                                    <tr *ngFor="let content of responseBid.add_item" class="bg-first-row">
+                                        <th class="text-capitalize" scope="row">{{content.item}}</th>
                                         <th scope="col"></th>
                                         <th scope="col"></th>
-                                        <td class="text-capitalize">1 Unidade(s)</td>
+                                        <td class="text-capitalize">{{content.quantity}}</td>
                                         <th scope="col"></th>
-                                        <td class="text-capitalize">R$ 10,000.00</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -74,10 +80,143 @@
                     </div>
                 </div>
             </div>
+            <div *ngIf="item.proposalWin" class="space-buttons-action-bid-custom">
+                <button class="btn btn-outline-danger mt-3" (click)="refuse(item)" *ngIf="item.aceitoRevisora || item.aceitoAssociacao">Recusar</button>
+                <button class="btn btn-outline-primary mx-sm-3 mt-3" (click)="toggleSectionOne()">Visualizar</button>
+                <button class="btn btn-outline-success mt-3" (click)="accept(item)" *ngIf="item.aceitoRevisora || item.aceitoAssociacao">Aceitar</button>
+            </div>
+        </div> -->
+    <!-- </div> -->
+    <!-- <div class="accordion" id="accordionExample">
+        <div class="accordion-item" *ngFor="let item of response.proposals; let i = index">
+            <h2 class="accordion-header" [id]="'heading'+i">
+
+                <button class="btn accordion-button" [ngClass]="{ 'collapsed': i != 0 }" type="button"
+                    data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse'+i" aria-expanded="true"
+                    [attr.aria-controls]="'collapse'+i">
+                    <div class="w-100 d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <p class="text-index-my-collections">{{i + 1}}</p>
+                            <h6 class="text-dark">Fornecedor</h6>
+                            <h6>{{response.bid.fornecedor?.name}}</h6>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <h6 class="text-dark">Valor total</h6>
+                            <h6 *ngIf="item.total_value">{{item.total_value | currency: 'R$ '}}</h6>
+                        </div>
+                    </div>
+                </button>
+            </h2>
+            <div [id]="'collapse'+i" class="accordion-collapse collapse" [ngClass]="{ 'show': i == 0 }"
+                [attr.aria-labelledby]="'heading'+i" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="content" [ngClass]="{ 'open': isSectionOneOpen }">
+                        <hr>
+                        <h4 class="pb-3">Lista de itens</h4>
+                        <div class="row col-12 mb-3">
+                            <div class="col-md-12">
+                                <div class="table-responsive-sm">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr class="custom-th-contrato">
+                                                <th scope="col" style="color: black;">Item</th>
+                                                <th scope="col"></th>
+                                                <th scope="col"></th>
+                                                <td class="text-capitalize">Unidade(s)</td>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody *ngFor="let responseBid of response.bid.add_allotment">
+                                            <tr *ngFor="let content of responseBid.add_item" class="bg-first-row">
+                                                <th class="text-capitalize" scope="row">{{content.item}}</th>
+                                                <th scope="col"></th>
+                                                <th scope="col"></th>
+                                                <td class="text-capitalize">{{content.quantity}}</td>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+
+    </div> -->
+
+    <ngb-accordion>
+        <ngb-panel *ngFor="let item of response.proposals; let i = index" [expanded]="isActiveItem(i)"
+            (click)="setActiveItem(i)">
+            <ng-template ngbPanelTitle>
+                <div class="position-relative my-3">
+                    <div *ngIf="item.proposalWin" class="space-win-proposal">
+                        <div class="d-flex align-items-center winning-proposal-border px-3 py-1">
+                            <img class="pr-2" style="width: 25px;" src="../../../assets/images/filled-star-icon.svg">
+                            <span class="winning-proposal-text text-white">Proposta vencedora</span>
+                        </div>
+                    </div>
+                    <div class="d-flex w-100 align-items-center justify-content-between">
+                        <div *ngFor="let item of response.invited_suppliers" class="d-flex flex-column">
+                            <h6 class="text-dark">Fornecedor</h6>
+                            <h6>{{item?.name}}</h6>
+                        </div>
+                        <div *ngIf="item.total_value" class="d-flex flex-column">
+                            <h6 class="text-dark">Valor total</h6>
+                            <h6 *ngIf="item.total_value">{{item.total_value | currency: 'R$ '}}</h6>
+                        </div>
+                        <i class="bi" [ngClass]="{'bi-caret-down-fill': !isIconUp(i), 'bi-caret-up': isIconUp(i)}"></i>
+                    </div>
+                    <div *ngIf="item.proposalWin" class="space-buttons-action-bid-custom">
+                        <button class="btn btn-outline-danger mt-3" (click)="refuse(item)"
+                            *ngIf="item.status !== 'aceitoRevisora' && item.status !== 'aceitoAssociacao'"
+                            style="max-width: 250px !important;">Recusar</button>
+                        <button class="btn btn-outline-primary mx-sm-3 mt-3" (click)="setActiveItem(i)"
+                            style="max-width: 250px !important;">Visualizar</button>
+                        <button class="btn btn-outline-success mt-3" (click)="accept(item)"
+                            *ngIf="item.status !== 'aceitoRevisora' && item.status !== 'aceitoAssociacao'"
+                            style="max-width: 250px !important;">Aceitar</button>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+                <div class="row col-12 mb-3">
+                    <div class="col-md-12">
+                        <div class="table-responsive-sm">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr class="custom-th-contrato">
+                                        <th scope="col" style="color: black;">Item</th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <td class="text-capitalize">Unidade(s)</td>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let responseBid of response.bid.add_allotment">
+                                    <tr *ngFor="let content of responseBid.add_item" class="bg-first-row">
+                                        <th class="text-capitalize" scope="row">{{content.item}}</th>
+                                        <th scope="col"></th>
+                                        <th scope="col"></th>
+                                        <td class="text-capitalize">{{content.quantity}}</td>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+
+    <div *ngIf="response.proposals.length === 0" class="">
+        <h4>Nenhuma proposta</h4>
     </div>
 
-    <div class="row col-12 col-md-12 p-0 mt-4 mx-0 user-data-border">
+    <!-- <div class="row col-12 col-md-12 p-0 mt-4 mx-0 user-data-border">
         <div class="col-12 py-3">
             <div class="d-flex align-items-center justify-content-between">
                 <div class="col-md-6 p-0">
@@ -94,8 +233,7 @@
                 <div class="col-md-1 p-0 d-flex justify-content-end">
                     <img (click)="toggleSectionTwo()" style="width: 16px;"
                         [src]="isSectionTwoOpen ? '../../../assets/images/arrow-close.svg' : '../../../assets/images/arrow-opener.svg'"
-                        alt="Ícone"
-                        class="opener-icon cursor-pointer">
+                        alt="Ícone" class="opener-icon cursor-pointer">
                 </div>
             </div>
 
@@ -132,6 +270,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 </div>

@@ -42,7 +42,6 @@ export class NewGroupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.convenioId = localStorage.getItem("convenioId") || "";
-    console.log(this.convenioId);
     this.getCostItems();
   }
 
@@ -53,11 +52,10 @@ export class NewGroupComponent implements OnInit, OnDestroy {
   getCostItems() {
     this.costItemsService.list().subscribe({
       next: success => {
-        console.log(success);
         this.costItemsList = success;
       },
       error: error => {
-        console.log(error);
+        console.error(error);
       },
     });
   }

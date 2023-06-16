@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AssociationService } from 'src/services/association.service';
-import { UserService } from 'src/services/user.service';
+import { CepService } from '../../../../services/cep.service';
+import { CepResponseDto } from '../../../../dtos/address/cep-response.dto';
+import { NominatimService } from '../../../../services/nominatim.service';
 
 @Component({
   selector: 'app-register-association',
@@ -19,12 +21,17 @@ export class RegisterAssociationComponent implements OnInit {
   formLegalRepresentativeAddress!: FormGroup;
   isSubmit: boolean = false;
 
+  @ViewChild('addressnumber') inputNumber: ElementRef;
+  @ViewChild('addressnumberlegal') inputNumberLegalRepresentative: ElementRef;
+
   constructor(
     private formBuilder: FormBuilder,
     private associationService: AssociationService,
     private ngxSpinnerService: NgxSpinnerService,
     private toastrService: ToastrService,
-    private router: Router
+    private router: Router,
+    private cepService: CepService,
+    private nominatimService: NominatimService,
   ) {
 
     this.form = this.formBuilder.group({
@@ -90,16 +97,83 @@ export class RegisterAssociationComponent implements OnInit {
     this.associationService.register(dto).subscribe({
       next: (success) => {
         this.ngxSpinnerService.hide();
-        this.toastrService.success('Associação cadastrada com sucesso!', '', { progressBar: true});
+        this.toastrService.success('Associação cadastrada com sucesso!', '', { progressBar: true });
         this.router.navigate(['/pages/associacao'])
       },
       error: (error) => {
         console.error(error);
-        this.toastrService.error( error.error.errors[0], '', { progressBar: true});
+        this.toastrService.error(error.error.errors[0], '', { progressBar: true });
         this.ngxSpinnerService.hide();
       }
     });
 
   }
 
+  async searchAssociationAddressByCep(event: any) {
+
+    if (event.target.value) {
+
+      let cep: string = event.target.value.replace('.', '');
+      cep = cep.replace('-', '');
+
+      if (cep.length === 8) {
+
+        const response = await this.searchCep(cep);
+
+        this.formAddress.patchValue({
+          publicPlace: response.logradouro,
+          neighborhood: response.bairro,
+          city: response.cidade,
+          state: response.uf,
+        });
+
+        this.inputNumber.nativeElement.focus();
+      }
+    }
+  }
+
+  async searchLegalRepresentativeAddressByCep(event: any) {
+
+    if (event.target.value) {
+
+      let cep: string = event.target.value.replace('.', '');
+      cep = cep.replace('-', '');
+
+      if (cep.length === 8) {
+
+        const response = await this.searchCep(cep);
+
+        this.formLegalRepresentativeAddress.patchValue({
+          publicPlace: response.logradouro,
+          neighborhood: response.bairro,
+          city: response.cidade,
+          state: response.uf,
+        });
+
+        this.inputNumberLegalRepresentative.nativeElement.focus();
+      }
+    }
+  }
+
+  async searchCep(cep: string): Promise<CepResponseDto> {
+    return await this.cepService.buscarCep(cep);
+  }
+
+  async getLatLong(event: any) {
+
+    const address = { ...this.formAddress.value };
+
+    const result: any = await this.nominatimService.getLatLongByAddressq(address.zipCode);
+
+    if (result && result.length > 0) {
+
+      const lat = result[0].lat;
+      const lng = result[0].lon;
+
+      this.formAddress.patchValue({
+        latitude: lat,
+        longitude: lng,
+      });
+    }
+  }
 }

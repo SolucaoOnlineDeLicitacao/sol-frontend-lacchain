@@ -12,8 +12,7 @@
 					placeholder="Busque por status, data ou número">
 			</div>
 			<div class="col-md-3">
-				<button type="button" class="btn btn-secondary btn-lg btn-block"
-					[routerLink]="['/pages/licitacoes/licitacao-register']">Nova Licitação</button>
+				<button type="button" class="btn btn-secondary btn-lg btn-block" [routerLink]="['/pages/licitacoes/licitacao-register']">Nova Licitação</button>
 			</div>
 
 		</div>
@@ -22,7 +21,7 @@
 
 			<div class="row col-12 p-2" (click)="detailBids(item);">
 				<div class="col-12 col-md-10">
-					<h5 class="text-dark"> <b> Licitação nº {{item.bid_count}}/2022 </b></h5>
+					<h5 class="text-dark"> <b> Licitação nº {{item.bid_count}}/{{item.createdAt | date:'yyyy'}} </b></h5>
 				</div>
 				<div class="col-12 col-md-2">
 					<h6 class="font-poppins f-size-14 text-secondary">Status</h6>
@@ -50,8 +49,7 @@
 					<h6 class="font-poppins f-size-16 text-secondary">{{item.start_at | date: 'dd/MM/yyyy'}} - {{item.end_at | date: 'dd/MM/yyyy'}}</h6>
 				</div>
 				<div class="col-12 col-md-2">
-					<button (click)="editBids(item);" *ngIf="item.status ==='draft'" type="button" class="bg-light btn-lg btn-block mb-4 text-small text-dark">Adicionar
-						lote</button>
+					<button (click)="editBids(item);" *ngIf="item.status ==='draft'" type="button" class="bg-light btn-lg btn-block mb-4 text-small text-dark">Editar</button>
 				</div>
 			</div>
 		</div>

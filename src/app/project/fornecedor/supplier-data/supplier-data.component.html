@@ -22,9 +22,13 @@
 						<h6 class="font-poppins f-size-14 text-secondary">Nome</h6>
 						<h5 class="f-size-16">{{fornecedor?.name}}</h5>
 					</div>
-					<div class="col-12 col-lg-4 p-2">
+					<div *ngIf="fornecedor?.type === 'pessoa_fisica'" class="col-12 col-lg-4 p-2">
+						<h6 class="font-poppins f-size-14 text-secondary">CPF</h6>
+						<h5 class="f-size-16">{{fornecedor?.cpf! | mask : '000.000.000-00'}}</h5>
+					</div>
+					<div *ngIf="fornecedor?.type === 'pessoa_juridica'" class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">CNPJ</h6>
-						<h5 class="f-size-16">{{fornecedor?.document! | mask : '00.000.000/0000-00'}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.cpf! | mask : '00.000.000/0000-00'}}</h5>
 					</div>
 
 					<div class="col-12 col-lg-4 p-2">
@@ -40,37 +44,37 @@
 
 					<div class="col-12 col-lg-4 p-2 text-capitalize">
 						<h6 class="font-poppins f-size-14 text-secondary">CEP</h6>
-						<h5 class="f-size-16">{{fornecedor?.zip! | mask : '00.000-000'}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.address?.zipCode! | mask : '00.000-000'}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2 text-capitalize">
 						<h6 class="font-poppins f-size-14 text-secondary">Estado</h6>
-						<h5 class="f-size-16">{{fornecedor?.state}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.address?.state}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Município</h6>
-						<h5 class="f-size-16">{{fornecedor?.city}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.address?.city}}</h5>
 					</div>
 
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Bairro</h6>
-						<h5 class="f-size-16">{{fornecedor?.neighborhood}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.address?.neighborhood}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Logradouro</h6>
-						<h5 class="f-size-16">{{fornecedor?.publicPlace}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.address?.publicPlace}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Número</h6>
-						<h5 class="f-size-16">{{fornecedor?.number}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.address?.number}}</h5>
 					</div>
 
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Complemento</h6>
-						<h5 class="f-size-16">{{fornecedor?.complement}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.address?.complement}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Ponto de referência</h6>
-						<h5 class="f-size-16">{{fornecedor?.referencePoint}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.address?.referencePoint}}</h5>
 					</div>
 
 				</div>
@@ -84,11 +88,11 @@
 
 					<div class="col-12 col-lg-4 p-2 text-capitalize">
 						<h6 class="font-poppins f-size-14 text-secondary">Nome</h6>
-						<h5 class="f-size-16">{{fornecedor?.legalName}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.legal_representative?.name}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2 text-capitalize">
 						<h6 class="font-poppins f-size-14 text-secondary">CPF</h6>
-						<h5 class="f-size-16">{{fornecedor?.cpf! | mask : '000.000.000-00'}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.legal_representative?.cpf! | mask : '000.000.000-00'}}</h5>
 					</div>
 					<!-- <div class="col-12 col-lg-4 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Estado Civil</h6>
@@ -101,37 +105,37 @@
 
 					<div class="col-12 col-lg-4 p-2 text-capitalize">
 						<h6 class="font-poppins f-size-14 text-secondary">CEP</h6>
-						<h5 class="f-size-16">{{fornecedor?.legalZip! | mask : '00.000-000'}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.legal_representative?.address?.zipCode! | mask : '00.000-000'}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2 text-capitalize">
 						<h6 class="font-poppins f-size-14 text-secondary">Estado</h6>
-						<h5 class="f-size-16">{{fornecedor?.legalState}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.legal_representative?.address?.state}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Município</h6>
-						<h5 class="f-size-16">{{fornecedor?.legalCity}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.legal_representative?.address?.city}}</h5>
 					</div>
 
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Bairro</h6>
-						<h5 class="f-size-16">{{fornecedor?.legalNeighborhood}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.legal_representative?.address?.neighborhood}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Logradouro</h6>
-						<h5 class="f-size-16">{{fornecedor?.legalPublicPlace}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.legal_representative?.address?.publicPlace}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Número</h6>
-						<h5 class="f-size-16">{{fornecedor?.legalNumber}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.legal_representative?.address?.number}}</h5>
 					</div>
 
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Complemento</h6>
-						<h5 class="f-size-16">{{fornecedor?.legalComplement}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.legal_representative?.address?.complement}}</h5>
 					</div>
 					<div class="col-12 col-lg-4 p-2">
 						<h6 class="font-poppins f-size-14 text-secondary">Ponto de referência</h6>
-						<h5 class="f-size-16">{{fornecedor?.legalReferencePoint}}</h5>
+						<h5 class="f-size-16">{{fornecedor?.legal_representative?.address?.referencePoint}}</h5>
 					</div>
 
 				</div>
@@ -144,7 +148,7 @@
 					</div>
 
 					<div *ngFor="let item of fornecedor?.categories" class="col-12 p-2 text-capitalize">
-						<h5 class="font-poppins f-size-14 text-secondary mb-3 text-dark">{{item}}</h5>
+						<h5 class="font-poppins f-size-14 text-secondary mb-3 text-dark">{{item?.category_name}}</h5>
 					</div>
 
 				</div>

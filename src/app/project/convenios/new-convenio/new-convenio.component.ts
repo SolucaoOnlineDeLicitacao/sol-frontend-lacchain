@@ -64,8 +64,8 @@ export class NewConvenioComponent {
       price: ["", [Validators.required]],
       state: ["", [Validators.required]],
       city: ["", [Validators.required]],
-      datesub: ["", [Validators.required, Validators.minLength(8)]],
-      datemat: ["", [Validators.required, Validators.minLength(8)]],
+      datesub: ["", [Validators.required]],
+      datemat: ["", [Validators.required]],
       situation: ["", [Validators.required]],
       association: ["", [Validators.required]],
       review: ["", [Validators.required]],
@@ -219,9 +219,9 @@ export class NewConvenioComponent {
 
   onSubmit() {
     this.verifyInputs();
-    if (this.form.invalid) {
-      return;
-    }
+    // if (this.form.invalid) {
+    //   return;
+    // }
 
     this.request = {
       register_number: `${this.form.controls["number"].value}/${this.year} `,
@@ -246,18 +246,16 @@ export class NewConvenioComponent {
       reviewerId: this.form.controls["review"].value,
     };
 
-    if (this.form.valid) {
-      this.convenioService.register(this.request).subscribe({
-        next: success => {
-          this.toastrService.success("Criado com sucesso!", "", { progressBar: true });
-          this.location.back();
-        },
-        error: error => {
-          console.error(error);
-          this.toastrService.error(error.error.errors[0], "Error ao criar!", { progressBar: true });
-        },
-      });
-    }
+    this.convenioService.register(this.request).subscribe({
+      next: success => {
+        this.toastrService.success("Criado com sucesso!", "", { progressBar: true });
+        this.location.back();
+      },
+      error: error => {
+        console.error(error);
+        this.toastrService.error('', "Error ao criar!", { progressBar: true });
+      },
+    });
   }
 
   getCity(state: string) {

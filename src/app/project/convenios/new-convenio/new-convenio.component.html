@@ -25,7 +25,7 @@
             <option *ngFor="let estados of statesList" [value]="estados">{{estados}}</option>
           </select>
         </div>
-        <div class="col-md-5 mt-4">
+        <div class="col-md-6 mt-4">
           <label for="municipio"><strong>{{cityalert}}</strong></label>
           <select formControlName="city" #city class="form-control br-10 h50"
             id="municipio">
@@ -33,7 +33,7 @@
             <option *ngFor="let cidades of citiesList" [value]="cidades">{{cidades}}</option>
           </select>
         </div>
-        <div class="col-md-5 mt-4">
+        <div class="col-md-4 mt-4">
           <label class="text-dark text-capitalize" for="value"><strong>{{pricealert}}</strong></label>
           <input type="tel" formControlName="price" #price class="form-control br-10
             py-4" id="value" separatorLimit="100000000" prefix="R$" mask="0000" mask="separator.2" thousandSeparator=","  placeholder="Digite o valor">

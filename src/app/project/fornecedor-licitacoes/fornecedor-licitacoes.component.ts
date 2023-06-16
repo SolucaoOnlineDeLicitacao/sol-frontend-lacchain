@@ -1,9 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { forkJoin } from 'rxjs';
-import { AssociationResponseDto } from 'src/dtos/association/association-response.dto';
-import { UserTypeEnum } from 'src/enums/user-type.enum';
+import { Observable, forkJoin } from 'rxjs';
 import { AssociationBidService } from 'src/services/association-bid.service';
 import { AssociationService } from 'src/services/association.service';
 import { AuthService } from 'src/services/auth.service';
@@ -26,15 +24,17 @@ export class FornecedorLicitacoesComponent {
   VALUEaLERT = false;
   licitacoesList: any = [];
   licitacoesId: any;
-  associationList: AssociationResponseDto[];
-  userList: any[];
-  associateListInfo: any;
+  associationName: any;
+  listAssociationInfo: any;
+
+  idArray: string[] = [];
+  listIdAssociation: any;
   constructor(
     private authbase: AuthService,
-    private userService: UserService,
     private spinnerService: NgxSpinnerService,
+    private userService: UserService,
     private _associationBidService: AssociationBidService,
-    private association: AssociationService,
+    private associationService:AssociationService,
     private router: Router
   ) {
   }
@@ -43,26 +43,32 @@ export class FornecedorLicitacoesComponent {
     if (this.authbase.getAuthenticatedUser().type !== 'fornecedor') this.router.navigate(['/pages/dashboard']);
     this._associationBidService.list().subscribe({
       next: (data: any[]) => {
+        console.log('licitações', data);
         this.licitacoesList = data;
-        console.log(this.licitacoesList);
-        const filterList = this.licitacoesList.filter((licitacao: { invited_suppliers: string[]; }) => {
-          if (licitacao.invited_suppliers && Array.isArray(licitacao.invited_suppliers)) {
-            return licitacao.invited_suppliers.includes(this.authbase.getAuthenticatedUser().id);
-          }
-          return false;
+        const observables: Observable<any>[] = [];
+        data.forEach((item: any, index: number) => {
+          this.listIdAssociation = item.agreement?.association;
+          console.log(item.agreement?.association);
+          observables.push(this.associationService.getById(this.listIdAssociation));
+          observables[index].subscribe({
+            next: (response: any) => {
+              this.licitacoesList[index].name = response.name;
+            },
+            error: (err: any) => {
+              console.error(err);
+            }
+          });
         });
-        console.log(filterList);
-        this.licitacoesId = filterList;
-        const listFiltred = this.licitacoesId.map((association: any) => { return this.userService.getById(association.association);});
-        forkJoin(listFiltred).subscribe({
-          next: (success: any) => {
-            this.associateListInfo = success.map((item: any) => item.name);
+        forkJoin(observables).subscribe({
+          next: (responses) => {
+            console.log(responses);
+            this.listAssociationInfo = responses;
+            console.log(this.listAssociationInfo, 'lista de associação');
           },
           error: (err) => {
             console.error(err);
           }
         });
-    
         this.spinnerService.hide();
       },
       error: (error: any) => {

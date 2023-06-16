@@ -1,9 +1,7 @@
 
 import { Component, AfterViewInit } from '@angular/core';
 import * as L from "leaflet";
-import { AllLicitacao } from 'src/services/association-licitacao.mock';
 import { AuthService } from 'src/services/auth.service';
-import { licitacaoList } from 'src/services/association-licitacao.mock';
 import { Router } from '@angular/router';
 import { DatamockService } from 'src/services/datamock.service';
 import { AssociationService } from 'src/services/association.service';
@@ -43,7 +41,8 @@ export class DashboardComponent implements AfterViewInit {
       'Big Square': L.polygon([[46.8, -121.55], [46.9, -121.55], [46.9, -121.7], [46.8, -121.7]])
     }
   }
-  licitacoesList!: any[];
+  licitacoesId: any;
+  licitacoesList: any[];
   currentPage: number = 1;
   itensPerPage: number = 6;
 
@@ -63,7 +62,22 @@ export class DashboardComponent implements AfterViewInit {
     if (this.authService.getAuthenticatedUser().type == 'administrador' || this.authService.getAuthenticatedUser().type == 'fornecedor') {
       this.ngxSpinnerService.hide();
     }
-    this.licitacoesList = this.datamockService.licitacoes;
+    this._associationBidService.list().subscribe({
+      next: (data: any[]) => {
+        this.licitacoesList = data;
+        const filterList = this.licitacoesList.filter((licitacao: { invited_suppliers: string[]; }) => {
+          if (licitacao.invited_suppliers && Array.isArray(licitacao.invited_suppliers)) {
+            return licitacao.invited_suppliers.includes(this.authService.getAuthenticatedUser().id);
+          }
+          return false;
+        });
+        console.log(filterList);
+        this.licitacoesId = filterList;
+      },
+      error: (error) => {
+        console.log(error)
+      }
+    });
 
     if (this.authService.getAuthenticatedUser().type == 'associacao') {
       // this.ngxSpinnerService.show();

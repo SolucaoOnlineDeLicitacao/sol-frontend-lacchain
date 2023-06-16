@@ -34,7 +34,9 @@
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Modalidade</h6>
-                    <h5 class="f-size-16">{{response.modality}}</h5>
+                    <h5 *ngIf="response.modality ==='openClosed'" class="f-size-16 text-dark">Aberta/pública</h5>
+                    <h5 *ngIf="response.modality ==='openInvite'" class="f-size-16 text-dark">Convite aberto</h5>
+                    <h5 *ngIf="response.modality ==='closedInvite'" class="f-size-16 text-dark">Convite fechado</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Classificação</h6>
@@ -68,7 +70,8 @@
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">Convênio</h6>
-                    <h5 class="f-size-16">{{response.agreement}}</h5>
+                    <h5 class="f-size-16">{{response.agreement?.register_number+" -
+                        "+response.agreement?.register_object }}</h5>
                 </div>
                 <div *ngIf="response.status === 'deserted' || response.status === 'canceled' || response.status === 'failed'"
                     class="col-md-8 mt-3 ">
@@ -131,9 +134,9 @@
             class="col-md-11 mt-3">
             <div class="row">
                 <div class="col-md-3 px-0">
-                    <button (click)="openModal('proposal', null)"
-                        class="btn mt-2 h50 br-10 w3-white text-dark border-dark w-100"> <strong>Lista de
-                            propostas</strong></button>
+                    <button (click)="openModal('proposal', response)"
+                        class="btn mt-2 h50 br-10 w3-white text-dark border-dark w-100"> <strong>Vizualizar
+                            proposta</strong></button>
                 </div>
                 <div class="col-md-4"></div>
                 <!-- <div class="col-md-5 mt-2 px-0">

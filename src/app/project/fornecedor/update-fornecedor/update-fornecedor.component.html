@@ -42,7 +42,7 @@
                             <label for="cnpj"
                                 class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>CNPJ</b></label>
                             <input type="text" formControlName="cnpj" style="text-indent:20px;" class="form-control"
-                                mask="00.000.000/0000-00" id="cnpj" placeholder="00.000.000/0000-00">
+                                [mask]="fornecedor?.type==='pessoa_fisica'?'000.000.000-00':'00.000.000/0000-00'" id="cnpj" placeholder="00.000.000/0000-00">
 
                             <div *ngIf="form.controls['cnpj'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
@@ -450,21 +450,17 @@
                             <select type="text" formControlName="categories" style="text-indent:20px;"
                                 class="form-control" id="categories">
                                 <option selected readonly disabled [value]="''">Selecione...</option>
-                                <option value="100 - Bens / Papelaria">100 - Bens / Papelaria</option>
-                                <option value="101 - Bens / Papelaria">101 - Bens / Papelaria</option>
-                                <option value="102 - Bens / Papelaria">102 - Bens / Papelaria</option>
-                                <option value="103 - Bens / Papelaria">103 - Bens / Papelaria</option>
-                                <option value="104 - Bens / Papelaria">104 - Bens / Papelaria</option>
+                                <option *ngFor="let item of categoriesAndSegments" [value]="item._id">{{item.category_name}}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <button (click)="handleCategories();" type="submit" class="btn btn-secondary btn-lg btn-block mb-4">+ Adicionar</button>
                         </div>
 
-                        <div *ngFor="let item of fornecedor?.categories; let i = index" class="col-sm-12 col-md-8">
+                        <div *ngFor="let item of selectCategoriesAndSegments; let i = index" class="col-sm-12 col-md-8">
                             <div class="categories-card mb-3 p-2 d-flex justify-content-between">
                                 <div class="pl-4 f-size-16 text-dark">
-                                    {{item}}
+                                    {{item.category_name}}
                                 </div>
                                 <div (click)="removeCategory(i);" class="cursor-pointer">
                                     <img src="../../../assets/images/delete-X-icon.svg" class="img-msg-error" alt="">

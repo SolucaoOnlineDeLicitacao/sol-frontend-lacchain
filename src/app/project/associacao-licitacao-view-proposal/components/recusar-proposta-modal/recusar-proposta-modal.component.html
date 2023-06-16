@@ -1,0 +1,17 @@
+<section class="container-fluid p-4 modal-custom">
+    <div class="d-flex justify-content-end">
+        <i class="bi bi-x-lg" (click)="exit()"></i>
+    </div>
+    <form [formGroup]="form">
+        <div class="d-flex flex-column justify-content-center">
+            <h4 class="text-center fw-bold">Deseja recusar essa proposta?</h4>
+            <label for="refusedBecaused">Qual motivo da recusa?</label>
+            <textarea id="refusedBecaused" formControlName="refusedBecaused" cols="30" rows="5"
+                class="form-control"></textarea>
+
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-success mt-3" (click)="confirm()">Confirmar</button>
+            </div>
+        </div>
+    </form>
+</section>

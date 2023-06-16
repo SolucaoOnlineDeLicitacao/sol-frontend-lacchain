@@ -25,7 +25,6 @@ export class RegisterCostItemsComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private ngxSpinnerService: NgxSpinnerService,
     private costItemsService: CostItemsService,
     private productService: ProductService,
     private categoryService: CategoryService,
@@ -39,7 +38,7 @@ export class RegisterCostItemsComponent implements OnInit {
       category: ['', [Validators.required]],
       product: ['', [Validators.required]],
       specification: ['', [Validators.required]],
-      sustainable: ['', [Validators.required]],
+      sustainable: [''],
     });
   }
 

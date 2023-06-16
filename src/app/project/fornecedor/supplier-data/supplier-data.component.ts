@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AssociationResponseDto } from 'src/dtos/association/association-response.dto';
 import { AssociationService } from 'src/services/association.service';
-import { AllSuppliers, supplierList } from 'src/services/supplier.mock';
+import { SupplierService } from 'src/services/supplier.service';
 
 @Component({
   selector: 'app-supplier-data',
@@ -14,17 +14,15 @@ import { AllSuppliers, supplierList } from 'src/services/supplier.mock';
 })
 export class SupplierDataComponent implements OnInit {
 
-  fornecedor!: AllSuppliers | undefined;
+  fornecedor!: any | undefined;
   blockSupplier!: FormGroup;
   idSupplier!: boolean;
 
   constructor(
-    private ngxSpinnerService: NgxSpinnerService,
     private activatedRoute: ActivatedRoute,
-    private associationService: AssociationService,
-    private router: Router,
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
+    private supplierService:SupplierService
   ) {
     this.blockSupplier = this.formBuilder.group({
       message: [''],
@@ -33,8 +31,17 @@ export class SupplierDataComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const fornecedorId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    this.fornecedor = supplierList.find(fornecedor => fornecedor._id === fornecedorId);
+    const fornecedorId =this.activatedRoute.snapshot.paramMap.get('id');
+    if(!fornecedorId) return;
+    this.supplierService.getById(fornecedorId).subscribe({
+      next: data => {
+        this.fornecedor = data;
+        console.log(this.fornecedor)
+      },
+      error: error => {
+        console.log(error);
+      }
+    })
   }
 
   open(contentBlocked: any) {
@@ -50,21 +57,21 @@ export class SupplierDataComponent implements OnInit {
   }
 
   handleBlock() {
-    const fornecedorId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    const supplier = supplierList.find(supplier => supplier._id === fornecedorId);
-    if (supplier) {
-      supplier.block = true;
-      this.modalService.dismissAll();
-    }
+    // const fornecedorId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    // const supplier = supplierList.find(supplier => supplier._id === fornecedorId);
+    // if (supplier) {
+    //   supplier.block = true;
+    // }
+    this.modalService.dismissAll();
   }
 
   handleUnBlock() {
-    const fornecedorId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    const supplier = supplierList.find(supplier => supplier._id === fornecedorId);
-    if (supplier) {
-      supplier.block = false;
-      this.modalService.dismissAll();
-    }
+    // const fornecedorId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    // const supplier = supplierList.find(supplier => supplier._id === fornecedorId);
+    // if (supplier) {
+    //   supplier.block = false;
+    // }
+    this.modalService.dismissAll();
   }
 
 }

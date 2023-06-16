@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AssociationBidService } from 'src/services/association-bid.service';
-import { licitacaoList } from 'src/services/association-licitacao.mock';
 import { AuthService } from 'src/services/auth.service';
 
 @Component({
@@ -32,6 +31,7 @@ export class AssociacaoLicitacaoComponent {
   }
 
   detailBids(i: any) {
+    console.log('áaaa', i)
     this.router.navigate(['/pages/licitacoes/licitacao-data', i._id]);
   }
 
