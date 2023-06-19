@@ -28,9 +28,8 @@ export class AceitarPropostaModalComponent {
 
   confirm() {
 
-    this.proposalService.acceptProposal(this.response._id, this.response).subscribe({
+    this.proposalService.acceptProposal(this.response._id).subscribe({
       next: data => {
-        console.log(data);
         this.toastrService.success('Proposta aceita com sucesso', '', { progressBar: true });
         this.exit();
       },

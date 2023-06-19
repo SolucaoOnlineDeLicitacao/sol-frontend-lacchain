@@ -35,9 +35,9 @@ export class ProposalService extends BaseService {
             .put(`${this.url}/refuse/${proposalId}`, dto, this.authorizedHeader);
     }
 
-    acceptProposal(proposalId: string, dto: any): Observable<any> {
+    acceptProposal(proposalId: string): Observable<any> {
         return this.httpClient
-            .put(`${this.url}/accept/${proposalId}`, dto, this.authorizedHeader)
+            .put(`${this.url}/accept/${proposalId}`, null, this.authorizedHeader)
             .pipe(map(this.extractData), catchError(this.serviceError));
     }
 

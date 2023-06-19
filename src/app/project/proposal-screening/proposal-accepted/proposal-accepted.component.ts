@@ -30,12 +30,11 @@ export class ProposalAcceptedComponent {
     let response: any = localStorage.getItem('bidResponse');
     this.responseBid = JSON.parse(response);
 
-    console.log(this.responseBid)
+    console.log('response bid', this.responseBid)
 
     this.proposalService.getProposalAcceptByBid(this.responseBid._id).subscribe({
       next: data => {
         this.responseProposal = data;
-        console.log(data);
       },
       error: error => {
         console.error(error)
@@ -83,7 +82,6 @@ export class ProposalAcceptedComponent {
   approve() {
     this.proposalService.acceptProposal(this.responseProposal._id).subscribe({
       next: data => {
-        console.log(data);
         this.toastrService.success('Proposta aceita com sucesso', '', { progressBar: true });
         this.location.back();
       },
