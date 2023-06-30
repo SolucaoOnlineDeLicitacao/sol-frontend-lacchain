@@ -5,6 +5,7 @@ import { UserListResponseDto } from 'src/dtos/user/user-list-response.dto';
 import { UserTypeEnum } from 'src/enums/user-type.enum';
 import { UserService } from 'src/services/user.service';
 import { DeleteUserComponent } from '../delete-user/delete-user.component';
+import { SupplierService } from 'src/services/supplier.service';
 
 @Component({
   selector: 'app-control-fornecedor',
@@ -14,12 +15,13 @@ import { DeleteUserComponent } from '../delete-user/delete-user.component';
 export class ControlFornecedorComponent {
   currentPage: number = 1;
   itensPerPage: number = 8;
-  
+
   userList!: UserListResponseDto[];
 
   constructor(
     private userService: UserService,
     private ngxSpinnerService: NgxSpinnerService,
+    private supplierService: SupplierService,
     private ngbModal: NgbModal
   ) {
 
@@ -29,8 +31,24 @@ export class ControlFornecedorComponent {
     this.ngxSpinnerService.show();
     this.userService.listByType(UserTypeEnum.fornecedor).subscribe({
       next: (data) => {
-        this.userList = data;
-        this.ngxSpinnerService.hide();
+        this.supplierService.supplierList().subscribe({
+          next: (successSup) => {
+            for (let user of data) {
+              for (let sup of successSup) {
+                if (user.supplier == sup._id) {
+                  user.supplier = sup.name
+                }
+              }
+            }
+            this.userList = data;
+            this.ngxSpinnerService.hide();
+          },
+          
+          error: (error) => {
+            console.error(error.error.errors[0]);
+          }
+        });
+      
       },
       error: (err) => {
         console.error(err);

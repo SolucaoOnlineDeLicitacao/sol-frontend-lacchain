@@ -10,7 +10,7 @@ import { ContractResponseDto } from "../../../dtos/contratos/convenio-response.d
   styleUrls: ["./associacao-contratos.component.scss"],
 })
 export class AssociacaoContratosComponent {
-  convenios: ContractResponseDto[] = [];
+  convenios: any[] = [];
 
   constructor(
     private _contractsService: ContractsService,

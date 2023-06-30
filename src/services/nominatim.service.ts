@@ -19,7 +19,7 @@ export class NominatimService {
         );
     }
 
-    getLatLongByAddressq(cep: string) {
+    getLatLongByAddressByCep(cep: string) {
         return firstValueFrom(
             this._httpClient.get(
                 `https://nominatim.openstreetmap.org/search?format=json&postalcode=${cep}`

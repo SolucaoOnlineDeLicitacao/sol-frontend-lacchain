@@ -1,7 +1,7 @@
 <div class="container-fluid mb-6">
   <div class="row mt-5">
     <div class="col-md-12">
-      <h1>Dados da Licitação</h1>
+      <h1>{{"SUPPLIER_BIDDING.BIDDING_INFORMATION" | translate}}</h1>
       <hr class="bg-primary">
     </div>
   </div>
@@ -24,134 +24,145 @@
             </div>
             <div class="col-12 col-md-2">
               <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
-              <h5 *ngIf="response.status ==='awaiting'" class="f-size-16 text-warning">Aguardando Liberação</h5>
-              <h5 *ngIf="response.status ==='tiebreaker'" class="f-size-16 text-warning">Aguardando desempate</h5>
-              <h5 *ngIf="response.status ==='analysis'" class="f-size-16 text-info">Em Análise</h5>
-              <h5 *ngIf="response.status ==='deserted'" class="f-size-16 text-danger">Deserta</h5>
-              <h5 *ngIf="response.status ==='canceled'" class="f-size-16 text-danger">Cancelada</h5>
-              <h5 *ngIf="response.status ==='failed'" class="f-size-16 text-danger">Falhou</h5>
-              <h5 *ngIf="response.status ==='draft'" class="f-size-16 text-dark">Em Rascunho</h5>
-              <h5 *ngIf="response.status ==='released'" class="f-size-16 text-success">Lançada</h5>
-              <h5 *ngIf="response.status ==='open'" class="f-size-16 text-success">Aberta</h5>
-              <h5 *ngIf="response.status ==='completed'" class="f-size-16 text-success">Concluida</h5>
-              <h5 *ngIf="response.status ==='reopened'" class="f-size-16 text-success">Reaberta</h5>
+              <h5 *ngIf="response.status ==='awaiting'" class="f-size-16 text-warning">{{'ADMINISTRATION_BIDDING.AWAITING' | translate}}</h5>
+              <h5 *ngIf="response.status ==='tiebreaker'" class="f-size-16 text-warning">{{'ADMINISTRATION_BIDDING.TIEBREAKER' | translate}}</h5>
+              <h5 *ngIf="response.status ==='analysis'" class="f-size-16 text-info">{{'ADMINISTRATION_BIDDING.ANALYSIS' | translate}}</h5>
+              <h5 *ngIf="response.status ==='deserted'" class="f-size-16 text-danger">{{'ADMINISTRATION_BIDDING.DESERTED' | translate}}</h5>
+              <h5 *ngIf="response.status ==='canceled'" class="f-size-16 text-danger">{{'ADMINISTRATION_BIDDING.CANCELED' | translate}}</h5>
+              <h5 *ngIf="response.status ==='failed'" class="f-size-16 text-danger">{{'ADMINISTRATION_BIDDING.FAILED' | translate}}</h5>
+              <h5 *ngIf="response.status ==='draft'" class="f-size-16 text-dark">{{'ADMINISTRATION_BIDDING.DRAFT' | translate}}</h5>
+              <h5 *ngIf="response.status ==='released'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.RELEASED' | translate}}</h5>
+              <h5 *ngIf="response.status ==='open'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.OPEN' | translate}}</h5>
+              <h5 *ngIf="response.status ==='completed'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.COMPLETED' | translate}}</h5>
+              <h5 *ngIf="response.status ==='reopened'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.REOPENED' | translate}}</h5>
             </div>
           </div>
 
           <div class="row col-12 p-2">
             <div class="col-12 col-md-10">
-              <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
-              <p class="f-size-16 text-dark">{{authService.getAuthenticatedUser().name}}</p>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'ASSOCIATION_AGREEMENTS.ASSOCIATION' | translate}}</h6>
+              <p class="f-size-16 text-dark">{{response?.association?.name}}</p>
             </div>
             <div class="col-12 col-md-2">
-              <h6 class="font-poppins f-size-14 text-secondary">Revisor</h6>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'ASSOCIATION_AGREEMENTS.REVIWER' | translate}}</h6>
               <h6 class="f-size-16 text-dark">Adm Geral</h6>
             </div>
           </div>
 
           <div class="row col-12 p-2">
             <div class="col-12 col-md-6">
-              <h6 class="font-poppins f-size-14 text-secondary">Modalidade</h6>
-              <p *ngIf="response.modality ==='openClosed'" class="f-size-16 text-dark">Aberta/pública</p>
-              <p *ngIf="response.modality ==='openInvite'" class="f-size-16 text-dark">Convite aberto</p>
-              <p *ngIf="response.modality ==='closedInvite'" class="f-size-16 text-dark">Convite fechado</p>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING.MODALITY' | translate}}</h6>
+              <h5 *ngIf="response.modality ==='openClosed'" class="f-size-16 text-dark">{{'ADMINISTRATION_BIDDING.PUBLIC' | translate}}</h5>
+              <h5 *ngIf="response.modality ==='openInvite'" class="f-size-16 text-dark">{{'ADMINISTRATION_BIDDING.INVITATION_OPEN' | translate}}</h5>
+              <h5 *ngIf="response.modality ==='closedInvite'" class="f-size-16 text-dark">{{'ADMINISTRATION_BIDDING.INVITATION_CLOSED' | translate}}</h5>
             </div>
             <div class="col-12 col-md-6">
-              <h6 class="font-poppins f-size-14 text-secondary">Classificação</h6>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING.CLASSIFICATION' | translate}}</h6>
               <h6 class="f-size-16 text-dark">{{response?.classification}}</h6>
             </div>
           </div>
 
           <div class="row col-12 p-2">
             <div class="col-12 col-md-6">
-              <h6 class="font-poppins f-size-14 text-secondary">Prazo para entrega/execução (dias)</h6>
-              <h6 class="f-size-16 text-dark">{{prazoEmdias}} dias</h6>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING_DETAIL.DEADLINE_DELIVERY' | translate}}</h6>
+              <h6 class="f-size-16 text-dark">{{prazoEmdias}} {{'SUPPLIER_BIDDING.DAYS' | translate}}</h6>
             </div>
             <div class="col-12 col-md-4">
-              <h6 class="font-poppins f-size-14 text-secondary">Data de início</h6>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'CREATE_BIDDING.START_DATE' | translate}}</h6>
               <p class="text-dark">{{response.start_at | date: 'dd/MM/yyyy'}}</p>
             </div>
             <div class="col-12 col-md-2">
-              <h6 class="font-poppins f-size-14 text-secondary">Data de encerramento</h6>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'CREATE_BIDDING.CLOSING_DATE' | translate}}</h6>
               <h6 class="f-size-16 text-dark">{{response.end_at | date: 'dd/MM/yyyy'}}</h6>
             </div>
           </div>
 
           <div class="row col-12 p-2">
             <div class="col-12 col-md-6">
-              <h6 class="font-poppins f-size-14 text-secondary">Local da Entrega</h6>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'CREATE_BIDDING.DELIVERY_PLACE' | translate}}</h6>
               <p class="text-dark">{{response.local_to_delivery}}</p>
             </div>
             <div class="col-12 col-md-6">
-              <h6 class="font-poppins f-size-14 text-secondary">Dias corridos para desempate</h6>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING_DETAIL.DAYS_TIEBREAKER' | translate}}</h6>
               <h6 class="f-size-16 text-dark">{{response.days_to_tiebreaker}}</h6>
             </div>
           </div>
 
           <div class="row col-12 p-2">
             <div class="col-12 col-md-6">
-              <h6 class="font-poppins f-size-14 text-secondary">Tipo de Licitação</h6>
-              <p *ngIf="response.bid_type ==='individualPrice'" class="f-size-16 text-dark">Preço individual</p>
-              <p *ngIf="response.bid_type ==='allotmentPrice'" class="f-size-16 text-dark">Preço por lote</p>
-              <p *ngIf="response.bid_type ==='globalPrice'" class="f-size-16 text-dark">Preço global</p>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING_DETAIL.TYPE_BID' | translate}}</h6>
+              <h5 *ngIf="response.bid_type ==='individualPrice'" class="f-size-16">{{'ADMINISTRATION_BIDDING_DETAIL.INDIVIDUAL_PRICE' | translate}}</h5>
+              <h5 *ngIf="response.bid_type ==='allotmentPrice'" class="f-size-16">{{'ADMINISTRATION_BIDDING_DETAIL.ALLOTMENT_PRICE' | translate}}</h5>
+              <h5 *ngIf="response.bid_type ==='globalPrice'" class="f-size-16">{{'ADMINISTRATION_BIDDING_DETAIL.GLOBAL_PRICE' | translate}}</h5>
             </div>
             <div class="col-12 col-md-6">
-              <h6 class="font-poppins f-size-14 text-secondary">Convênio</h6>
-              <h6 class="f-size-16 text-dark">{{response.agreement?.register_number+" -
-                "+response.agreement?.register_object }}</h6>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'SIDEBAR.AGREEMENTS' | translate}}</h6>
+              <h6 class="f-size-16 text-dark">
+                {{response.agreement?.register_number+" - "+response.agreement?.register_object }}</h6>
             </div>
           </div>
 
           <div class="row col-6 p-2">
             <div class="col-12 col-md-12">
-              <h6 class="font-poppins f-size-14 text-secondary">Descrição</h6>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING.DESCRIPTION' | translate}}</h6>
               <p class="text-dark">{{response?.description}}</p>
             </div>
             <div class="col-12 col-md-12">
-              <h6 class="font-poppins f-size-14 text-secondary">Site Adicional</h6>
+              <h6 class="font-poppins f-size-14 text-secondary">{{'CREATE_BIDDING.WEBSITE' | translate}}</h6>
               <h6 class="f-size-16 text-dark">{{response.aditional_site}}</h6>
             </div>
           </div>
 
           <div class="row col-12 col-md-6 p-2">
             <div class="col-12">
-              <button (click)="downloadEdital()" type="button" class="bg-light btn-lg btn-block mb-4 text-small">Baixar Edital</button>
+              <button (click)="downloadEdital()" type="button" class="bg-light btn-lg btn-block mb-4 text-small">
+                {{"SUPPLIER_BIDDING.DOWNLOAD" | translate}}</button>
             </div>
             <div class="col-12">
-              <button (click)="downloadAta()" type="button" class="bg-light btn-lg btn-block mb-4 text-small">Baixar Ata</button>
+              <button (click)="downloadComplentary()" type="button" class="bg-light btn-lg btn-block mb-4 text-small">
+                {{"DOWNLOAD_COMPLEMENTARY_ARCHIVES" | translate}}</button>
+            </div>
+            <div class="col-12">
+              <button *ngIf="response.status === 'completed'" (click)="openModal('contract', null)" type="button" class="bg-light btn-lg btn-block mb-4 text-small">
+                {{'ADMINISTRATION_BIDDING_DETAIL.CONTRACT_AGREEMENT' | translate}}</button>
+            </div>
+            
+            <div class="col-12">
+              <button *ngIf="response.status === 'completed' " (click)="downloadAta()" type="button" class="bg-light btn-lg btn-block mb-4 text-small">
+                {{"ADMINISTRATION_BIDDING_DETAIL.DOWNLOAD_ATA" | translate}}</button>
             </div>
           </div>
 
         </div>
 
         <div [ngClass]="response.status ==='draft'? 'justify-content-between':'justify-content-end'"
-          class="row col-12 d-flex float-right my-4 p-0 ">
-          <button (click)="open(content);" type="button" [ngClass]="response.status ==='draft'? 'mx-auto':''"
-            class="btn-block-supplier col-md-5 col-12 btn-lg btn-block text-small border-0 text-white py-2">Cancelar
-            Licitação</button>
+          class="row col-12 d-flex float-right my-4 p-0 " >
+          <button *ngIf="response.status !== 'canceled' && response.status === 'awaiting' || response.status === 'draft'" (click)="open(content);" type="button" [ngClass]="response.status ==='draft'? 'mx-auto':''"
+            class="btn-block-supplier col-md-5 col-12 btn-lg btn-block text-small border-0 text-white py-2">
+            {{"ADMINISTRATION_DETAIL_BID_CANCEL.CANCEL_BID" | translate}}
+          </button>
           <button *ngIf="response.status ==='draft'" (click)="open(contentAccept);" type="button"
             [ngClass]="response.status ==='draft'? 'mx-auto':''"
-            class="btn-info col-md-5 col-12 btn-lg text-small border-0 text-white py-2">Finalizar e enviar para
-            liberação</button>
+            class="btn-info col-md-5 col-12 btn-lg text-small border-0 text-white py-2">{{"SUPPLIER_BIDDING.FINALIZE_SUBMIT" | translate}}</button>
         </div>
 
         <div class="row col-12 mt-6">
-          <h4>Lotes e itens</h4>
+          <h4>{{"SUPPLIER_BIDDING.LOTS_ITEMS" | translate}}</h4>
         </div>
 
         <div *ngFor="let allotment of response.add_allotment"
-          class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border">
-          <div class="col-12 py-2">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="col-md-3 p-0">
-                <h6>Nº de lote</h6>
+          class="row mt-4 m-0 p-3 pe-0 user-data-border">
+          <div class="col-12 py-2 px-0 px-sm-3">
+            <div class="d-flex align-items-start justify-content-between">
+              <div class="col-4 p-0">
+                <h6>{{"SUPPLIER_BIDDING.LOT_NUMBER" | translate}}</h6>
                 <h6>{{response.bid_count}}</h6>
               </div>
-              <div class="col-md-3 p-0">
-                <h6>Itens</h6>
+              <div class="col-3 p-0">
+                <h6>{{"SIDEBAR.ITEMS" | translate}}</h6>
                 <h6>{{allotment.add_item.length}}</h6>
               </div>
-              <div class="col-md-3 p-0">
+              <div class="col-3 p-0 text-end">
                 <h6>Status</h6>
                 <h6 [ngClass]="getClassStatus(allotment.status)" class="text-capitalize">{{allotment.status || '-'}}
                 </h6>
@@ -168,9 +179,9 @@
 
             <div class="content" [ngClass]="{ 'open': allotment.isSectionOpen }">
               <hr>
-              <h4 class="pb-3">Lista de itens e propostas</h4>
-              <div class="row col-12 mb-3">
-                <div class="col-md-12">
+              <h4 class="pb-3">{{"SUPPLIER_BIDDING.LIST_ITEMS_PROPOSALS" | translate}} </h4>
+              <div class="row col-12 mb-3 p-0 p-sm-2">
+                <div class="col-md-12 p-0">
                   <div class="table-responsive-sm">
                     <table class="table table-hover">
                       <thead>
@@ -179,7 +190,7 @@
                           <th scope="col"></th>
                           <th scope="col"></th>
                           <th scope="col"></th>
-                          <th scope="col" style="color: black;">Quantidade</th>
+                          <th scope="col" style="color: black;">{{"CREATE_BIDDING.QUANTITY" | translate}}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -188,7 +199,7 @@
                           <th scope="col"></th>
                           <th scope="col"></th>
                           <th scope="col"></th>
-                          <td class="text-capitalize">{{ itens.quantity }} Unidade(s)</td>
+                          <td class="text-capitalize">{{ itens.quantity }} {{"SUPPLIER_BIDDING.UNITS" | translate}}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -197,68 +208,67 @@
               </div>
               <div *ngIf="response.editalFile" class="d-flex align-items-center justify-content-between p-0">
                 <div class="col-md-4 p-0">
-                  <h6>Arquivos do lote</h6>
+                  <h6>{{"SUPPLIER_BIDDING.LOT_FILES" | translate}}</h6>
                   <h6 (click)="download(allotment._id)" class="text-primary cursor-pointer">
                     {{getFileName(allotment.files)}}</h6>
                 </div>
                 <div class="col-md-3 mt-4">
                 </div>
               </div>
-              <button type="button" (click)="goViewProposals()"
-                class="bg-dark btn-lg btn-block mb-4 text-small text-white">Visualizar
-                propostas</button>
+              <button  *ngIf="response.status === 'analysis'  || response.status === 'completed' " type="button" (click)="goViewProposals()"
+                class="bg-dark btn-lg btn-block mb-4 text-small text-white">{{"ADMINISTRATION_BIDDING_DETAIL.VIEW_PROPOSAL" | translate}}</button>
             </div>
           </div>
         </div>
 
         <div class="row col-12 mt-5">
-          <h4>Fornecedores convidados</h4>
+          <h4>{{"SUPPLIER_BIDDING.INVITED_SUPPLIERS" | translate}}</h4>
         </div>
 
         <div class="row col-12 col-md-12 mt-4 p-0 m-0 user-data-border mb-5"
           *ngFor="let response of response.invited_suppliers">
-          <div class="col-12 py-2">
-            <div class="d-flex align-items-center justify-content-between">
+          <div class="col-12">
+            <div class="row d-flex align-items-center justify-content-between p-3">
               <div class="col-md-9 p-0">
-                <h6>Fornecedor</h6>
+                <h6>{{"SIDEBAR.SUPPLIER" | translate}}</h6>
                 <h6>{{response.name}}</h6>
               </div>
-              <div class="col-md-3 p-0 d-flex justify-content-end">
+              <div class="col-md-3 p-0 d-flex align-items-center justify-content-end">
                 <div class="pr-5">
-                  <h6>Documento</h6>
+                  <h6>{{"SUPPLIER_BIDDING.DOCUMENT" | translate}}</h6>
                   <h6>{{response.cpf | mask : '000.000.000-00'}}</h6>
                 </div>
                 <!-- <img (click)="toggleSectionTwo()" style="width: 16px;"
                   [src]="isSectionTwoOpen ? '../../../' : '../../../assets/images/arrow-opener.svg'"
                   alt="Ícone"
                   class="opener-icon cursor-pointer"> -->
-                <i class="bi" [ngClass]="{'bi-caret-down-fill': !isSectionTwoOpen, 'bi-caret-up': isSectionTwoOpen}"
+                <i class="bi text-center" [ngClass]="{'bi-caret-down-fill': !isSectionTwoOpen, 'bi-caret-up': isSectionTwoOpen}"
                   (click)="toggleSectionTwo()"></i>
               </div>
             </div>
 
             <div class="content" [ngClass]="{ 'open': isSectionTwoOpen }">
               <hr>
-              <h6 class="text-dark">Endereço</h6>
-              <div class="d-flex align-items-center justify-content-between p-0">
+              <h6 class="text-dark">{{"SUPPLIER_BIDDING.ADDRESS" | translate}}</h6>
+              <div class="row d-flex align-items-center justify-content-between p-3">
                 <div class="col-md-4 p-0">
-                  <h6>Longradouro</h6>
+                  <h6>{{"SUPPLIER_BIDDING.STREET" | translate}}</h6>
                   <h6>{{response.address.complement}}</h6>
                 </div>
                 <div class="col-md-2 p-0">
-                  <h6>Número</h6>
+                  <h6>{{"ASSOCIATION_AGREEMENTS.NUMBER" | translate}}</h6>
                   <h6>{{response.address.number}}</h6>
                 </div>
                 <div class="col-md-2 p-0">
-                  <h6>Bairro</h6>
+                  <h6>{{"SUPPLIER_BIDDING.NEIGHBORHOOD" | translate}}</h6>
                   <h6>{{response.address.neighborhood}}</h6>
                 </div>
                 <div class="col-md-2 p-0">
-                  <h6>Cidade</h6>
+                  <h6>{{"SUPPLIER_BIDDING.CITY" | translate}}</h6>
                   <h6>{{response.address.city}}</h6>
                 </div>
                 <div class="col-md-2 p-0">
-                  <h6>Cep</h6>
+                  <h6>{{"SUPPLIER_BIDDING.ZIP_CODE" | translate}}</h6>
                   <h6>{{response.address.zipCode}}</h6>
                 </div>
               </div>
@@ -274,51 +284,50 @@
 <ng-template class="container-fluid" #content let-modal>
   <div class="p-5 bg-light">
     <div class="col-12 d-flex justify-content-between">
-      <h3 class="tfa-title m-0">Cancelar Licitação</h3>
+      <h3 class="tfa-title m-0">{{"ADMINISTRATION_DETAIL_BID_CANCEL.CANCEL_BID" | translate}}</h3>
       <h5 (click)="exit()" class="cursor-pointer">X</h5>
     </div>
 
     <div class="my-4 text-center block-messege py-1 d-flex justify-content-center">
       <div class="pr-1"><img src="../../../../assets/images/icon-alert.svg" (click)="exit()"></div>
-      <div class="danger-text">Esta ação irá cancelar a licitação</div>
+      <div class="danger-text">{{"SUPPLIER_BIDDING.CANCEL_BIDDING" | translate}}</div>
     </div>
 
     <div class="d-flex justify-content-center">
       <div class="col-md-6 mt-4">
         <button type="button" class="bg-light btn-lg btn-block mb-4 text-small border-0"
-          (click)="exit();">Voltar</button>
+          (click)="exit();">{{"BUTTON_TEXT.BACK" | translate}}</button>
       </div>
 
       <div class="col-md-6 mt-4">
         <button type="button" class="btn-block-supplier text-white btn-lg btn-block mb-4 text-small border-0"
-          (click)="cancelStatus();">Confirmar</button>
+          (click)="cancelStatus();">{{"BUTTON_TEXT.CONFIRM" | translate}}</button>
       </div>
     </div>
   </div>
 </ng-template>
 
-
 <ng-template class="container-fluid" #contentAccept let-modal>
   <div class="p-5 bg-light">
     <div class="col-12 d-flex justify-content-between">
-      <h3 class="tfa-title m-0">Aceitar Licitação</h3>
+      <h3 class="tfa-title m-0">{{"SUPPLIER_BIDDING.ACCEPT_BID" | translate}}</h3>
       <h5 (click)="exit()" class="cursor-pointer">X</h5>
     </div>
 
     <div class="my-4 text-center accept-messege py-1 d-flex justify-content-center">
       <div class="pr-1"><img src="../../../../assets/images/icon-alert.svg" (click)="exit()"></div>
-      <div class="text-primary">Esta ação irá enviar para liberação a licitação</div>
+      <div class="text-primary">{{"SUPPLIER_BIDDING.APPROVAL_ACTION" | translate}}</div>
     </div>
 
     <div class="d-flex justify-content-center">
       <div class="col-md-6 mt-4">
         <button type="button" class="bg-light btn-lg btn-block mb-4 text-small border-0"
-          (click)="exit();">Voltar</button>
+          (click)="exit();">{{"BUTTON_TEXT.BACK" | translate}}</button>
       </div>
 
       <div class="col-md-6 mt-4">
         <button type="button" class="btn-info text-white btn-lg btn-block mb-4 text-small border-0"
-          (click)="acceptStatus()">Confirmar</button>
+          (click)="acceptStatus()">{{"BUTTON_TEXT.CONFIRM" | translate}}</button>
       </div>
     </div>
   </div>

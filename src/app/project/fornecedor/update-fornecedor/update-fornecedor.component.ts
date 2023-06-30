@@ -1,19 +1,23 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { CategoryResponseDto } from 'src/dtos/category/category-response.dto';
-import { SupplierRegisterDto } from 'src/dtos/supplier/supplier-register-request.dto';
-import { CategoryService } from 'src/services/category.service';
-import { SupplierService } from 'src/services/supplier.service';
+import { Component } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
+import { ToastrService } from "ngx-toastr";
+import { catchError, forkJoin, of } from "rxjs";
+import { CepResponseDto } from "src/dtos/address/cep-response.dto";
+import { CategoryResponseDto } from "src/dtos/category/category-response.dto";
+import { SupplierRegisterDto } from "src/dtos/supplier/supplier-register-request.dto";
+import { CategoryService } from "src/services/category.service";
+import { CepService } from "src/services/cep.service";
+import { NominatimService } from "src/services/nominatim.service";
+import { SupplierService } from "src/services/supplier.service";
 
 @Component({
-  selector: 'app-update-fornecedor',
-  templateUrl: './update-fornecedor.component.html',
-  styleUrls: ['./update-fornecedor.component.scss']
+  selector: "app-update-fornecedor",
+  templateUrl: "./update-fornecedor.component.html",
+  styleUrls: ["./update-fornecedor.component.scss"],
 })
 export class UpdateFornecedorComponent {
-
   form!: FormGroup;
   formAddress!: FormGroup;
   formLegalRepresentative!: FormGroup;
@@ -25,89 +29,188 @@ export class UpdateFornecedorComponent {
   categoriesAndSegments: any[] = [];
   selectCategoriesAndSegments: CategoryResponseDto[] = [];
 
-  request:SupplierRegisterDto;
+  request: SupplierRegisterDto;
 
   constructor(
     private formBuilder: FormBuilder,
     private toastrService: ToastrService,
     private router: Router,
+    private translate: TranslateService,
+
     private route: ActivatedRoute,
-    private supplierService:SupplierService,
+    private supplierService: SupplierService,
     private categoryService: CategoryService,
+    private cepService: CepService,
+    private nominatimService: NominatimService
   ) {
     this.form = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]],
-      cnpj: ['', [Validators.required, Validators.minLength(14)]],
+      name: ["", [Validators.required, Validators.maxLength(50)]],
+      cnpj: ["", [Validators.required, Validators.minLength(14)]],
     });
 
     this.formAddress = this.formBuilder.group({
-      zipCode: ['', [Validators.required, Validators.minLength(8)]],
-      number: ['', [Validators.required]],
-      publicPlace: ['', [Validators.required]],
-      neighborhood: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      state: ['', [Validators.required]],
-      latitude: ['', [Validators.required]],
-      longitude: ['', [Validators.required]],
-      complement: [''],
-      referencePoint: [''],
+      zipCode: ["", [Validators.required, Validators.minLength(8)]],
+      number: ["", [Validators.required]],
+      publicPlace: ["", [Validators.required]],
+      neighborhood: ["", [Validators.required]],
+      city: ["", [Validators.required]],
+      state: ["", [Validators.required]],
+      latitude: ["", [Validators.required]],
+      longitude: ["", [Validators.required]],
+      complement: [""],
+      referencePoint: [""],
     });
 
     this.formLegalRepresentative = this.formBuilder.group({
-      name: ['', [Validators.required]],
-      nationality: ['', [Validators.required]],
-      maritalStatus: ['', [Validators.required]],
-      cpf: ['', [Validators.required, Validators.minLength(11)]],
-      rg: ['', [Validators.required]],
-      validityData: ['', [Validators.required]]
+      name: ["", [Validators.required]],
+      nationality: ["", [Validators.required]],
+      maritalStatus: ["", [Validators.required]],
+      cpf: ["", [Validators.required, Validators.minLength(11)]],
+      rg: ["", [Validators.required]],
+      validityData: ["", [Validators.required]],
     });
 
     this.formLegalRepresentativeAddress = this.formBuilder.group({
-      zipCode: ['', [Validators.required, Validators.minLength(8)]],
-      number: ['', [Validators.required]],
-      publicPlace: ['', [Validators.required]],
-      neighborhood: ['', [Validators.required]],
-      city: ['', [Validators.required]],
-      state: ['', [Validators.required]],
-      latitude: ['', [Validators.required]],
-      longitude: ['', [Validators.required]],
-      complement: [''],
-      referencePoint: [''],
+      zipCode: ["", [Validators.required, Validators.minLength(8)]],
+      number: ["", [Validators.required]],
+      publicPlace: ["", [Validators.required]],
+      neighborhood: ["", [Validators.required]],
+      city: ["", [Validators.required]],
+      state: ["", [Validators.required]],
+      latitude: ["", [Validators.required]],
+      longitude: ["", [Validators.required]],
+      complement: [""],
+      referencePoint: [""],
     });
 
     this.formCategoryAndSegments = this.formBuilder.group({
-      categories: ['']
+      categories: [""],
     });
   }
 
   ngOnInit(): void {
-    
-    const fornecedorId = this.route.snapshot.paramMap.get('id');
-    if(fornecedorId) {
-      this.supplierService.getById(fornecedorId).subscribe({
-        next: (fornecedor:any) => {
-          this.fornecedor = fornecedor;
-          this.handlerInitForm()
-          this.categoryService.getCategory().subscribe((response) => {
-            this.categoriesAndSegments = response;
-            this.selectCategoriesAndSegments = this.categoriesAndSegments.filter((category) => {
-              return fornecedor.categories.some((categoryFornecedor:any) => {
-                return categoryFornecedor.id === category.id;
-              });
-            });
+    const fornecedorId = this.route.snapshot.paramMap.get("id");
+    if (fornecedorId) {
+      const fork = forkJoin({
+        fornecedor: this.supplierService.getById(fornecedorId).pipe(
+          catchError(error => {
+            this.toastrService.error(error.error);
+            return of(undefined);
           })
+        ),
+        categories: this.categoryService.getCategory().pipe(
+          catchError(error => {
+            this.toastrService.error(error.error);
+            return of(undefined);
+          })
+        ),
+      });
+      fork.subscribe({
+        next: response => {
+          this.fornecedor = response.fornecedor;
+          this.categoriesAndSegments = response.categories;
+          this.selectCategoriesAndSegments = this.categoriesAndSegments.filter(category => {
+            return this.fornecedor.categories.some((categoryFornecedor: any) => {
+              return categoryFornecedor._id === category._id;
+            });
+          });
+          this.handlerInitForm();
         },
-        error: (error) => {
-          this.toastrService.error(error.error);
+      });
+    }
+
+    this.formAddress.controls["zipCode"].valueChanges.subscribe({
+      next: data => {
+        if (data.length === 8) {
+          this.insertDataForCep(data, "fornecedor");
         }
-      })
+      },
+    });
+
+    this.formLegalRepresentativeAddress.controls["zipCode"].valueChanges.subscribe({
+      next: data => {
+        if (data.length === 8) {
+          this.insertDataForCep(data, "representante");
+        }
+      },
+    });
+  }
+
+  async insertDataForCep(cep: string, typeForm: string) {
+    if (cep.length < 8) return;
+
+    if (typeForm === "fornecedor") {
+      const response = await this.searchCep(cep);
+
+      this.formAddress.patchValue({
+        publicPlace: response.logradouro,
+        neighborhood: response.bairro,
+        city: response.cidade,
+        state: response.uf,
+        number: response.numero,
+      });
+      const result: any = await this.nominatimService.getLatLongByAddress(
+        response.logradouro,
+        response.cidade,
+        'brazil',
+        response.uf,
+      );
+
+      if (result.length > 0) {
+        const lat = result[0].lat;
+        const lon = result[0].lon;
+
+        this.formAddress.patchValue({
+          latitude: lat,
+          longitude: lon,
+        });
+      } else {
+        this.formAddress.patchValue({
+          latitude: 1,
+          longitude: 1,
+        });
+      }
+    } else {
+      const response = await this.searchCep(cep);
+      this.formLegalRepresentativeAddress.patchValue({
+        publicPlace: response.logradouro,
+        neighborhood: response.bairro,
+        city: response.cidade,
+        state: response.uf,
+        number: response.numero,
+      });
+      const result: any = await this.nominatimService.getLatLongByAddress(
+        response.logradouro,
+        response.cidade,
+        'brazil',
+        response.uf,
+      );
+
+      if (result.length > 0) {
+        const lat = result[0].lat;
+        const lon = result[0].lon;
+
+        this.formLegalRepresentativeAddress.patchValue({
+          latitude: lat,
+          longitude: lon,
+        });
+      } else {
+        this.formLegalRepresentativeAddress.patchValue({
+          latitude: 1,
+          longitude: 1,
+        });
+      }
     }
   }
 
-  handlerInitForm(){
+  async searchCep(cep: string): Promise<CepResponseDto> {
+    return await this.cepService.buscarCep(cep);
+  }
+
+  handlerInitForm() {
     this.form.patchValue({
       name: this.fornecedor?.name,
-      cnpj: this.fornecedor?.cpf
+      cnpj: this.fornecedor?.cpf,
     });
 
     this.formAddress.patchValue({
@@ -120,7 +223,7 @@ export class UpdateFornecedorComponent {
       latitude: this.fornecedor?.address?.latitude,
       longitude: this.fornecedor?.address?.longitude,
       complement: this.fornecedor?.address?.complement,
-      referencePoint: this.fornecedor?.address?.referencePoint
+      referencePoint: this.fornecedor?.address?.referencePoint,
     });
 
     this.formLegalRepresentative.patchValue({
@@ -129,7 +232,7 @@ export class UpdateFornecedorComponent {
       maritalStatus: this.fornecedor?.legal_representative?.maritalStatus,
       cpf: this.fornecedor?.legal_representative?.cpf,
       rg: this.fornecedor?.legal_representative?.rg,
-      validityData: this.fornecedor?.legal_representative?.validityData
+      validityData: this.fornecedor?.legal_representative?.validityData,
     });
 
     this.formLegalRepresentativeAddress.patchValue({
@@ -142,7 +245,7 @@ export class UpdateFornecedorComponent {
       latitude: this.fornecedor?.legal_representative?.address?.latitude,
       longitude: this.fornecedor?.legal_representative?.address?.longitude,
       complement: this.fornecedor?.legal_representative?.address?.complement,
-      referencePoint: this.fornecedor?.legal_representative?.address?.referencePoint
+      referencePoint: this.fornecedor?.legal_representative?.address?.referencePoint,
     });
   }
 
@@ -170,7 +273,9 @@ export class UpdateFornecedorComponent {
     this.fornecedor!.legalComplement = this.formLegalRepresentativeAddress.value.complement;
     this.fornecedor!.legalReferencePoint = this.formLegalRepresentativeAddress.value.referencePoint;
 
-    const categoriesId = [...this.selectCategoriesAndSegments?.map((category) => category._id), ...this.fornecedor?.categories?.map((category:any) => category._id)]
+    const categoriesId = this.selectCategoriesAndSegments
+      ?.map(category => category._id || "")
+      .filter(category => category !== "");
 
     this.request = {
       name: this.form.value.name,
@@ -185,9 +290,9 @@ export class UpdateFornecedorComponent {
         latitude: this.formAddress.value.latitude,
         longitude: this.formAddress.value.longitude,
         complement: this.formAddress.value.complement,
-        referencePoint: this.formAddress.value.referencePoint
+        referencePoint: this.formAddress.value.referencePoint,
       },
-      legal_representative:{
+      legal_representative: {
         name: this.formLegalRepresentative.value.name,
         cpf: this.formLegalRepresentative.value.cpf,
         address: {
@@ -200,33 +305,28 @@ export class UpdateFornecedorComponent {
           latitude: this.formLegalRepresentativeAddress.value.latitude,
           longitude: this.formLegalRepresentativeAddress.value.longitude,
           complement: this.formLegalRepresentativeAddress.value.complement,
-          referencePoint: this.formLegalRepresentativeAddress.value.referencePoint
+          referencePoint: this.formLegalRepresentativeAddress.value.referencePoint,
         },
         maritalStatus: this.formLegalRepresentative.value.maritalStatus,
         validityData: this.formLegalRepresentative.value.validityData,
         rg: this.formLegalRepresentative.value.rg,
-        nationality:this.formLegalRepresentative.value.nationality
-
+        nationality: this.formLegalRepresentative.value.nationality,
       },
       group_id: this.fornecedor?.group_id,
-      type:this.fornecedor?.type,
-      categoriesId: categoriesId || [],
+      type: this.fornecedor?.type,
+      categoriesId: categoriesId,
     };
 
-    console.log(this.request.categoriesId);
-
     this.supplierService.update(this.fornecedor?._id!, this.request).subscribe({
-      next: (response) => {
-        this.toastrService.success('Fornecedor editado com sucesso!', '', { progressBar: true });
-        this.router.navigate(['/pages/fornecedor']);
+      next: response => {
+        this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_EDIT_SUPPLIER'), '', { progressBar: true });
+        this.router.navigate(["/pages/fornecedor"]);
       },
-      error: (error) => {
-        console.log(error);
-        this.toastrService.error('Erro ao editar fornecedor', '', { progressBar: true });
-      }
-    })
-
-
+      error: error => {
+        console.error(error);
+        this.toastrService.error(this.translate.instant('TOASTRS.ERROR_EDIT_SUPPLIER'), '', { progressBar: true });
+      },
+    });
   }
 
   onSubmit() {
@@ -234,8 +334,10 @@ export class UpdateFornecedorComponent {
   }
 
   handleCategories() {
-    if (this.formCategoryAndSegments.controls['categories'].value) {
-      const selected = this.categoriesAndSegments.find(a => a._id?.toString() === this.formCategoryAndSegments.controls['categories'].value)
+    if (this.formCategoryAndSegments.controls["categories"].value) {
+      const selected = this.categoriesAndSegments.find(
+        a => a._id?.toString() === this.formCategoryAndSegments.controls["categories"].value
+      );
       this.selectCategoriesAndSegments.push(selected!);
     }
   }
@@ -243,5 +345,4 @@ export class UpdateFornecedorComponent {
   removeCategory(index: number) {
     this.selectCategoriesAndSegments.splice(index, 1);
   }
-
 }

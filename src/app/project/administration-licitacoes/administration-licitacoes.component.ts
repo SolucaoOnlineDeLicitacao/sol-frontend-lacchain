@@ -13,7 +13,7 @@ import { DatamockService } from 'src/services/datamock.service';
 export class AdministrationLicitacoesComponent {
   licitacoesList: any = [];
   currentPage: number = 1;
-  itensPerPage: number = 6;
+  itensPerPage: number = 5;
   constructor(
     private authbase: AuthService,
     private router: Router,

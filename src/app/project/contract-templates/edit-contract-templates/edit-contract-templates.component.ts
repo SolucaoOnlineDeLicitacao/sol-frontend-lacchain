@@ -19,7 +19,11 @@ export class EditContractTemplatesComponent {
   templateList!: ModelContractDto;
   licitacoesList: any = [];
   modelContractId!: string;
-
+  isSectionOpenFornecedor: boolean = false;
+  isSectionOpenAssociacao: boolean = false;
+  isSectionOpenContrato: boolean = false;
+  isSectionOpenConvenio: boolean = false;
+  isSectionOpenLicitacao: boolean = false;
   htmlContent = '';
   config: AngularEditorConfig = {
     editable: true,
@@ -32,7 +36,7 @@ export class EditContractTemplatesComponent {
     defaultFontName: 'Arial',
     toolbarHiddenButtons: [
       ['bold']
-      ],
+    ],
     customClasses: [
       {
         name: "quote",
@@ -49,70 +53,126 @@ export class EditContractTemplatesComponent {
       },
     ]
   };
-  
+
+  storedLanguage: string | null
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private ngxSpinnerService: NgxSpinnerService,
-    private _modelContractService:ModelContractService,
+    private _modelContractService: ModelContractService,
     private activatedRoute: ActivatedRoute,
     private _associationBidService: AssociationBidService,
     private toastrService: ToastrService,
-  ){
+  ) {
     this.form = this.formBuilder.group({
       _id: [''],
       name: [''],
-      licitacoes: [''],
+      classification: [''],
       contract: ['']
     })
   }
 
   ngOnInit(): void {
-    this._associationBidService.list().subscribe({
-      next: data => {
-        this.licitacoesList = data;
-      },
-    })
 
     this.ngxSpinnerService.show();
     this.activatedRoute.params.subscribe((params) => {
       this._modelContractService.getById(params['_id']).subscribe({
         next: (success) => {
-          this.modelContractId = success. _id;
+          this.modelContractId = success._id;
           this.form.patchValue({
-            _id: success. _id,
+            _id: success._id,
             name: success.name,
-            licitacoes: success.bid,
+            classification: success.classification,
             contract: success.contract
           });
-      
+
         }
       })
     })
     this.ngxSpinnerService.hide();
-  
- }
 
- onSubmit() {
-   
-  let dto = {
-    name : this.form.value.name ,
-    bid: this.form.value.licitacoes,
-    contract:this.form.value.contract
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
+
   }
- 
-  this._modelContractService.updateModelContract(this.modelContractId, dto).subscribe({
-    next: (success) => {
-      this.toastrService.success('Modelo de contrato atualizado com sucesso!', '', { progressBar: true });
-      this.router.navigate(['/pages/modelo-contratos'])
-    },
-    error: (error) => {
-      console.error(error);
-      this.toastrService.error(error.error.errors[0], '', { progressBar: true });
-    }
-  });
-}
 
+  onSubmit() {
+
+    let dto = {
+      name: this.form.value.name,
+      classification: this.form.value.classification,
+      contract: this.form.value.contract
+    }
+
+    this._modelContractService.updateModelContract(this.modelContractId, dto).subscribe({
+      next: (success) => {
+
+        let successMessage = 'Modelo de contrato atualizado com sucesso!';
+
+        switch (this.storedLanguage) {
+          case 'pt':
+            successMessage = 'Modelo de contrato atualizado com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'Contract template successfully updated!'
+            break;
+          case 'fr':
+            successMessage = 'Modèle de contrat mis à jour avec succès !'
+            break;
+          case 'es':
+            successMessage = '¡Plantilla de contrato actualizada con éxito!'
+            break;
+        }
+
+        this.toastrService.success(successMessage, '', { progressBar: true });
+        this.router.navigate(['/pages/modelo-contratos'])
+      },
+      error: (error) => {
+        console.error(error);
+        this.toastrService.error(error.error.errors[0], '', { progressBar: true });
+      }
+    });
+  }
+
+  toggleSectionFornecedor() {
+    if (this.isSectionOpenFornecedor) {
+      this.isSectionOpenFornecedor = false
+    } else {
+      this.isSectionOpenFornecedor = true
+    }
+  }
+
+  toggleSectionAssociacao() {
+    if (this.isSectionOpenAssociacao) {
+      this.isSectionOpenAssociacao = false
+    } else {
+      this.isSectionOpenAssociacao = true
+    }
+  }
+
+  toggleSectionContrato() {
+    if (this.isSectionOpenContrato) {
+      this.isSectionOpenContrato = false
+    } else {
+      this.isSectionOpenContrato = true
+    }
+  }
+
+  toggleSectionConvenio() {
+    if (this.isSectionOpenConvenio) {
+      this.isSectionOpenConvenio = false
+    } else {
+      this.isSectionOpenConvenio = true
+    }
+  }
+
+  toggleSectionLicitacao() {
+    if (this.isSectionOpenLicitacao) {
+      this.isSectionOpenLicitacao = false
+    } else {
+      this.isSectionOpenLicitacao = true
+    }
+  }
 
   backContact() {
     this.router.navigate(['/pages/modelo-contratos'])

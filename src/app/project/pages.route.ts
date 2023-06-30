@@ -7,7 +7,6 @@ import { ControlFornecedorComponent } from "./control-fornecedor/control-fornece
 import { ConveniosComponent } from "./convenios/convenios.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { FornecedorComponent } from "./fornecedor/fornecedor.component";
-import { IntegracoesComponent } from "./integracoes/integracoes.component";
 import { PagesAppComponent } from "./pages.app.component";
 import { RelatoriosComponent } from "./relatorios/relatorios.component";
 import { RegisterUserAdministracaoComponent } from "./control-administracao/register-user-administracao/register-user-administracao.component";
@@ -81,6 +80,16 @@ import { ContractTemplatesComponent } from "./contract-templates/contract-templa
 import { NewContractTemplatesComponent } from "./contract-templates/new-contract-templates/new-contract-templates.component";
 import { EditContractTemplatesComponent } from "./contract-templates/edit-contract-templates/edit-contract-templates.component";
 import { GetProposalsByBidIdResolve } from "../resolvers/get-proposals-by-bid-id.resolver";
+import { DetailsContractComponent } from "./administration-licitacoes/administration-contracts-licitacao/details-contract/details-contract.component";
+import { GetProposalByIdResolve } from "../resolvers/get-proposal-by-id.resolver";
+
+import { AdministrationRelatorioComponent } from "./administration-relatorio/administration-relatorio.component";
+
+import { ReportContractComponent } from "./report-contract/report-contract.component";
+import { ReportGeneralComponent } from "./report-general/report-general.component";
+import { ReportGeneratedComponent } from "./report-generated/report-generated.component";
+import { AdministrationIntegrationsComponent } from "./administration-integrations/administration-integrations.component";
+
 
 const routerConfig: Routes = [
   {
@@ -105,6 +114,7 @@ const routerConfig: Routes = [
       { path: "controle-fornecedor/editar-usuario/:id", component: UpdateUserFornecedorComponent },
       { path: "controle-fornecedor/dados-usuario/:id", component: UserDataFornecedorComponent },
       { path: "convenios", component: ConveniosComponent },
+      { path: "relatorios-licitacao", component: AdministrationRelatorioComponent },
       {
         path: "convenios/detalhes-convenio/:_id",
         component: DadosConvenioComponent,
@@ -121,7 +131,6 @@ const routerConfig: Routes = [
         component: AssociacaoConvenioDataComponent,
         resolve: { agreement: AgreementGetByIdResolve },
       },
-      { path: "integracoes", component: IntegracoesComponent },
       { path: "licitacoes/licitacao-register", component: AssociacaoRegisterLicitacaoComponent },
       {
         path: "licitacoes/licitacao-edit/:_id",
@@ -146,7 +155,11 @@ const routerConfig: Routes = [
       { path: "associacao/map-associacao", component: AssociacaoMapComponent },
       { path: "associacao/convenios", component: AssociacaoConveniosComponent },
       { path: "associacao/licitacoes", component: AssociacaoLicitacaoComponent },
-      { path: "associacao/licitacoes/view-proposal/:_id", component: AssociacaoLicitacaoViewProposalComponent, resolve: { proposals: GetProposalsByBidIdResolve } },
+      {
+        path: "associacao/licitacoes/view-proposal/:_id",
+        component: AssociacaoLicitacaoViewProposalComponent,
+        resolve: { proposals: GetProposalsByBidIdResolve },
+      },
       { path: "associacao/contratos", component: AssociacaoContratosComponent },
       { path: "associacao/contrato-data/:id", component: AssociacaoContratosDataComponent },
       { path: "itens-custo", component: CostItemsComponent },
@@ -177,6 +190,7 @@ const routerConfig: Routes = [
       },
       { path: "licitacoes/lote-licitacoes", component: AdministrationLoteLicitacaoComponent },
       { path: "licitacoes/contratos-licitacoes", component: AdministrationContractsLicitacaoComponent },
+      { path: "licitacoes/contratos-licitacoes/:_id", component: DetailsContractComponent },
       { path: "proposal-screening/proposal-accepted", component: ProposalAcceptedComponent },
       { path: "proposal-screening/proposal-sent", component: ProposalSentComponent },
       { path: "fornecedor/contratos", component: FornecedorContratoComponent },
@@ -188,9 +202,16 @@ const routerConfig: Routes = [
         resolve: { bid: BidGetByIdResolve },
       },
       { path: "fornecedor/proposta", component: FornecedorPropostaComponent },
-      { path: "fornecedor/proposta/atualizar", component: FornecedorAtualizarPropostaComponent },
+      {
+        path: "fornecedor/proposta/atualizar/:_id",
+        component: FornecedorAtualizarPropostaComponent,
+        resolve: { proposal: GetProposalByIdResolve },
+      },
       { path: "fornecedor/proposta/enviar", component: FornecedorEnviarPropostaComponent },
       { path: "produtos", component: ProdutosComponent },
+      { path: "report-contracts", component: ReportContractComponent },
+      { path: "report-general", component: ReportGeneralComponent },
+      { path: "report-generated", component: ReportGeneratedComponent },
       { path: "produtos/registrar-produto", component: NewProdutoComponent },
       { path: "produtos/editar-produto", component: EditProdutoComponent },
       { path: "categorias", component: CategoriasComponent },
@@ -200,15 +221,17 @@ const routerConfig: Routes = [
       { path: "modelo-contratos", component: ContractTemplatesComponent },
       { path: "modelo-contratos/novo-modelo", component: NewContractTemplatesComponent },
       { path: "modelo-contratos/editar-modelo/:_id", component: EditContractTemplatesComponent },
-      { path: '**', component: NotfoundComponent },
+      { path: "integracoes", component: AdministrationIntegrationsComponent },
+
+      { path: "**", component: NotfoundComponent },
     ],
 
     canActivate: [AuthGuard],
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routerConfig)],
   exports: [RouterModule],
 })
-export class PagesRoutingModule { }
+export class PagesRoutingModule {}

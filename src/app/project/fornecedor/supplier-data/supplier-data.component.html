@@ -171,11 +171,11 @@
 					<div class="col-12 p-3">
 						<div class="d-flex">
 							<h5 class="col-md-6"><b>Evento de Bloqueio</b></h5>
-							<button *ngIf="fornecedor?.block == false" (click)="open(contentBlocked);" type="button" class="bg-dark btn-lg btn-block mb-4 text-small
+							<button *ngIf="fornecedor?.blocked == false && !fornecedor?.blocked" (click)="open(contentBlocked);" type="button" class="bg-dark btn-lg btn-block mb-4 text-small
 								col-md-6
 								text-white">Bloquear fornecedor</button>
 
-							<button *ngIf="fornecedor?.block == true" (click)="open(contentUnBlocked);" type="button" class="bg-dark btn-lg btn-block mb-4 text-small
+							<button *ngIf="fornecedor?.blocked == true" (click)="open(contentUnBlocked);" type="button" class="bg-dark btn-lg btn-block mb-4 text-small
 								col-md-6
 								text-white">Debloquear fornecedor</button>
 						</div>
@@ -183,7 +183,8 @@
 					</div>
 
 					<div class="col-12 col-lg-12 p-2 text-capitalize">
-						<h5 class="font-poppins f-size-14 text-secondary mb-3 text-dark">Não há bloqueios para este fornecedor.</h5>
+						<h5 *ngIf="!fornecedor?.blocked && fornecedor?.blocked === false" class="font-poppins f-size-14 text-secondary mb-3 text-dark">Não há bloqueios para este fornecedor.</h5>
+						<h5 *ngIf="fornecedor?.blocked === true" class="font-poppins f-size-14 text-secondary mb-3 text-dark">{{fornecedor?.blocked_reason}}</h5>
 					</div>
 
 				</div>
@@ -208,7 +209,7 @@
 			<form [formGroup]="blockSupplier">
 				<div class="mb-2">
 					<label for="message" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Motivo do bloqueio</b></label>
-					<textarea formControlName="message" class="form-control custom-textarea" id="message" placeholder="Digite sua mensagem"></textarea>
+					<textarea formControlName="blocked_reason" class="form-control custom-textarea" id="message" placeholder="Digite sua mensagem"></textarea>
 				</div>
 
 				<div class="d-flex justify-content-center">
@@ -241,7 +242,7 @@
 			<form [formGroup]="blockSupplier">
 				<div class="mb-2">
 					<label for="message" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Motivo do debloqueio</b></label>
-					<textarea formControlName="message" class="form-control custom-textarea" id="message" placeholder="Digite sua mensagem"></textarea>
+					<textarea formControlName="blocked_reason" class="form-control custom-textarea" id="message" placeholder="Digite sua mensagem"></textarea>
 				</div>
 
 				<div class="d-flex justify-content-center">

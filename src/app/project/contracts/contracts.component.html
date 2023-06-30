@@ -1,7 +1,7 @@
 <div class="container-fluid mb-5">
   <div class="row mt-5">
     <div class="col-md-12">
-      <h1>Contrato</h1>
+      <h1>{{'ADMINISTRATION_CONTRACTS.CONTRACT' | translate}}</h1>
       <hr class="bg-primary">
     </div>
   </div>
@@ -11,28 +11,28 @@
       <div class="col-lg-8 col-sm-10">
         <div class="row p-3 user-data-border">
 
-          <div class="col-12 col-lg-4 p-2 text-capitalize">
-            <h6 class="font-poppins f-size-14 text-secondary">Contrato</h6>
+          <div class="col-12 col-lg-4 p-2 text-capitalize"> 
+            <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_CONTRACTS.CONTRACT' | translate}}</h6>
             <h5 class="f-size-16">632/2021</h5>
           </div>
           <div class="col-12 col-lg-4 p-2">
-            <h6 class="font-poppins f-size-14 text-secondary">Licitação</h6>
+            <h6 class="font-poppins f-size-14 text-secondary">{{'SIDEBAR.BIDDING' | translate}}</h6>
             <h5 class="f-size-16">1920/2021</h5>
           </div>
 
           <div *ngIf="situationWaiting" class="col-12 col-lg-4 p-2">
-            <h6 class="font-poppins f-size-14 text-secondary">Situação</h6>
-            <h5 class="f-size-16 toggle-text text-dark">Aguardando as assinaturas</h5>
+            <h6 class="font-poppins f-size-14 text-secondary">{{'ASSOCIATION_AGREEMENTS.STATUS' | translate}}</h6>
+            <h5 class="f-size-16 toggle-text text-dark">{{'ASSOCIATION_CONTRACTS.AWAITING_SIGNATURES' | translate}}</h5>
           </div>
 
           <div *ngIf="situationWaitingSupplier" class="col-12 col-lg-4 p-2">
-            <h6 class="font-poppins f-size-14 text-secondary">Situação</h6>
-            <h5 style="color:#765CDE;" class="f-size-16 toggle-text">Não assinado pelo fornecedor</h5>
+            <h6 class="font-poppins f-size-14 text-secondary">{{'ASSOCIATION_AGREEMENTS.STATUS' | translate}}</h6>
+            <h5 style="color:#765CDE;" class="f-size-16 toggle-text">{{'CONTRACT_MODELS.NOT_SIGNATURES' | translate}}</h5>
           </div>
 
           <div *ngIf="situationDone" class="col-12 col-lg-4 p-2">
-            <h6 class="font-poppins f-size-14 text-secondary">Situação</h6>
-            <h5 class="f-size-16 toggle-text text-info">Assinado</h5>
+            <h6 class="font-poppins f-size-14 text-secondary">{{'ASSOCIATION_AGREEMENTS.STATUS' | translate}}</h6>
+            <h5 class="f-size-16 toggle-text text-info">{{'ADMINISTRATION_CONTRACTS.CONTRACT' | translate}}</h5>
           </div>
 
           <div class="col-12 col-lg-4 p-2">

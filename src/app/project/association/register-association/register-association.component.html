@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row mt-5">
         <div class="col-md-12">
-            <h1>Adicionar nova associação</h1>
+            <h1>{{'ADMINISTRATION_NEW_ASSOCIATION.ADD_ASSOCIATION' | translate}}</h1>
             <hr class="bg-primary">
         </div>
     </div>
@@ -14,7 +14,6 @@
 
                     <div class="row">
                         <div class="col-12 mt-3">
-                            <h5>Dados da Associação</h5>
                         </div>
                     </div>
 
@@ -22,19 +21,19 @@
 
                         <div class="col-sm-12 col-md-6 mt-3">
                             <label for="name"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Nome</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'PROFILE.PROFILE_NAME' | translate}}</b></label>
                             <input type="text" formControlName="name" style="text-indent:20px;" class="form-control"
                                 id="name" placeholder="Nome">
 
                             <div *ngIf="form.controls['name'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Nome é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.NAME_REQUIRED' | translate}}</p>
                             </div>
                             <div *ngIf="form.controls['name'].errors?.['maxlength'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Nome deve conter no máximo 50 caracteres!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.NAME_VALIDATOR' | translate}}</p>
                             </div>
                         </div>
 
@@ -44,15 +43,15 @@
                             <input type="text" formControlName="cnpj" style="text-indent:20px;" class="form-control"
                                 mask="00.000.000/0000-00" id="cnpj" placeholder="00.000.000/0000-00">
 
-                            <div *ngIf="form.controls['cnpj'].errors?.['required'] && isSubmit"
+                            <div *ngIf="form.controls['cnpj'].errors?.['required'] && isSubmit || regex.test(form.controls['cnpj'].value)"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">CNPJ é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.REQUIRED_DOCUMENT' | translate}}</p>
                             </div>
                             <div *ngIf="form.controls['cnpj'].errors?.['minlength'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">CNPJ inválido!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.INVALID_DOCUMENT' | translate}}</p>
                             </div>
                         </div>
 
@@ -62,7 +61,7 @@
 
                 <div class="row">
                     <div class="col-12 mt-5">
-                        <h5>Endereço</h5>
+                        <h5>{{'ADMINISTRATION_ASSOCIATION_DATA.ADDRESS' | translate}}</h5>
                     </div>
                 </div>
 
@@ -79,119 +78,118 @@
                             <div *ngIf="formAddress.controls['zipCode'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">CEP é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.CEP_REQUIRED' | translate}}</p>
                             </div>
                             <div *ngIf="formAddress.controls['zipCode'].errors?.['minlength'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">CEP inválido!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.CEP_INVALID' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-5 mt-3">
                             <label for="publicPlace"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Logradouro</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.PUBLIC_PLACE' | translate}}</b></label>
                             <input type="text" formControlName="publicPlace" style="text-indent:20px;"
                                 class="form-control" id="publicPlace" placeholder="Logradouro">
 
                             <div *ngIf="formAddress.controls['publicPlace'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Logradouro é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.CEP_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-3 mt-3">
                             <label for="number"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Número</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.STREET_NUMBER' | translate}}</b></label>
                             <input type="text" formControlName="number" style="text-indent:20px;" class="form-control"
                                 id="number" placeholder="000" #addressnumber (focusout)="getLatLong($event)">
 
                             <div *ngIf="formAddress.controls['number'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Número é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.NUMBER_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-4 mt-3">
                             <label for="state"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Estado</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.STATE' | translate}}</b></label>
                             <input type="text" formControlName="state" style="text-indent:20px;" class="form-control"
                                 id="state" placeholder="Estado">
 
                             <div *ngIf="formAddress.controls['state'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Estado é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.STATE_REQUIRED' | translate}}/p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-4 mt-3">
                             <label for="city"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Município</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.LOCAL' | translate}}</b></label>
                             <input type="text" formControlName="city" style="text-indent:20px;" class="form-control"
                                 id="city" placeholder="Município">
 
                             <div *ngIf="formAddress.controls['city'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Município é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.LOCAL_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-4 mt-3">
                             <label for="neighborhood"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Bairro</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.NEIGHBORHOOD' | translate}}</b></label>
                             <input type="text" formControlName="neighborhood" style="text-indent:20px;"
                                 class="form-control" id="neighborhood" placeholder="Bairro">
 
                             <div *ngIf="formAddress.controls['neighborhood'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Bairro é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.NEIGHBORHOOD_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-6 mt-3">
                             <label for="latitude"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Latitude</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_NEW_ASSOCIATION.LATITUDE' | translate}}</b></label>
                             <input type="text" formControlName="latitude" style="text-indent:20px;" class="form-control"
-                                id="latitude" placeholder="Latitude">
+                                id="latitude" placeholder="{{'ADMINISTRATION_NEW_ASSOCIATION.LATITUDE' | translate}}">
 
                             <div *ngIf="formAddress.controls['latitude'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Latitude é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.LATITUDE_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-6 mt-3">
                             <label for="longitude"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Longitude</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_NEW_ASSOCIATION.LONGITUDE' | translate}}</b></label>
                             <input type="text" formControlName="longitude" style="text-indent:20px;"
-                                class="form-control" id="longitude" placeholder="Longitude">
+                                class="form-control" id="longitude" placeholder="{{'ADMINISTRATION_NEW_ASSOCIATION.LONGITUDE' | translate}}">
 
                             <div *ngIf="formAddress.controls['longitude'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Longitude é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.LONGITUDE_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-6 mt-3">
                             <label for="complement"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Complemento</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.COMPLEMENTS' | translate}}</b></label>
                             <input type="text" formControlName="complement" style="text-indent:20px;"
-                                class="form-control" id="complement" placeholder="Complemento">
+                                class="form-control" id="complement" placeholder="{{'ADMINISTRATION_ASSOCIATION_DATA.COMPLEMENTS' | translate}}">
                         </div>
 
                         <div class="col-sm-12 col-md-6 mt-3">
                             <label for="referencePoint"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Ponto de
-                                    Referência</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.POINT' | translate}}</b></label>
                             <input type="text" formControlName="referencePoint" style="text-indent:20px;"
-                                class="form-control" id="referencePoint" placeholder="Ponto de Referência">
+                                class="form-control" id="referencePoint" placeholder="{{'ADMINISTRATION_ASSOCIATION_DATA.POINT' | translate}}">
                         </div>
 
                     </div>
@@ -200,7 +198,7 @@
 
                 <div class="row">
                     <div class="col-12 mt-5">
-                        <h5>Representante Legal (Dados para contrato)</h5>
+                        <h5>{{'ADMINISTRATION_ASSOCIATION_DATA.LEGAL' | translate}}</h5>
                     </div>
                 </div>
 
@@ -210,48 +208,47 @@
 
                         <div class="col-sm-12 col-md-5 mt-3">
                             <label for="name"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Nome</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'PROFILE.PROFILE_NAME' | translate}}</b></label>
                             <input type="text" formControlName="name" style="text-indent:20px;" class="form-control"
-                                id="name" placeholder="Nome">
+                                id="name" placeholder="{{'PROFILE.PROFILE_NAME' | translate}}">
 
                             <div *ngIf="formLegalRepresentative.controls['name'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Nome é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.NAME_REQUIRED' | translate}}/p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-4 mt-3">
                             <label for="nationality"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Nacionalidade</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.NACIONALITY' | translate}}</b></label>
                             <input type="text" formControlName="nationality" style="text-indent:20px;"
-                                class="form-control" id="nationality" placeholder="Nacionalidade">
+                                class="form-control" id="nationality" placeholder="{{'ADMINISTRATION_ASSOCIATION_DATA.NACIONALITY' | translate}}">
 
                             <div *ngIf="formLegalRepresentative.controls['nationality'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Nacionalidade é obrigatória!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.NACIONALITY_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-3 mt-3">
                             <label for="maritalStatus"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Estado
-                                    Civil</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.CIVIL_STATE' | translate}}</b></label>
                             <select type="text" formControlName="maritalStatus" style="text-indent:20px;"
                                 class="form-control" id="maritalStatus">
-                                <option selected readonly disabled [value]="''">Selecione...</option>
-                                <option value="solteiro">Solteiro(a)</option>
-                                <option value="casado">Casado(a)</option>
-                                <option value="separado">Separado(a)</option>
-                                <option value="divorciado">Divorciado(a)</option>
-                                <option value="viuvo">Viúvo(a)</option>
+                                <option selected readonly disabled [value]="''">{{'ADMINISTRATION_NEW_ASSOCIATION.SELECT' | translate}}...</option>
+                                <option value="solteiro">{{'ADMINISTRATION_NEW_ASSOCIATION.SINGLE' | translate}}</option>
+                                <option value="casado">{{'ADMINISTRATION_NEW_ASSOCIATION.MARRIED' | translate}}</option>
+                                <option value="separado">{{'ADMINISTRATION_NEW_ASSOCIATION.SEPARATED' | translate}}</option>
+                                <option value="divorciado">{{'ADMINISTRATION_NEW_ASSOCIATION.DIVORCED' | translate}}</option>
+                                <option value="viuvo">{{'ADMINISTRATION_NEW_ASSOCIATION.WIDOWER' | translate}}</option>
                             </select>
 
                             <div *ngIf="formLegalRepresentative.controls['maritalStatus'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Etado Civil é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.CIVIL_STATE_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
@@ -261,15 +258,15 @@
                             <input type="text" formControlName="cpf" style="text-indent:20px;" class="form-control"
                                 mask="000.000.000-00" id="cpf" placeholder="000.000.000-00">
 
-                            <div *ngIf="formLegalRepresentative.controls['cpf'].errors?.['required'] && isSubmit"
+                            <div *ngIf="formLegalRepresentative.controls['cpf'].errors?.['required'] && isSubmit || regex.test(formLegalRepresentative.controls['cpf'].value)"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">CPF é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.REQUIRED_DOCUMENT' | translate}}!</p>
                             </div>
                             <div *ngIf="formLegalRepresentative.controls['cpf'].errors?.['minlength'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">CPF inválido!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.INVALID_DOCUMENT' | translate}}</p>
                             </div>
                         </div>
 
@@ -283,21 +280,20 @@
                             <div *ngIf="formLegalRepresentative.controls['rg'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">RG é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.RG_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-4 mt-3">
                             <label for="validityData"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Data de
-                                    Vigência</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.VALIDITY' | translate}}</b></label>
                             <input type="date" formControlName="validityData" style="text-indent:20px;"
                                 class="form-control" id="validityData">
 
                             <div *ngIf="formLegalRepresentative.controls['validityData'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Data de Vigência é obrigatória!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.VALIDITY_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
@@ -318,119 +314,92 @@
                             <div *ngIf="formLegalRepresentativeAddress.controls['zipCode'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">CEP é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.CEP_REQUIRED' | translate}}</p>
                             </div>
                             <div *ngIf="formLegalRepresentativeAddress.controls['zipCode'].errors?.['minlength'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">CEP inválido!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.CEP_INVALID' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-5 mt-3">
                             <label for="publicPlace"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Logradouro</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.PUBLIC_PLACE' | translate}}</b></label>
                             <input type="text" formControlName="publicPlace" style="text-indent:20px;"
-                                class="form-control" id="publicPlace" placeholder="Logradouro">
+                                class="form-control" id="publicPlace" placeholder="{{'ADMINISTRATION_ASSOCIATION_DATA.PUBLIC_PLACE' | translate}}">
 
                             <div *ngIf="formLegalRepresentativeAddress.controls['publicPlace'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Logradouro é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.PUBLIC_PLACE_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-3 mt-3">
                             <label for="number"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Número</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.STREET_NUMBER' | translate}}</b></label>
                             <input type="text" formControlName="number" style="text-indent:20px;" class="form-control"
                                 id="number" placeholder="000"  #addressnumberlegal >
 
                             <div *ngIf="formLegalRepresentativeAddress.controls['number'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Número é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.NUMBER_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-4 mt-3">
                             <label for="state"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Estado</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>  {{'ADMINISTRATION_ASSOCIATION_DATA.STATE' | translate}}</b></label>
                             <input type="text" formControlName="state" style="text-indent:20px;" class="form-control"
-                                id="state" placeholder="Estado">
+                                id="state" placeholder="{{'ADMINISTRATION_ASSOCIATION_DATA.STATE' | translate}}aaaaa">
 
                             <div *ngIf="formLegalRepresentativeAddress.controls['state'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Estado é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.STATE_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-4 mt-3">
                             <label for="city"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Município</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.LOCAL' | translate}}</b></label>
                             <input type="text" formControlName="city" style="text-indent:20px;" class="form-control"
-                                id="city" placeholder="Município">
+                                id="city" placeholder="{{'ADMINISTRATION_ASSOCIATION_DATA.LOCAL' | translate}}">
 
                             <div *ngIf="formLegalRepresentativeAddress.controls['city'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Município é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.LOCAL_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-4 mt-3">
                             <label for="neighborhood"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Bairro</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.NEIGHBORHOOD' | translate}}</b></label>
                             <input type="text" formControlName="neighborhood" style="text-indent:20px;"
-                                class="form-control" id="neighborhood" placeholder="Bairro">
+                                class="form-control" id="neighborhood" placeholder="{{'ADMINISTRATION_ASSOCIATION_DATA.NEIGHBORHOOD' | translate}}">
 
                             <div *ngIf="formLegalRepresentativeAddress.controls['neighborhood'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Bairro é obrigatório!</p>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12 col-md-6 mt-3">
-                            <label for="latitude"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Latitude</b></label>
-                            <input type="text" formControlName="latitude" style="text-indent:20px;" class="form-control"
-                                id="latitude" placeholder="Latitude">
-
-                            <div *ngIf="formLegalRepresentativeAddress.controls['latitude'].errors?.['required'] && isSubmit"
-                                class="div-msg-error mt-2">
-                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Latitude é obrigatório!</p>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12 col-md-6 mt-3">
-                            <label for="longitude"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Longitude</b></label>
-                            <input type="text" formControlName="longitude" style="text-indent:20px;"
-                                class="form-control" id="longitude" placeholder="Longitude">
-
-                            <div *ngIf="formLegalRepresentativeAddress.controls['longitude'].errors?.['required'] && isSubmit"
-                                class="div-msg-error mt-2">
-                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Longitude é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ADMINISTRATION_NEW_ASSOCIATION.NEIGHBORHOOD_REQUIRED' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-sm-12 col-md-6 mt-3">
                             <label for="complement"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Complemento</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.COMPLEMENTS' | translate}}</b></label>
                             <input type="text" formControlName="complement" style="text-indent:20px;"
-                                class="form-control" id="complement" placeholder="Complemento">
+                                class="form-control" id="complement" placeholder="{{'ADMINISTRATION_ASSOCIATION_DATA.COMPLEMENTS' | translate}}">
                         </div>
 
                         <div class="col-sm-12 col-md-6 mt-3">
                             <label for="referencePoint"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Ponto de
-                                    Referência</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'ADMINISTRATION_ASSOCIATION_DATA.POINT' | translate}}</b></label>
                             <input type="text" formControlName="referencePoint" style="text-indent:20px;"
-                                class="form-control" id="referencePoint" placeholder="Ponto de Referência">
+                                class="form-control" id="referencePoint" placeholder="{{'ADMINISTRATION_ASSOCIATION_DATA.POINT' | translate}}">
                         </div>
 
                     </div>
@@ -439,11 +408,10 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <button type="button" class="bg-light btn-lg btn-block mb-4"
-                                    [routerLink]="['/pages/associacao']">Cancelar</button>
+                                    [routerLink]="['/pages/associacao']">{{'BUTTON_TEXT.CANCEL' | translate}}</button>
                             </div>
                             <div class="col-md-6">
-                                <button type="submit" class="btn btn-secondary btn-lg btn-block mb-4">Criar
-                                    Associação</button>
+                                <button type="submit" class="btn btn-dark btn-lg btn-block mb-4">{{'ADMINISTRATION_NEW_ASSOCIATION.CREATE_ASSOCIATE' | translate}}</button>
                             </div>
                         </div>
                     </div>

@@ -42,7 +42,6 @@ export class RecusarPropostaModalComponent {
     this.proposalService.refusedProposal(this.response._id, request, ).subscribe({
 
       next: data => {
-        console.log(data);
         this.toastrService.success('Proposta recusada com sucesso', '', { progressBar: true });
         this.exit();
       },

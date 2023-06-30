@@ -12,6 +12,7 @@ import { AssociationBidService } from 'src/services/association-bid.service';
 export class RecusarLicitacaoComponent implements OnInit {
 
   responseId: any;
+  storedLanguage : string | null
 
   constructor(
     private modalService: NgbModal,
@@ -22,6 +23,8 @@ export class RecusarLicitacaoComponent implements OnInit {
   ngOnInit(): void {
     let bid: any = localStorage.getItem('bidId');
     this.responseId = bid;
+
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
   }
   closeModal(value: string) {
     this.modalService.dismissAll();
@@ -34,7 +37,24 @@ export class RecusarLicitacaoComponent implements OnInit {
 
     this.bidService.changeStatus(this.responseId, request).subscribe({
       next: data => {
-        const toastr = this.toastrService.success('Recusada com sucesso!', '', { progressBar: true });
+        let successMessage = 'Recusada com sucesso';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Recusada com sucesso'
+            break;
+          case 'en':
+            successMessage = 'successfully declined'
+            break;
+          case 'fr':
+            successMessage = 'refusé avec succès'
+            break;
+          case 'es':
+            successMessage = 'rechazado con éxito'
+            break;
+        }
+
+        const toastr = this.toastrService.success(successMessage, '', { progressBar: true });
         if (toastr) {
           toastr.onHidden.subscribe(() => {
             this.modalService.dismissAll();
@@ -43,6 +63,24 @@ export class RecusarLicitacaoComponent implements OnInit {
         }
       },
       error: error => {
+
+        let errorMessage = 'Erro ao recusar licitação!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            errorMessage = 'Erro ao recusar licitação!'
+            break;
+          case 'en':
+            errorMessage = 'Error rejecting bid!'
+            break;
+          case 'fr':
+            errorMessage = "Erreur lors du rejet de l'enchère !"
+            break;
+          case 'es':
+            errorMessage = '¡Error al rechazar la oferta!'
+            break;
+        }
+
         this.toastrService.error('Erro ao recusar licitação!', '', { progressBar: true });
       }
     })

@@ -37,4 +37,5 @@ export class AllotmentsService extends BaseService {
       .post(`${this.url}/download-file-by-id/${_id}`, null, this.authorizedHeaderBlob)
       .pipe(map(response => response), catchError(this.serviceError))
   }
+
 }

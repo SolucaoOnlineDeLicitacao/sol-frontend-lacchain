@@ -18,6 +18,7 @@ export class NewCategoriasComponent implements OnInit {
   form: FormGroup;
   isSubmit: boolean = false;
   request: CategoryRequestDto;
+  storedLanguage : string | null
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,6 +35,7 @@ export class NewCategoriasComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
   }
 
   onSubmit() {
@@ -48,12 +50,48 @@ export class NewCategoriasComponent implements OnInit {
     }
     this.categoryService.register(this.request).subscribe({
       next: (success) => {
+
+        let successMessage = 'Categoria cadastrada com sucesso!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Categoria cadastrada com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'Category registered successfully!'
+            break;
+          case 'fr':
+            successMessage = 'Catégorie enregistrée avec succès !'
+            break;
+          case 'es':
+            successMessage = '¡Categoría registrada con éxito!'
+            break;
+        }
+
         this.toastrService.success('Categoria cadastrada com sucesso!', '', { progressBar: true });
         this.router.navigate(['/pages/categorias']);
       },
       error: (error) => {
+
+        let errorMessage = 'Erro ao cadastrar a categoria!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            errorMessage = 'Erro ao cadastrar a categoria!'
+            break;
+          case 'en':
+            errorMessage = 'Error registering category!'
+            break;
+          case 'fr':
+            errorMessage = "Erreur lors de l'enregistrement de la catégorie !"
+            break;
+          case 'es':
+            errorMessage = '¡Error al registrar la categoría!'
+            break;
+        }
+
         console.error(error);
-        this.toastrService.error('Error ao cadastrar a categoria!', '', { progressBar: true });
+        this.toastrService.error(errorMessage, '', { progressBar: true });
         this.toastrService.error(error.error.errors[0], '', { progressBar: true });
       }
     });

@@ -4,6 +4,7 @@ import { ContractResponseDto } from 'src/dtos/contratos/convenio-response.dto';
 import { AuthService } from 'src/services/auth.service';
 import { ContractsService } from 'src/services/contract.service';
 import { DatamockService } from 'src/services/datamock.service';
+import { jsPDF } from 'jspdf';
 
 @Component({
   selector: 'app-fornecedor-contrato',
@@ -11,7 +12,7 @@ import { DatamockService } from 'src/services/datamock.service';
   styleUrls: ['./fornecedor-contrato.component.scss']
 })
 export class FornecedorContratoComponent {
-  contratosList: ContractResponseDto [] = [];
+  contratosList: any [] = [];
   currentPage: number = 1;
   itensPerPage: number = 6;
   searchTool = false;
@@ -26,7 +27,6 @@ export class FornecedorContratoComponent {
     this.contractsService.getContract().subscribe({
       next: data => {
         this.contratosList = data;
-        console.log(data)
       },
       error: error => {
         console.error(error)
@@ -45,6 +45,4 @@ export class FornecedorContratoComponent {
     this.router.navigate(['/pages/fornecedor/contratos/contrato-supplier/'+i._id]);
     /* localStorage.setItem('contrato', JSON.stringify(i)); */
   }
-
-
 }

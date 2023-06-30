@@ -14,7 +14,7 @@ export abstract class UserListResponseDto {
     profilePicture?: string;
     office?: string;
     association?: AssociationResponseDto;
-    supplier?: string;
+    supplier?: any;
     roles?: string;
     notification_list?: []
 }

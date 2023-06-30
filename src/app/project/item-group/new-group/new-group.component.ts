@@ -10,6 +10,7 @@ import { LocalStorageService } from "src/services/local-storage.service";
 import { WorkPlanService } from "src/services/work-plan.service";
 import { WorkPlanProductInterface, WorkPlanRegisterRequest } from "src/dtos/workPlan/work-plan-register-request.dto";
 import { ConvenioService } from "src/services/convenio.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-new-group",
@@ -29,6 +30,8 @@ export class NewGroupComponent implements OnInit, OnDestroy {
     private workPlanService: WorkPlanService,
     private formBuilder: FormBuilder,
     private location: Location,
+    private translate: TranslateService,
+
     private toastrService: ToastrService,
     private convenioService: ConvenioService
   ) {
@@ -69,7 +72,7 @@ export class NewGroupComponent implements OnInit, OnDestroy {
     const costItems = this.costItemsList.find(item => item._id === this.form.controls["items"].value);
 
     if (!costItems) {
-      this.toastrService.error("Item não encontrado!", "", { progressBar: true });
+      this.toastrService.error(this.translate.instant('TOASTRS.FIND_ITEM'), '', { progressBar: true });
       return;
     }
     const item: ItemCustom = {
@@ -106,20 +109,18 @@ export class NewGroupComponent implements OnInit, OnDestroy {
       next: success => {
         this.convenioService.addWorkPlan(this.convenioId, { workPlanId: success._id }).subscribe({
           next: success => {
-            this.toastrService.success("Grupo cadastrado com sucesso!", "", { progressBar: true });
+            this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_CREATE_GROUP'), '', { progressBar: true });
             this.location.back();
           },
           error: error => {
             console.error(error);
-            this.toastrService.error("Error ao cadastrar o grupo!", "", { progressBar: true });
-            this.toastrService.error(error.error.errors[0], "", { progressBar: true });
+            this.toastrService.error(error.error.errors[0],this.translate.instant('TOASTRS.ERROR_CREATE_GROUP'), { progressBar: true });
           },
         });
       },
       error: error => {
         console.error(error);
-        this.toastrService.error("Error ao cadastrar o grupo!", "", { progressBar: true });
-        this.toastrService.error(error.error.errors[0], "", { progressBar: true });
+        this.toastrService.error(error.error.errors[0], this.translate.instant('TOASTRS.ERROR_CREATE_GROUP'), { progressBar: true });
       },
     });
   }

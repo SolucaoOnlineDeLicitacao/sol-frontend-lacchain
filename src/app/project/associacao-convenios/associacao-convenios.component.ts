@@ -18,7 +18,7 @@ export class AssociacaoConveniosComponent {
   }
 
   ngOnInit(): void {
-    this.conveniosService.getConvenio().subscribe({
+    this.conveniosService.getConvenioForAssociation().subscribe({
       next: data => {
         this.convenios = data;
       },

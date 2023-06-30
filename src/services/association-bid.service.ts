@@ -18,8 +18,27 @@ export class AssociationBidService extends BaseService {
     return this.httpClient.post<AssociationBidRequestDto>(`${this.url}/register`, dto, this.authorizedHeader);
   }
 
+  bidRegisterFormData(formData: FormData) {
+    return this.httpClient.post<AssociationBidRequestDto>(`${this.url}/register`, formData, this.authorizedHeaderMulti);
+  }
+
   list(): Observable<any> {
     return this.httpClient.get(`${this.url}/list`, this.authorizedHeader).pipe(
+      map(response => response),
+      catchError(this.serviceError)
+    );
+  }
+
+
+  listForSupplier(): Observable<any> {
+    return this.httpClient.get(`${this.url}/list-for-supplier`, this.authorizedHeader).pipe(
+      map(response => response),
+      catchError(this.serviceError)
+    );
+  }
+
+  listForProposalSupplier(): Observable<any> {
+    return this.httpClient.get(`${this.url}/list-for-proposal-supplier`, this.authorizedHeader).pipe(
       map(response => response),
       catchError(this.serviceError)
     );
@@ -41,11 +60,21 @@ export class AssociationBidService extends BaseService {
     // return this.httpClient
     //     .get(`${this.url}/download/${id}/${type}`, this.authorizedHeader)
 
-    return firstValueFrom(
-      this.httpClient.get(`${this.url}/download/${id}/${type}`, {
+    return this.httpClient.get(`${this.url}/download/${id}/${type}`, {
         headers: this.authorizedHeaderFile.headers,
         responseType: "blob",
-      })
+      }).pipe(map(response => response), catchError(this.serviceError))
+  }
+
+
+  bidPdf(_id: string, type: string) {
+    return firstValueFrom(this.httpClient
+      .get(`${this.url}/bid-pdf/${_id}/${type}`, this.authorizedHeader)
+      .pipe(map((response:any) => response))
     );
+  }
+
+  listByAssociation() {
+    return this.httpClient.get(`${this.url}/list-by-association`, this.authorizedHeader);
   }
 }

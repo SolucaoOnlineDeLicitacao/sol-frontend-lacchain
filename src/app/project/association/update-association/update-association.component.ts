@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AssociationService } from 'src/services/association.service';
+import { CepService } from 'src/services/cep.service';
+import { NominatimService } from 'src/services/nominatim.service';
 
 @Component({
   selector: 'app-update-association',
@@ -19,13 +21,17 @@ export class UpdateAssociationComponent implements OnInit {
   isSubmit: boolean = false;
   associationId!: string;
 
+  storedLanguage : string | null
+
   constructor(
     private formBuilder: FormBuilder,
     private associationService: AssociationService,
     private ngxSpinnerService: NgxSpinnerService,
     private toastrService: ToastrService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private cepService: CepService,
+    private nominatimService: NominatimService
   ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required, Validators.maxLength(50)]],
@@ -101,7 +107,7 @@ export class UpdateAssociationComponent implements OnInit {
             maritalStatus: success.legalRepresentative.maritalStatus,
             cpf: success.legalRepresentative.cpf,
             rg: success.legalRepresentative.rg,
-            validityData: success.legalRepresentative.validityData.toString().slice(0,10)
+            validityData: success.legalRepresentative.validityData.toString().slice(0, 10)
           });
 
           this.formLegalRepresentativeAddress.patchValue({
@@ -127,7 +133,53 @@ export class UpdateAssociationComponent implements OnInit {
       });
     });
 
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
 
+  }
+
+  async searchCep() {
+
+    let zipCode = this.formAddress.get('zipCode')?.value || '';
+    if (zipCode.length < 8) return
+    if (zipCode) {
+      const cep = await this.cepService.buscarCep(zipCode)
+      if (cep) {
+        this.formAddress.patchValue({
+          number: cep.numero,
+          publicPlace: cep.logradouro,
+          neighborhood: cep.bairro,
+          city: cep.cidade,
+          state: cep.uf,
+          complement: cep.complemento,
+        })
+      }
+      this.getLatLong(
+        cep.logradouro,
+        cep.cidade,
+        'brazil',
+        cep.uf,
+      )
+    }
+  }
+
+  async getLatLong(street: string, city: string, country: string, state: string) {
+    const result: any = await this.nominatimService.getLatLongByAddress(
+      street,
+      city,
+      country,
+      state,
+    );
+
+    if (result && result.length > 0) {
+
+      const lat = result[0].lat;
+      const lng = result[0].lon;
+
+      this.formAddress.patchValue({
+        latitude: lat,
+        longitude: lng,
+      });
+    }
   }
 
   onSubmit() {
@@ -147,13 +199,31 @@ export class UpdateAssociationComponent implements OnInit {
     this.ngxSpinnerService.show();
     this.associationService.update(this.associationId, dto).subscribe({
       next: (success) => {
+
+        let successMessage = 'Associação editada com sucesso!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Associação editada com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'Association successfully edited!'
+            break;
+          case 'fr':
+            successMessage = 'Association éditée avec succès !'
+            break;
+          case 'es':
+            successMessage = '¡Asociación editada con éxito!'
+            break;
+        }
+
         this.ngxSpinnerService.hide();
-        this.toastrService.success('Associação editada com sucesso!', '', { progressBar: true});
+        this.toastrService.success('Associação editada com sucesso!', '', { progressBar: true });
         this.router.navigate(['/pages/associacao']);
       },
       error: (error) => {
         console.error(error);
-        this.toastrService.error( error.error.errors[0], '', { progressBar: true});
+        this.toastrService.error(error.error.errors[0], '', { progressBar: true });
         this.ngxSpinnerService.hide();
       }
     });

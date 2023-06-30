@@ -13,6 +13,7 @@ import { ProductService } from 'src/services/product.service';
 })
 export class DeleteCategoriasComponent implements OnInit {
 
+  storedLanguage : string | null
 
   constructor(
     private ngxSpinnerService: NgxSpinnerService,
@@ -24,20 +25,57 @@ export class DeleteCategoriasComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
   }
 
   deleteCategory() {
     this.ngxSpinnerService.show();
     this.categoryService.delete(this.localStorage.getDataCategoria()._id).subscribe({
       next: (data) => {
+
+        let successMessage = 'Categoria deletada com sucesso!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Categoria deletada com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'Category deleted successfully!'
+            break;
+          case 'fr':
+            successMessage = 'Catégorie supprimée avec succès!'
+            break;
+          case 'es':
+            successMessage = 'Categoría eliminada con éxito!'
+            break;
+        }
+
         this.ngxSpinnerService.hide();
-        this.toastrService.success('Categoria deletada com sucesso!', '', { progressBar: true });
+        this.toastrService.success(successMessage, '', { progressBar: true });
         this.ngbModal.dismissAll();
       },
       error: (error) => {
+
+        let errorMessage = 'Erro ao deletar categoria!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            errorMessage = 'Erro ao deletar categoria!'
+            break;
+          case 'en':
+            errorMessage = 'Error deleting category!'
+            break;
+          case 'fr':
+            errorMessage = 'Erreur lors de la suppression de la catégorie!'
+            break;
+          case 'es':
+            errorMessage = 'Error al eliminar la categoría!'
+            break;
+        }
+
         this.ngxSpinnerService.hide();
         console.error(error);
-        this.toastrService.error('Erro ao deletar categoria!', '', { progressBar: true });
+        this.toastrService.error(errorMessage, '', { progressBar: true });
       }
     });
   }

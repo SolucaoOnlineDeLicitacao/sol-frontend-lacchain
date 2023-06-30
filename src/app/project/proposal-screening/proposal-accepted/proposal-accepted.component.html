@@ -1,114 +1,146 @@
 <div class="container-fluid">
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <h1>Proposta Aceita</h1>
-            <hr class="bg-primary">
-        </div>
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <h1>{{'PROPOSAL.VIEW_PROPOSAL' | translate}}</h1>
+      <hr class="bg-primary">
     </div>
-    <form>
-        <div class="row mt-4 mb-0 ">
-            <div class="col-md-11">
-                <div class="row br-10 bg-blur  bg-opacity-50 border mx-0 br-16 p-3">
-                    <div class="col-4">
-                        <p>Nome
-                            <th>{{responseProposal?.acceptedFornecedor?.name}}</th>
-                        </p>
-                        <p>CEP
-                            <th>{{responseProposal?.acceptedFornecedor?.name}}</th>
-                        </p>
-                    </div>
-                    <div class="col-4 mb-0">
-                        <p>Documento
-                            <th>{{responseProposal?.acceptedFornecedor?.document}}</th>
-                        </p>
-                        <p>Bairro
-                            <th>Centro</th>
-                        </p>
-                    </div>
-                    <div class="col-4 mb-0">
-                        <p>Município
-                            <th>São Bento do Norte</th>
-                        </p>
-                    </div>
-                </div>
-            </div>
+  </div>
+  <div *ngFor="let item of responseProposal?.proposals ">
+    <div class="row mt-4 mb-0 ">
+      <div class="col-md-11">
+        <h6>{{'PROPOSAL.SUPPLIER' | translate}}</h6>
+        <div class="row br-10 bg-blur  bg-opacity-50 border mx-0 br-16 p-3">
+          <div class="col-4">
+            <p>{{'PROFILE.PROFILE_NAME' | translate}}
+              <th>{{item?.acceptedFornecedor?.name}}</th>
+            </p>
+            <p>CEP
+              <th>{{item?.acceptedFornecedor?.association?.address?.zipCode}}</th>
+            </p>
+          </div>
+          <div class="col-4 mb-0">
+            <p>{{'SUPPLIER.DOCUMENT' | translate}}
+              <th>{{item?.acceptedFornecedor?.document}}</th>
+            </p>
+            <p>c
+              <th>{{item?.acceptedFornecedor?.association?.address?.neighborhood}}</th>
+            </p>
+          </div>
+          <div class="col-4 mb-0">
+            <p>{{'REGISTER_SUPPLIER.COUNTY' | translate}}
+              <th>{{item?.acceptedFornecedor?.association?.address?.city}}</th>
+            </p>
+          </div>
         </div>
-    </form>
-    <form>
-        <div class="row mt-4 mb-0 ">
-            <div class="col-md-11">
-                <div class="row br-10 bg-blur  bg-opacity-50 border mx-0 br-16 p-3">
-                    <div class="col-md-12">
-                        <h3>Representante Legal (Dados para contrato) </h3>
-                        <hr class="bg-primary">
-                    </div>
-                    <div class="col-md-4">
-                        <h6>Nome</h6>
-                        <h6><strong>Office</strong></h6>
-                    </div>
-                    <div class="col-md-4">
-                        <h6>CPF</h6>
-                        <h6><strong>000.000.000-00</strong></h6>
-                    </div>
-                    <div class="col-md-4">
-                        <h6>RG</h6>
-                        <h6><strong>0000000</strong></h6>
-                    </div>
-                    <div class="col-md-12 mt-4">
-                        <h3>Anexos</h3>
-                        <hr class="bg-primary">
-                    </div>
-                    <div class="d-flex justify-content-between col-4">
-                        <p>
-                            Não há Anexos
-                        </p>
-                    </div>
-                    <div class="col-md-12 mt-4">
-                        <h3>Valor da Proposta</h3>
-                        <hr class="bg-primary">
-                    </div>
-                    <div *ngIf="responseProposal?.total_value" class="d-flex justify-content-between col-4">
-                        <h6>Valor</h6>
-                        <h6><strong>{{responseProposal?.total_value | currency: 'R$ '}}</strong></h6>
-                    </div>
-                    <div *ngIf="responseProposal?.file" class="d-flex flex-column justify-content-between">
-                        <h6>Planilha de proposta</h6>
-                        <a (click)="open()">Acessar documento</a>
-                    </div>
-                </div>
-                <table class="table table-hover mt-4">
-                    <thead>
-                        <tr>
-                            <th class="bg-pattern text-light br-tabele" scope="col">Item de Custo</th>
-                            <th class="bg-pattern text-light" scope="col">Quantidade</th>
-                            <th class="bg-pattern text-light br-tabele2" scope="col">Valor Unitário da cotação (R$)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border">
-                            <td class="text-capitalize text-dark" scope="row">eeee</td>
-                            <td class="text-capitalize text-dark">ooooo</td>
-                            <td class="text-capitalize text-dark">eeeety</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="row mb-5 mt-4">
-                    <div class="col-md-12 d-flex justify-content-end px-0">
-                        <div class="col-md-3">
-                            <button class="btn br-10 border-light text-light  w-100 py-2"
-                                style="background-color: #F34C41;" (click)="refused()">
-                                Reprovar Proposta
-                            </button>
-                        </div>
-                        <div class="col-md-4">
-                            <button class="btn br-10 w-100 py-2 text-light" style="background-color: #2CCE71;"
-                                (click)="approve()">
-                                Aprovar Proposta
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <h6 *ngIf="responseBid.invited_suppliers.length > 0" class="mt-4">{{'SUPPLIER_BIDDING.INVITED_SUPPLIERS' | translate}}</h6>
+        <div *ngFor="let item of responseBid.invited_suppliers"
+          class="row br-10 bg-blur  bg-opacity-50 border mx-0 br-16 p-3">
+          <div class="col-4">
+            <p>{{'PROFILE.PROFILE_NAME' | translate}}
+              <th>{{item?.name}}</th>
+            </p>
+            <p>CEP
+              <th>{{item?.address?.zipCode}}</th>
+            </p>
+          </div>
+          <div class="col-4 mb-0">
+            <p>{{'SUPPLIER.DOCUMENT' | translate}}
+              <th>{{item?.cpf}}</th>
+            </p>
+            <p>{{'SUPPLIER.DOCUMENT' | translate}}
+              <th>{{item?.address?.neighborhood}}</th>
+            </p>
+          </div>
+          <div class="col-4 mb-0">
+            <p>{{'REGISTER_SUPPLIER.COUNTY' | translate}}
+              <th>{{item?.address?.publicPlace}}</th>
+            </p>
+          </div>
         </div>
-    </form>
-</div>
+      </div>
+    </div>
+
+    <div class="row mt-4 mb-0 ">
+      <div class="col-md-11">
+        <div *ngFor="let item of responseBid.invited_suppliers"
+          class="row br-10 bg-blur  bg-opacity-50 border mx-0 br-16 p-3">
+          <div class="col-md-12">
+            <h3>{{'REGISTER_SUPPLIER.LEGAL_REPRESENTATIVE' | translate}}</h3>
+            <hr class="bg-primary">
+          </div>
+          <div class="col-md-4">
+            <h6>{{'PROFILE.PROFILE_NAME' | translate}}</h6>
+            <h6><strong>{{item?.legal_representative?.name}}</strong></h6>
+          </div>
+          <div class="col-md-4">
+            <h6>CPF</h6>
+            <h6><strong>{{item?.legal_representative?.cpf}}</strong></h6>
+          </div>
+          <div class="col-md-4">
+            <h6>RG</h6>
+            <h6><strong>{{item?.legal_representative?.rg}}</strong></h6>
+          </div>
+        </div>
+        <!-- <div class="col-md-12 mt-4">
+                    <h3>Anexos</h3>
+                    <hr class="bg-primary">
+                </div>
+                <div class="d-flex justify-content-between col-4">
+                    <p>
+                        Não há Anexos
+                    </p>
+                </div>
+                <div class="col-md-12 mt-4">
+                    <h3>Valor da Proposta</h3>
+                    <hr class="bg-primary">
+                </div> -->
+        <div *ngIf="responseProposal?.total_value" class="d-flex justify-content-between col-4">
+          <h6>{{'ASSOCIATION_CONTRACTS.VALUE' | translate}}</h6>
+          <h6><strong>{{responseProposal?.total_value | currency: 'R$ '}}</strong></h6>
+        </div>
+        <div *ngIf="responseProposal?.file" class="d-flex flex-column justify-content-between">
+          <h6>{{'ASSOCIATION_CONTRACTS.PROPOSAL_SPREADSHEET' | translate}}</h6>
+          <a (click)="open()">{{'ASSOCIATION_CONTRACTS.SIGNATURES' | translate}}</a>
+        </div>
+
+        <div *ngFor="let itemBid of responseProposal?.bid.add_allotment">
+
+          <h6>{{itemBid.allotment_name}}</h6>
+          <table class="table table-hover mt-4">
+
+            <thead>
+              <tr>
+                <th class="bg-pattern text-light br-tabele" scope="col">{{'ASSOCIATION_CONTRACTS.COST_ITEM' | translate}}</th>
+                <th class="bg-pattern text-light" scope="col">{{'ADMINISTRATION_AGREEMENTS_BIDDING.QUANTITY' | translate}}</th>
+                <th class="bg-pattern text-light br-tabele2" scope="col">{{'ASSOCIATION_CONTRACTS.UNIT_PRICE' | translate}}</tr>
+              </thead>
+              <tbody *ngFor="let itemBidItemAdd of itemBid.add_item">
+
+                <tr class="border">
+                  <td class="text-capitalize text-dark" scope="row">{{itemBidItemAdd.item}}</td>
+                  <td class="text-capitalize text-dark">{{itemBidItemAdd.quantity}}</td>
+                  <td class="text-capitalize text-dark">{{item.total_value / itemBidItemAdd.quantity }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="item?.status === 'aceitoAssociacao'">
+            <div class="row mb-5 mt-4">
+              <div class="col-md-12 d-flex justify-content-end px-0">
+                <div class="col-md-3">
+                  <button class="btn br-10 border-light text-light  w-100 py-2"
+                    style="background-color: #F34C41;" (click)="refused(item)">{{'PROPOSAL.PROPOSAL_REPROVED' | translate}}
+                  </button>
+                </div>
+                <div class="col-md-4">
+                  <button class="btn br-10 w-100 py-2 text-light" style="background-color: #2CCE71;"
+                    (click)="approve(item._id)">{{'PROPOSAL.PROPOSAL_APROVED' | translate}}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

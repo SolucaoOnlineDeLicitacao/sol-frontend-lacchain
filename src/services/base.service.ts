@@ -37,6 +37,21 @@ export abstract class BaseService {
     };
   }
 
+
+  protected get authorizedHeaderMulti() {
+    const userJson = localStorage.getItem("user") as string;
+    const user: UserAuthenticatedDto = JSON.parse(userJson);
+
+    return {
+      headers: new HttpHeaders({
+        // "Content-Type": " multipart/form-data",
+        Authorization: `Bearer ${user?.token}`,
+      }),
+    };
+  }
+
+ 
+
   protected get authorizedHeaderBlob() {
     const userJson = localStorage.getItem("user") as string;
     const user: UserAuthenticatedDto = JSON.parse(userJson);
@@ -58,6 +73,7 @@ export abstract class BaseService {
 
     return {
       headers: new HttpHeaders({
+        "Content-Type": "application/pdf",
         Authorization: `Bearer ${user?.token}`,
       }),
     };

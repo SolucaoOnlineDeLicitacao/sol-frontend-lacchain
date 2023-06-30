@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row mt-5">
         <div class="col-md-12">
-            <h1 class="text-dark"><strong>Editar Item</strong></h1>
+            <h1 class="text-dark"><strong>{{'COST_ITEMS.EDIT_ITEMS' | translate}}</strong></h1>
             <hr class="bg-primary">
         </div>
     </div>
@@ -12,97 +12,96 @@
                     <div class="row">
                         <div class="col-md-4 mt-3">
                             <label for="code"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Código</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'FIRST_ACCESS.CODE' | translate}}</b></label>
                             <input type="text" formControlName="code" class="form-control h50 br-10" id="code"
                                 placeholder="Código">
 
                             <div *ngIf="form.controls['code'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Código é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.REQUIRED_CODE' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-md-8 mt-3">
                             <label for="name"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Nome</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'AGREEMENTS.NAME' | translate}}</b></label>
                             <input type="text" formControlName="name" class="form-control h50 br-10" id="name"
                                 placeholder="Nome">
                             <div *ngIf="form.controls['name'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Nome é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.NAME_REQUIRED' | translate}}</p>
                             </div>
                             <div *ngIf="form.controls['name'].errors?.['maxlength'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Nome deve conter no máximo 50 caracteres!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'ERROR_MESSAGES.NAME_VALIDATOR' | translate}}</p>
                             </div>
                         </div>
 
                         <div class="col-md-12 mt-3">
                             <label for="unitMeasure"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Unidade</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'SUPPLIER_BIDDING.UNITS' | translate}}</b></label>
                             <select formControlName="unitMeasure" #unitMeasure id="unitMeasure"
                                 class="form-control br-10 h50">
                                 <option [disabled]="true" [selected]="true">
                                     {{response.unitMeasure}}</option>
-                                <option value="M">M -Metros</option>
-                                <option value="CM">CM - Centímetro</option>
-                                <option value="MM">MM - Milímetro</option>
-                                <option value="KG">KG - Quilograma</option>
-                                <option value="G">G -Grama</option>
-                                <option value="MG">MG - Miligrama</option>
-                                <option value="L">L -Litro</option>
-                                <option value="DL">DL - Decilitro</option>
-                                <option value="ML">ML - Mililitro</option>
-                                <option value="UN">UN - Unidade</option>
+                                <option value="M">{{'COST_ITEMS.METERS' | translate}}</option>
+                                <option value="CM">{{'COST_ITEMS.CENTIMETER' | translate}}</option>
+                                <option value="MM">{{'COST_ITEMS.MILLIMETER' | translate}}</option>
+                                <option value="KG">{{'COST_ITEMS.KILOGRAM' | translate}}</option>
+                                <option value="G">{{'COST_ITEMS.GRAM' | translate}}</option>
+                                <option value="MG">{{'COST_ITEMS.MILLIGRAM' | translate}}</option>
+                                <option value="L">{{'COST_ITEMS.LITER' | translate}}</option>
+                                <option value="DL">{{'COST_ITEMS.DECILITER' | translate}}</option>
+                                <option value="ML">{{'COST_ITEMS.MILLILIER' | translate}}</option>
+                                <option value="UN">{{'COST_ITEMS.UNIT' | translate}}</option>
                             </select>
                             <div *ngIf="form.controls['unitMeasure'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Unidade de Medida é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'COST_ITEMS.UNIT_REQUEST' | translate}}</p>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-12 mt-3">
                             <label for="category"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Categoria /
-                                    Segmento</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'COST_ITEMS.CATEGORY' | translate}}</b></label>
                             <select formControlName="category" #category id="category" class="form-control br-10 h50">
-                                <option disabled selected value="">Selecione</option>
+                                <option disabled selected value="">{{'BUTTON_TEXT.SELECT' | translate}}</option>
                                 <option *ngFor="let item of categoryList" [value]="item._id">{{item?.identifier}} -
                                     {{item?.category_name}} / {{item?.segment}}</option>
                             </select>
                             <div *ngIf="form.controls['category'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Categoria / Segmento é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'COST_ITEMS.CATEGORY_REQUEST' | translate}}</p>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-12 mt-3">
                             <label for="product"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Produtos</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'SIDEBAR.PRODUCTS' | translate}}</b></label>
                             <select formControlName="product" #product id="product" class="form-control br-10 h50">
-                                <option disabled selected value="">Selecione</option>
+                                <option disabled selected value="">{{'BUTTON_TEXT.SELECT' | translate}}</option>
                                 <option *ngFor="let item of productList" [value]="item._id">{{item?.identifier}} -
                                     {{item?.product_name}}</option>
                             </select>
                             <div *ngIf="form.controls['product'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Produtos é obrigatório!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'COST_ITEMS.PRODUCT_REQUEST' | translate}}</p>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-12 mt-3">
                             <label for="specification"
-                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Especificação</b></label>
+                                class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{'COST_ITEMS.SPECIFICATION' | translate}}</b></label>
                             <input type="text" formControlName="specification" class="form-control h50 br-10"
-                                id="specification" placeholder="Especificação">
+                                id="specification" placeholder="{{'COST_ITEMS.SPECIFICATION' | translate}}">
 
                             <div *ngIf="form.controls['specification'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
                                 <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Especificação é obrigatória!</p>
+                                <p class="font-poppins font-size-14 m-0">{{'COST_ITEMS.SPECIFICATION_REQUEST' | translate}}</p>
                             </div>
                         </div>
                     </div>
@@ -112,11 +111,11 @@
                                 <div class="row d-flex justify-content-end">
                                     <div class="col-md-5">
                                         <button type="button" class="bg-transparent w-100 btn br-10 h50 color-pattern"
-                                            [routerLink]="['/pages/itens-custo']"><strong>Cancelar</strong></button>
+                                            [routerLink]="['/pages/itens-custo']"><strong>{{'BUTTON_TEXT.CANCEL' | translate}}</strong></button>
                                     </div>
                                     <div class="col-md-5">
                                         <button type="submit"
-                                            class="btn bg-pattern text-light br-10 h50 w-100"><strong>Salvar</strong></button>
+                                            class="btn bg-pattern text-light br-10 h50 w-100"><strong>{{'BUTTON_TEXT.SAVE' | translate}}</strong></button>
                                     </div>
                                 </div>
                             </div>

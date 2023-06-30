@@ -14,7 +14,11 @@ import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor
 export class NewContractTemplatesComponent {
   form: FormGroup;
   licitacoesList: any = [];
-
+  isSectionOpenFornecedor: boolean = false;
+  isSectionOpenAssociacao: boolean = false;
+  isSectionOpenContrato: boolean = false;
+  isSectionOpenConvenio: boolean = false;
+  isSectionOpenLicitacao: boolean = false;
   html: '';
   htmlContent = '';
   config: AngularEditorConfig = {
@@ -28,7 +32,7 @@ export class NewContractTemplatesComponent {
     defaultFontName: 'Arial',
     toolbarHiddenButtons: [
       ['bold']
-      ],
+    ],
     customClasses: [
       {
         name: "quote",
@@ -45,50 +49,131 @@ export class NewContractTemplatesComponent {
       },
     ]
   };
+
+  storedLanguage : string | null
   
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private _associationBidService: AssociationBidService,
-    private _modelContractService:ModelContractService,
+    private _modelContractService: ModelContractService,
     private toastrService: ToastrService,
   ) {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
-      licitacoes: [''],
+      classification: [''],
       contract: [''],
     })
   }
 
   ngOnInit(): void {
-  
+
     this._associationBidService.list().subscribe({
       next: data => {
         this.licitacoesList = data;
       },
     })
+
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
    
   }
 
   onSubmit() {
-   
+
     let dto = {
-      name : this.form.value.name ,
-      bid: this.form.value.licitacoes,
+      name: this.form.value.name,
+      classification: this.form.value.classification,
       contract: this.form.value.contract
     }
-    
+
     this._modelContractService.modelContractRegister(dto).subscribe({
       next: (success) => {
-        this.toastrService.success('Modelo de contrato cadastrado com sucesso!', '', { progressBar: true });
+
+        let successMessage = 'Modelo de contrato cadastrado com sucesso!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Modelo de contrato cadastrado com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'Contract template registered successfully!'
+            break;
+          case 'fr':
+            successMessage = 'Modèle de contrat enregistré avec succès !'
+            break;
+          case 'es':
+            successMessage = '¡Plantilla de contrato registrada con éxito!'
+            break;
+        }
+
+        this.toastrService.success(successMessage, '', { progressBar: true });
         this.router.navigate(['/pages/modelo-contratos'])
       },
       error: (error) => {
+
+        let errorMessage = 'Erro ao cadastrar modelo de contrato!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            errorMessage = 'Erro ao cadastrar modelo de contrato!'
+            break;
+          case 'en':
+            errorMessage = 'Error registering contract model!'
+            break;
+          case 'fr':
+            errorMessage = "Erreur lors de l'enregistrement du modèle de contrat!"
+            break;
+          case 'es':
+            errorMessage = '¡Error al registrar modelo de contrato!'
+            break;
+        }
+
         console.error(error);
-        this.toastrService.error(error.error.errors[0], '', { progressBar: true });
+        this.toastrService.error(errorMessage, '', { progressBar: true });
       }
     });
   }
+
+  toggleSectionFornecedor() {
+    if (this.isSectionOpenFornecedor) {
+      this.isSectionOpenFornecedor = false
+    } else {
+      this.isSectionOpenFornecedor = true
+    }
+  }
+
+  toggleSectionAssociacao() {
+    if (this.isSectionOpenAssociacao) {
+      this.isSectionOpenAssociacao = false
+    } else {
+      this.isSectionOpenAssociacao = true
+    }
+  }
+
+  toggleSectionContrato() {
+    if (this.isSectionOpenContrato) {
+      this.isSectionOpenContrato = false
+    } else {
+      this.isSectionOpenContrato = true
+    }
+  }
+
+  toggleSectionConvenio() {
+    if (this.isSectionOpenConvenio) {
+      this.isSectionOpenConvenio = false
+    } else {
+      this.isSectionOpenConvenio = true
+    }
+  }
+
+  toggleSectionLicitacao() {
+    if (this.isSectionOpenLicitacao) {
+      this.isSectionOpenLicitacao = false
+    } else {
+      this.isSectionOpenLicitacao = true
+    }
+  }
+
 
   backContract() {
     this.router.navigate(['/pages/modelo-contratos'])

@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 import { AssociationResponseDto } from 'src/dtos/association/association-response.dto';
 import { AssociationService } from 'src/services/association.service';
 import { SupplierService } from 'src/services/supplier.service';
@@ -21,25 +23,27 @@ export class SupplierDataComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private modalService: NgbModal,
+    private translate: TranslateService,
+
     private formBuilder: FormBuilder,
-    private supplierService:SupplierService
+    private supplierService: SupplierService,
+    private toatrService: ToastrService
   ) {
     this.blockSupplier = this.formBuilder.group({
-      message: [''],
+      blocked_reason: [''],
     });
   }
 
   ngOnInit(): void {
 
-    const fornecedorId =this.activatedRoute.snapshot.paramMap.get('id');
-    if(!fornecedorId) return;
+    const fornecedorId = this.activatedRoute.snapshot.paramMap.get('id');
+    if (!fornecedorId) return;
     this.supplierService.getById(fornecedorId).subscribe({
       next: data => {
         this.fornecedor = data;
-        console.log(this.fornecedor)
       },
       error: error => {
-        console.log(error);
+        console.error(error);
       }
     })
   }
@@ -57,21 +61,32 @@ export class SupplierDataComponent implements OnInit {
   }
 
   handleBlock() {
-    // const fornecedorId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    // const supplier = supplierList.find(supplier => supplier._id === fornecedorId);
-    // if (supplier) {
-    //   supplier.block = true;
-    // }
-    this.modalService.dismissAll();
+    this.supplierService.block(this.fornecedor._id, this.blockSupplier.value).subscribe({
+      next: data => {
+
+        this.toatrService.success(this.translate.instant('TOASTRS.BLOCK_SUPPLIER'), '', { progressBar: true });
+        this.modalService.dismissAll();
+        this.blockSupplier.reset();
+        this.ngOnInit();
+      },
+      error: error => {
+        console.error(error)
+      }
+    })
   }
 
   handleUnBlock() {
-    // const fornecedorId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    // const supplier = supplierList.find(supplier => supplier._id === fornecedorId);
-    // if (supplier) {
-    //   supplier.block = false;
-    // }
-    this.modalService.dismissAll();
+    this.supplierService.unblock(this.fornecedor._id, this.blockSupplier.value).subscribe({
+      next: data => {
+        this.toatrService.success(this.translate.instant('TOASTRS.DESBLOCK_SUPPLIER'), '', { progressBar: true });
+        this.modalService.dismissAll();
+        this.blockSupplier.reset();
+        this.ngOnInit();
+      },
+      error: error => {
+        console.error(error)
+      }
+    })
   }
 
 }

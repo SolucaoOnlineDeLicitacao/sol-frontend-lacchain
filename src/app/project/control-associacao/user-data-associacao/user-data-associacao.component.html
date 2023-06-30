@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-12 col-lg-6 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Associação</h6>
-                        <h5 class="f-size-16">{{user?.association?.name}}</h5>
+                        <a class="f-size-16" [href]="'pages/associacao/dados-associacao/' + (user?.association?._id)">{{user?.association?.name}}</a>
                     </div>
                     <div class="col-12 col-lg-6 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Cargo</h6>
@@ -44,7 +44,8 @@
                     </div>
                     <div class="col-12 col-lg-6 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
-                        <h5 class="f-size-16">{{user?.status}}</h5>
+                        <h5 *ngIf="user?.status ==='inactive'" class="f-size-16">Inativo</h5>
+                        <h5 *ngIf="user?.status ==='active'" class="f-size-16">Ativo</h5>
                     </div>
                 </div>
             </div>

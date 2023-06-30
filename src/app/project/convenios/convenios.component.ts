@@ -35,13 +35,18 @@ export class ConveniosComponent {
 
   getConvenio() {
     this.convenioService.getConvenio().subscribe({
-      next: success => (this.convenioList = success, console.log(this.convenioList)),
+      next: success => (this.convenioList = success),
       error: error => console.error(error),
     });
   }
 
   editConvenio(id: string) {
     this.router.navigate(["pages/convenios/edit-convenio/"+id]);
+  }
+
+  addGroup(id: string) {
+    this.router.navigate(["/pages/item-group/new-group"]);
+    localStorage.setItem("convenioId", id);
   }
 
   delete(item: ConvenioResponseDto) {

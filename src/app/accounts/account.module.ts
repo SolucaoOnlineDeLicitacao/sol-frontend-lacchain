@@ -15,6 +15,9 @@ import { CommonModule } from "@angular/common";
 import { AssociationService } from "src/services/association.service";
 import { CostItemsService } from "src/services/cost-items.service";
 import { SupplierService } from "src/services/supplier.service";
+import { ChangeLangComponent } from "../components/change-lang/change-lang.component";
+import { TranslateModule } from "@ngx-translate/core";
+import { ChangeLangAuthComponent } from "../components/change-lang-auth/change-lang-auth.component";
 
 @NgModule({
     declarations: [
@@ -26,18 +29,24 @@ import { SupplierService } from "src/services/supplier.service";
         FirstAccessComponent,
         ConfirmCodeFirstAcessComponent,
         RegisterPasswordFirstAccessComponent,
+        ChangeLangComponent,
+        ChangeLangAuthComponent
     ],
     imports: [
         AccountRoutingModule,
         ReactiveFormsModule,
-        CommonModule
+        CommonModule,
+        TranslateModule
+    ],
+    exports: [
+        ChangeLangComponent
     ],
     providers: [
         AuthService,
         UserService,
         AssociationService,
         CostItemsService,
-        SupplierService
+        SupplierService,
     ]
 })
 export class AccountModule { }

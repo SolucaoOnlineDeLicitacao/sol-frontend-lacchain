@@ -1,0 +1,44 @@
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-12 mt-5">
+            <h3 class="font-weight-bold">Relatorios - Gerais</h3>
+            <hr color="green">
+        </div>
+        <div class="col-12">
+            <div class="border rounded d-flex justify-content-between align-items-center p-4">
+                <div class="d-flex flex-column">
+                    <h4>Licitação por tempo</h4>
+                    <span>Relatório de execução de acordo com período de execução</span>
+                </div>
+                <button class="btn btn-outline-dark" (click)="submit('bidData')">Baixar Dados</button>
+            </div>
+        </div>
+        <div class="col-12 mt-5">
+            <div class="border rounded d-flex justify-content-between align-items-center p-4">
+                <div class="d-flex flex-column">
+                    <h4>Itens semelhantes</h4>
+                    <span>Relatório da variação do valor dos itens de custo</span>
+                </div>
+                <button class="btn btn-outline-dark" (click)="submit('itemsData')">Baixar Dados</button>
+            </div>
+        </div>
+        <div class="col-12 mt-5">
+            <div class="border rounded d-flex justify-content-between align-items-center p-4">
+                <div class="d-flex flex-column">
+                    <h4>Fornecedores e licitações</h4>
+                    <span>Relatório de fornecedores que mais participam de licitações</span>
+                </div>
+                <button class="btn btn-outline-dark" (click)="submit('supplierBid')">Baixar Dados</button>
+            </div>
+        </div>
+        <div class="col-12 mt-5">
+            <div class="border rounded d-flex justify-content-between align-items-center p-4">
+                <div class="d-flex flex-column">
+                    <h4>Fornecedores e contratos</h4>
+                    <span>Relatório de fornecedores com maior numero e valores de contratos</span>
+                </div>
+                <button class="btn btn-outline-dark" (click)="submit('supplierContract')">Baixar Dados</button>
+            </div>
+        </div>
+    </div>
+</section>

@@ -19,6 +19,8 @@ export class UpdateUserAssociacaoComponent implements OnInit {
   userId!: string;
   associationList!: AssociationResponseDto[];
 
+  storedLanguage : string | null
+
   // offices = [
   //   { id: 1, name: 'cargo 1' },
   //   { id: 2, name: 'cargo 2' },
@@ -98,8 +100,26 @@ export class UpdateUserAssociacaoComponent implements OnInit {
     this.ngxSpinnerService.show();
     this.userService.updateById(this.userId, this.form.value).subscribe({
       next: (success) => {
+
+        let successMessage = 'Usuário editado com sucesso!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Usuário editado com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'User successfully edited!'
+            break;
+          case 'fr':
+            successMessage = 'Utilisateur modifié avec succès !'
+            break;
+          case 'es':
+            successMessage = '¡Usuario editado con éxito!'
+            break;
+        }
+
         this.ngxSpinnerService.hide();
-        this.toastrService.success('Usuário editado com sucesso!', '', { progressBar: true });
+        this.toastrService.success(successMessage, '', { progressBar: true });
         this.router.navigate(['/controle-associacao']);
       },
       error: (error) => {
@@ -108,6 +128,8 @@ export class UpdateUserAssociacaoComponent implements OnInit {
         this.toastrService.error(error.error.errors[0], '', { progressBar: true });
       }
     });
+
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
 
   }
 

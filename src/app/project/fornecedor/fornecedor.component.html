@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row mt-5">
     <div class="col-md-12">
-      <h1>Fornecedores</h1>
+      <h1>{{'SUPPLIER.SUPPLIER' | translate}}</h1>
       <hr class="bg-primary">
     </div>
   </div>
@@ -9,11 +9,11 @@
     <div class="row mt-4">
       <div class="col-md-9">
         <input type="text" class="form-control text-secondary input-height-border" formControlName="search"
-          placeholder="Busque por nome, documento ou município do fornecedor">
+          placeholder="{{'SUPPLIER.SEARCH_NAME' | translate}}">
       </div>
       <div class="col-md-3">
-        <button type="button" class="btn btn-secondary btn-lg btn-block"
-          [routerLink]="['/pages/fornecedor/registrar-fornecedor']">Novo Fornecedor</button>
+        <button type="button" class="btn btn-dark btn-lg btn-block"
+          [routerLink]="['/pages/fornecedor/registrar-fornecedor']">{{'SUPPLIER.NEW_SUPPLIER' | translate}}</button>
       </div>
 
     </div>
@@ -24,40 +24,40 @@
           <table class="table table-hover">
             <thead>
               <tr>
-                <th scope="col">Nome</th>
-                <th scope="col">Documento</th>
-                <th scope="col">Município</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
+                <th class="br-tabele bg-pattern text-light" scope="col">{{'SUPPLIER.NAME' | translate}}</th>
+                <th class="bg-pattern text-light" scope="col">{{'SUPPLIER.DOCUMENT' | translate}}</th>
+                <th class="bg-pattern text-light" scope="col">{{'SUPPLIER.COUNTY' | translate}}</th>
+                <th class="bg-pattern text-light" scope="col"></th>
+                <th class="bg-pattern text-light" scope="col"></th>
+                <th class="br-tabele2 bg-pattern text-light" scope="col"></th>
               </tr>
             </thead>
             <tbody>
               <tr
                 *ngFor="let item of fornecedor | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }; let i= index;">
-                <th [routerLink]="['/pages/fornecedor/dados-fornecedor/' + item._id]" class="text-capitalize"
+                <th class="text-capitalize"
                   scope="row">{{item.name}}</th>
-                <td [routerLink]="['/pages/fornecedor/dados-fornecedor/' + item._id]" class="text-capitalize">
+                <td class="text-capitalize">
                   {{item.cpf}}</td>
-                <td [routerLink]="['/pages/fornecedor/dados-fornecedor/' + item._id]" class="text-capitalize">
+                <td class="text-capitalize">
                   {{item.address.city}}</td>
+                  <td [routerLink]="['/pages/fornecedor/dados-fornecedor/' + item._id]" ><i class="bi bi-eye-fill"></i></td>
                 <td *ngIf="item.block == true" class="text-capitalize">
-                  <img src="../../../assets/images/blocked-icon.svg" style="max-height: 20px; max-width: 20px;" alt="">
+                  <img src="../../../assets/images/blocked-icon.svg" style="max-height: 20px; max-width: 20px;" alt>
                 </td>
                 <td *ngIf="item.block == false" class="text-capitalize">
                   <div style="max-height: 20px;"></div>
                 </td>
                 <td class="table_icon">
                   <button [routerLink]="['/pages/fornecedor/editar-fornecedor/' + item._id]"
-                    class="btn col-lg-12 btn-outline-secondary">
+                    class="btn btn-outline-secondary">
 
                     <!-- /pages/associacao/editar-associacao/ -->
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                   </button>
                 </td>
                 <td class="table_icon">
-                  <button class="btn col-lg-12 btn-danger" (click)="openModal(item)">
+                  <button class="btn btn-danger" (click)="openModal(item)">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                   </button>
                 </td>
@@ -67,8 +67,8 @@
 
           </table>
           <div class="row">
-            <div class="col-md-12"> <pagination-controls (pageChange)="currentPage= $event" previousLabel="Anterior"
-                nextLabel="Próximo"></pagination-controls>
+            <div class="col-md-12"> <pagination-controls (pageChange)="currentPage= $event" previousLabel="{{'BUTTON_TEXT.PREVIOUS' | translate}}"
+                nextLabel="{{'BUTTON_TEXT.NEXT' | translate}}"></pagination-controls>
             </div>
           </div>
         </div>

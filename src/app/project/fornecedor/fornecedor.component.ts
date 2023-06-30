@@ -36,7 +36,7 @@ export class FornecedorComponent {
         this.fornecedor = this.fornecedor.filter((item: any) =>
           item.name.toLowerCase().includes(text) ||
           item.cpf.toLowerCase().includes(text) ||
-          item.address.city.toLowerCase().includes(text) 
+          item.address.city.toLowerCase().includes(text)
         );
       else
         this.list();
@@ -48,7 +48,6 @@ export class FornecedorComponent {
   list() {
     this._supplierService.supplierList().subscribe((response: any) => {
       this.fornecedor = response;
-      console.log(this.fornecedor)
     });
   }
 

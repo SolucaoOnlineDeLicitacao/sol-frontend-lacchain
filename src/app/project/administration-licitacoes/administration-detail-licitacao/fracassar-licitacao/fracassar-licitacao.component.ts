@@ -12,6 +12,7 @@ import { AssociationBidService } from 'src/services/association-bid.service';
 export class FracassarLicitacaoComponent implements OnInit {
 
   responseId: any;
+  storedLanguage : string | null
 
   constructor(
     private modalService: NgbModal,
@@ -24,12 +25,32 @@ export class FracassarLicitacaoComponent implements OnInit {
   ngOnInit(): void {
     let bid: any = localStorage.getItem('bidId');
     this.responseId = bid;
+
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
   }
 
   closeModal(value: string) {
     this.modalService.dismissAll();
     if (value === 'failbids') {
-      this.toastrService.success('Fracassado com sucesso!', '', { progressBar: true });
+
+      let successMessage = 'Fracassado com sucesso!';
+
+      switch(this.storedLanguage) {
+        case 'pt': 
+          successMessage = 'Fracassado com sucesso!'
+          break;
+        case 'en':
+          successMessage = 'Failed successfully!'
+          break;
+        case 'fr':
+          successMessage = 'Échec réussi !'
+          break;
+        case 'es':
+          successMessage = '¡Error con éxito!'
+          break;
+      }
+
+      this.toastrService.success(successMessage, '', { progressBar: true });
     }
   }
 
@@ -40,7 +61,25 @@ export class FracassarLicitacaoComponent implements OnInit {
 
     this.bidService.changeStatus(this.responseId, request).subscribe({
       next: data => {
-        const toastr = this.toastrService.success('Fracassada com sucesso!', '', { progressBar: true });
+
+        let successMessage = 'Fracassado com sucesso!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Fracassado com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'Failed successfully!'
+            break;
+          case 'fr':
+            successMessage = 'Échec réussi !'
+            break;
+          case 'es':
+            successMessage = '¡Error con éxito!'
+            break;
+        }
+
+        const toastr = this.toastrService.success(successMessage, '', { progressBar: true });
         if (toastr) {
           toastr.onHidden.subscribe(() => {
             this.modalService.dismissAll();
@@ -49,7 +88,25 @@ export class FracassarLicitacaoComponent implements OnInit {
         }
       },
       error: error => {
-        this.toastrService.error('Erro ao fracassar licitação!', '', { progressBar: true });
+
+        let errorMessage = 'Erro ao fracassar licitação!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            errorMessage = 'Erro ao fracassar licitação!'
+            break;
+          case 'en':
+            errorMessage = 'Error failing bid!'
+            break;
+          case 'fr':
+            errorMessage = "Erreur lors de l'échec de l'enchère !"
+            break;
+          case 'es':
+            errorMessage = '¡Error al fallar la oferta!'
+            break;
+        }
+
+        this.toastrService.error(errorMessage, '', { progressBar: true });
       }
     })
   }

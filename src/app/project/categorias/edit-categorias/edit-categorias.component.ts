@@ -16,6 +16,7 @@ export class EditCategoriasComponent implements OnInit {
   form: FormGroup;
   isSubmit: boolean = false;
   request: CategoryRequestDto;
+  storedLanguage : string | null
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,6 +37,7 @@ export class EditCategoriasComponent implements OnInit {
       category: this.localStorage.getDataCategoria().category_name,
       segment: this.localStorage.getDataCategoria().segment,
     });
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
   }
 
   onSubmit() {
@@ -50,12 +52,48 @@ export class EditCategoriasComponent implements OnInit {
     }
     this.categoryService.update(this.localStorage.getDataCategoria()._id, this.request).subscribe({
       next: (success) => {
-        this.toastrService.success('Categoria editada com sucesso!', '', { progressBar: true });
+        
+        let successMessage = 'Categoria editada com sucesso!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Categoria editada com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'Category successfully edited!'
+            break;
+          case 'fr':
+            successMessage = 'Catégorie modifiée avec succès'
+            break;
+          case 'es':
+            successMessage = '¡Categoría editada con éxito!'
+            break;
+        }
+
+        this.toastrService.success(successMessage, '', { progressBar: true });
         this.router.navigate(['/pages/categorias']);
       },
       error: (error) => {
+
+        let errorMessage = 'Erro ao editar a categoria!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            errorMessage = 'Erro ao editar a categoria!'
+            break;
+          case 'en':
+            errorMessage = 'Error editing category!'
+            break;
+          case 'fr':
+            errorMessage = 'Erreur lors de la modification de la catégorie!'
+            break;
+          case 'es':
+            errorMessage = '¡Error al editar la categoría!'
+            break;
+        }
+
         console.error(error);
-        this.toastrService.error('Error ao editar a categoria!', '', { progressBar: true });
+        this.toastrService.error(errorMessage, '', { progressBar: true });
         this.toastrService.error(error.error.errors[0], '', { progressBar: true });
       }
     });

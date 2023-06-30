@@ -1,7 +1,7 @@
 <div class="container">
     <div class="row mt-5">
         <div class="col-md-12">
-            <h1 class="text-dark"><strong>Cadastrar Produto</strong></h1>
+            <h1 class="text-dark"><strong>{{"PRODUCTS.ADD_PRODUCT" | translate}}</strong></h1>
             <hr class="bg-primary">
         </div>
     </div>
@@ -11,12 +11,13 @@
                 <form [formGroup]="form" (ngSubmit)="onSubmit()">
                     <div class="row">
                         <div class="col-md-12 mt-3">
-                            <label for="name" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Produto</b></label>
-                            <input type="text" required formControlName="name" class="form-control h50 br-10" id="name" placeholder="Digite o nome do prodtudo">
+                            <label for="name" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"PRODUCTS.PRODUCT" | translate}}</b></label>
+                            <input type="text" required formControlName="name" class="form-control h50 br-10" id="name"
+                                placeholder="{{'PRODUCTS.ENTER_PRODUCT_NAME' | translate}}">
                             <div *ngIf="form.controls['name'].errors?.['required'] && isSubmit"
                                 class="div-msg-error mt-2">
-                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-                                <p class="font-poppins font-size-14 m-0">Nome é obrigatório!</p>
+                                <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
+                                <p class="font-poppins font-size-14 m-0">{{"ERROR_MESSAGES.NAME_REQUIRED" | translate}}</p>
                             </div>
                         </div>
                     </div>
@@ -25,10 +26,11 @@
                             <div class="col-md-12">
                                 <div class="row d-flex justify-content-end">
                                     <div class="col-md-5">
-                                        <button type="button" class="bg-transparent w-100 btn br-10 h50 color-pattern" [routerLink]="['/pages/produtos']"><strong>Cancelar</strong></button>
+                                        <button type="button" class="bg-transparent w-100 btn br-10 h50 color-pattern"
+                                            [routerLink]="['/pages/produtos']"><strong>{{"BUTTON_TEXT.CANCEL" | translate}}</strong></button>
                                     </div>
                                     <div class="col-md-5">
-                                        <button type="submit" class="btn bg-pattern text-light br-10 h50 w-100"><strong>Cadastrar</strong></button>
+                                        <button type="submit" class="btn bg-pattern text-light br-10 h50 w-100"><strong>{{"BUTTON_TEXT.REGISTER" | translate}}</strong></button>
                                     </div>
                                 </div>
                             </div>

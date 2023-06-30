@@ -17,6 +17,8 @@ export class UpdateUserAdministracaoComponent implements OnInit {
   isSubmit: boolean = false;
   userId!: string;
 
+  storedLanguage : string | null
+
   rolesList = [
     { value: 'geral', name: 'Administrador Geral' },
     { value: 'revisor', name: 'Revisor' },
@@ -63,6 +65,8 @@ export class UpdateUserAdministracaoComponent implements OnInit {
       });
     });
 
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
+
   }
 
   onSubmit() {
@@ -74,7 +78,25 @@ export class UpdateUserAdministracaoComponent implements OnInit {
 
     this.userService.updateById(this.userId, this.form.value).subscribe({
       next: (success) => {
-        this.toastrService.success('Usuário editado com sucesso!', '', { progressBar: true });
+
+        let successMessage = 'Usuário editado com sucesso!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Usuário editado com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'User successfully edited!'
+            break;
+          case 'fr':
+            successMessage = 'Utilisateur modifié avec succès !'
+            break;
+          case 'es':
+            successMessage = '¡Usuario editado con éxito!'
+            break;
+        }
+
+        this.toastrService.success(successMessage, '', { progressBar: true });
         this.router.navigate(['/controle-admin']);
       },
       error: (error) => {

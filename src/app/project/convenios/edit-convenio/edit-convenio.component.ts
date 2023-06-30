@@ -76,8 +76,8 @@ export class EditConvenioComponent {
         datemat.getMonth() + 1 < 10 ? "0" + (datemat.getMonth() + 1) : datemat.getMonth() + 1
       }${datemat.getFullYear()}`,
       situation: this.response.status,
-      association: this.response.association.name,
-      review: this.response.reviewer.name,
+      association: this.response.association._id,
+      review: this.response.reviewer._id,
     });
     this.citiesList = cities(this.response.states);
     this.getAssociation();

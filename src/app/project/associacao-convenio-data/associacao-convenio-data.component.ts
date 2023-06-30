@@ -1,8 +1,9 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ConvenioResponseDto, WorkPlanInterface } from "src/dtos/convenio/convenio-response.dto";
+import { AgreementStatusEnum } from "src/enums/agreement-status.enum";
 import { AuthService } from "src/services/auth.service";
 
 @Component({
@@ -18,7 +19,7 @@ export class AssociacaoConvenioDataComponent {
   response: ConvenioResponseDto;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private router: Router,
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     public authService: AuthService,
@@ -61,5 +62,23 @@ export class AssociacaoConvenioDataComponent {
 
   sum(item: { quantity: number; unitValue: number; costItems: any; _id: string }[]) {
     return item.reduce((ac, item) => ac + item.quantity * item.unitValue, 0);
+  }
+
+  handlerStatus(status: string) {
+    switch (status) {
+      case AgreementStatusEnum.canceled:
+        return "Cancelado";
+      case AgreementStatusEnum.concluded:
+        return "Concluído";
+      case AgreementStatusEnum.inExecution:
+        return "Em execução";
+      default:
+        return "-";
+    }
+  }
+
+  goToItem(id:string){
+    localStorage.setItem("id-item-group", id);
+    this.router.navigate(["/pages/item-group"]);
   }
 }

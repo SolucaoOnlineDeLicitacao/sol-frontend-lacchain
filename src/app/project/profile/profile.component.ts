@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/services/auth.service';
@@ -17,6 +18,8 @@ export class ProfileComponent {
   constructor(
     public authService: AuthService,
     private modalService: NgbModal,
+    private translate: TranslateService,
+
     private formBuilder: FormBuilder,
     private userService: UserService,
     private ngxSpinnerService: NgxSpinnerService,
@@ -68,21 +71,19 @@ export class ProfileComponent {
       this.userService.updatePassword(request).subscribe({
         next: (data) => {
           this.modalService.dismissAll();
-          this.toastrService.success('Senha alterada com sucesso', '', { progressBar: true, });
+          this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_CHANGE_PASS'), '', { progressBar: true });
           this.ngxSpinnerService.hide();
           this.changePassword.reset();
         },
         error: (error) => {
           console.error(error);
-          this.toastrService.error('Senha incorreta', '', { progressBar: true, });
+          this.toastrService.error(this.translate.instant('TOASTRS.INCORRECT_PASS'), '', { progressBar: true });
           this.ngxSpinnerService.hide();
         }
       })
     } else {
       this.ngxSpinnerService.hide();
-      this.toastrService.error('Senhas não conferem!', '', {
-        progressBar: true,
-      });
+      this.toastrService.error(this.translate.instant('TOASTRS.PASS_NOT_EQUALS'), '', { progressBar: true });
     }
   }
 

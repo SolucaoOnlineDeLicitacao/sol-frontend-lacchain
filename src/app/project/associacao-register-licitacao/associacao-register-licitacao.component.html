@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<div class="row mt-5">
 		<div class="col-md-12">
-			<h1>Criar Licitação</h1>
+			<h1>{{"CREATE_BIDDING.TITLE" | translate}}</h1>
 			<hr class="bg-primary">
 		</div>
 	</div>
@@ -15,167 +15,218 @@
 					<div class="row">
 
 						<div class="mb-2 col-12">
-							<label for="description" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Descrição (Objeto)</b><span
-									class="f-size-16 text-danger">*</span></label>
+							<label for="description"
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.DESCRIPTION"
+									|
+									translate}}</b><span class="f-size-16 text-danger">*</span></label>
 							<textarea formControlName="description" class="form-control custom-textarea" id="message"
-								placeholder="Digite a descrição"></textarea>
+								placeholder="{{'BUTTON_TEXT.TYPE_THE_DESCRIPTION' | translate}}"></textarea>
 
 							<div *ngIf="form.controls['description'].errors?.['required'] && isSubmit"
 								class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
-								<p class="font-poppins font-size-14 m-0">Descrição é obrigatória!</p>
+								<p class="font-poppins font-size-14 m-0">{{"BIDDING_ERROR_MESSAGES.DESCRIPTION" |
+									translate}}</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="insurance"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Convênio</b><span class="f-size-16
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.AGREEMENT"
+									| translate}}</b><span class="f-size-16
 									text-danger">*</span></label>
-							<select type="text" formControlName="insurance" style="text-indent:20px;"
+							<select type="text" formControlName="insurance" style="text-indent:20px;" (change)="changeAgreement()"
 								class="form-control" id="insurance">
-								<option selected readonly disabled [value]="''">Selecione...</option>
-								<option *ngFor="let convenio of convenioList" [value]="convenio._id">{{ convenio.register_number+" - "+convenio.register_object }}</option>
+								<option selected readonly disabled [value]="''">{{"BUTTON_TEXT.SELECT" | translate}}
+								</option>
+								<option *ngFor="let convenio of convenioList" [value]="convenio._id">{{
+									convenio.register_number+" - "+convenio.register_object }}</option>
 							</select>
 
 							<div *ngIf="form.controls['insurance'].errors?.['required'] && isSubmit"
 								class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
-								<p class="font-poppins font-size-14 m-0">Convênio é obrigatório!</p>
+								<p class="font-poppins font-size-14 m-0">{{"BIDDING_ERROR_MESSAGES.AGREEMENT" |
+									translate}}</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-8 mt-3">
 							<label for="classification"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Classificação</b><span class="f-size-16
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.CLASSIFICATION"
+									| translate}}</b><span class="f-size-16
 									text-danger">*</span></label>
-							<select type="text" formControlName="classification" style="text-indent:20px;"
+							<select type="text" formControlName="classification" style="text-indent:20px;" (change)="changeClassification()"
 								class="form-control" id="classification">
-								<option selected readonly disabled [value]="''">Selecione...</option>
-								<option value="De Bens">De Bens</option>
-								<option value="De Obras">De Obras</option>
-								<option value="De Serviço">De Serviço</option>
+								<option selected readonly disabled [value]="''">{{"BUTTON_TEXT.SELECT" | translate}}
+								</option>
+								<option *ngIf="classification.includes('bens')" value="bens">{{"CREATE_BIDDING.OF_GOODS" | translate}}</option>
+								<option *ngIf="classification.includes('obras')" value="obras">{{"CREATE_BIDDING.OF_WORKS" | translate}}</option>
+								<option *ngIf="classification.includes('servicos')" value="servicos">{{"CREATE_BIDDING.OF_Services" | translate}}</option>
 							</select>
 
 							<div *ngIf="form.controls['classification'].errors?.['required'] && isSubmit"
 								class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
-								<p class="font-poppins font-size-14 m-0">Classificação é obrigatório!</p>
+								<p class="font-poppins font-size-14 m-0">{{"BIDDING_ERROR_MESSAGES.CLASSIFICATION" |
+									translate}}</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="initialDate"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Data de início</b><span class="f-size-16
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.START_DATE"
+									| translate}}</b><span class="f-size-16
 									text-danger">*</span></label>
 							<input type="date" formControlName="initialDate" style="text-indent:20px;"
-								class="form-control" id="initialDate">
+								class="form-control" id="initialDate" min="{{today | date:'yyyy-MM-dd'}}" (input)="getYear($event,'initialDate' )" [max]="date">
 
 							<div *ngIf="form.controls['initialDate'].errors?.['required'] && isSubmit"
 								class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
-								<p class="font-poppins font-size-14 m-0">Data de início é obrigatória!</p>
+								<p class="font-poppins font-size-14 m-0">{{"BIDDING_ERROR_MESSAGES.START_DATE" |
+									translate}}</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="closureDate"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Data de encerramento</b><span
-									class="f-size-16
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.CLOSING_DATE"
+									| translate}}</b><span class="f-size-16
 									text-danger">*</span></label>
 							<input type="date" formControlName="closureDate" style="text-indent:20px;"
-								class="form-control" id="closureDate">
+								class="form-control" id="closureDate" [min]="form.controls['initialDate'].value" [max]="date" (input)="getYear($event,'closureDate' )">
 							<div *ngIf="form.controls['closureDate'].errors?.['required'] && isSubmit"
 								class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
-								<p class="font-poppins font-size-14 m-0">Data de encerramento é obrigatória!</p>
+								<p class="font-poppins font-size-14 m-0">{{"BIDDING_ERROR_MESSAGES.CLOSING_DATE" |
+									translate}}</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="timebreakerDays"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Dias corridos para desempate</b><span
-									class="f-size-16
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.DAYS_TIEBREAKER"
+									| translate}}</b><span class="f-size-16
 									text-danger">*</span></label>
 							<input type="number" formControlName="timebreakerDays" style="text-indent:20px;" class="form-control"
-								id="timebreakerDays" placeholder="Digite">
+								id="timebreakerDays" min="0" (input)="checkValue($event)" placeholder="{{'BUTTON_TEXT.TYPE' | translate}}">
 
 							<div *ngIf="form.controls['timebreakerDays'].errors?.['required'] && isSubmit"
 								class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
-								<p class="font-poppins font-size-14 m-0">Campo obrigatório!</p>
+								<p class="font-poppins font-size-14 m-0">{{"BIDDING_ERROR_MESSAGES.DAYS_TIEBREAKER" |
+									translate}}</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="executionDays"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Prazo para a entrega/execução em dias</b><span
-									class="f-size-16
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.EXECUTION_DAYS"
+									| translate}}</b><span class="f-size-16
 									text-danger">*</span></label>
-							<input type="date" formControlName="executionDays" style="text-indent:20px;"
-								class="form-control" id="executionDays">
+
+							<input type="number" formControlName="executionDays" style="text-indent:20px;"
+								class="form-control" min="0" (input)="checkValue($event)" id="executionDays" placeholder="{{'BUTTON_TEXT.TYPE' | translate}}">
 
 							<div *ngIf="form.controls['executionDays'].errors?.['required'] && isSubmit"
 								class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
-								<p class="font-poppins font-size-14 m-0">Prazo para a entrega é obrigatória!</p>
+								<p class="font-poppins font-size-14 m-0">{{"BIDDING_ERROR_MESSAGES.EXECUTION_DAYS" |
+									translate}}</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-8 mt-3">
 							<label for="deliveryPlace"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Local da entrega</b></label>
-							<input type="text" formControlName="deliveryPlace" style="text-indent:20px;" class="form-control"
-								id="deliveryPlace" placeholder="Digite">
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.DELIVERY_PLACE"
+									| translate}}</b></label>
+							<input type="text" formControlName="deliveryPlace" style="text-indent:20px;"
+								class="form-control" id="deliveryPlace"
+								placeholder="{{'BUTTON_TEXT.TYPE' | translate}}">
+							<div *ngIf="form.controls['deliveryPlace'].errors?.['required'] && isSubmit"
+								class="div-msg-error mt-2">
+								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
+								<p class="font-poppins font-size-14 m-0">{{"BIDDING_ERROR_MESSAGES.DELIVERY_PLACE" |
+									translate}}</p>
+							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-8 mt-3">
 							<label for="biddingType"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Tipo de licitação</b><span class="f-size-16
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.BIDDING_TYPE"
+									| translate}}</b><span class="f-size-16
 									text-danger">*</span></label>
 							<select type="text" formControlName="biddingType" style="text-indent:20px;"
-								class="form-control" id="biddingType">
-								<option selected readonly disabled [value]="''">Selecione...</option>
-								<option value="individualPrice">Preço individual</option>
-								<option value="allotmentPrice">Preço por lote</option>
-								<option value="globalPrice">Preço global</option>
+								(change)="setModality($event.target)" class="form-control" id="biddingType">
+								<option selected readonly disabled [value]="''">{{"BUTTON_TEXT.SELECT" | translate}}
+								</option>
+								<option value="individualPrice">{{"CREATE_BIDDING.INDIVIDUAL_PRICE" | translate}}
+								</option>
+								<option value="allotmentPrice">{{"CREATE_BIDDING.LOT_PRICE" | translate}}</option>
+								<option value="globalPrice">{{"CREATE_BIDDING.GLOBAL_PRICE" | translate}}</option>
 							</select>
 
 							<div *ngIf="form.controls['biddingType'].errors?.['required'] && isSubmit"
 								class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
-								<p class="font-poppins font-size-14 m-0">Tipo de licitação é obrigatório!</p>
+								<p class="font-poppins font-size-14 m-0">{{"BIDDING_ERROR_MESSAGES.BIDDING_TYPE" |
+									translate}}</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="modality"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Modalidade</b><span class="f-size-16
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.MODALITY"
+									| translate}}</b><span class="f-size-16
 									text-danger">*</span></label>
 							<select type="text" formControlName="modality" style="text-indent:20px;"
 								class="form-control" id="modality">
-								<option selected readonly disabled [value]="''">Selecione...</option>
-								<option value="openClosed">Aberta/pública</option>
-								<option value="openInvite">Convite aberto</option>
-								<option value="closedInvite">Convite fechado</option>
+								<option selected readonly disabled [value]="''">{{"BUTTON_TEXT.SELECT" | translate}}
+								</option>
+								<option value="openClosed">{{"CREATE_BIDDING.OPEN_PUBLIC" | translate}}</option>
+								<option value="openInvite">{{"CREATE_BIDDING.OPEN_INVITATION" | translate}}</option>
+								<option value="closedInvite">{{"CREATE_BIDDING.CLOSED_INVITATION" | translate}}</option>
 							</select>
 
 							<div *ngIf="form.controls['modality'].errors?.['required'] && isSubmit"
 								class="div-msg-error mt-2">
 								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
-								<p class="font-poppins font-size-14 m-0">Modalidade é obrigatório!</p>
+								<p class="font-poppins font-size-14 m-0">{{"BIDDING_ERROR_MESSAGES.MODALITY" |
+									translate}}</p>
 							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-12 mt-3">
 							<label for="adicionalSite"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Site adicional</b></label>
-							<input type="text" formControlName="adicionalSite" style="text-indent:20px;" class="form-control"
-								id="adicionalSite" placeholder="Digite">
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.WEBSITE"
+									| translate}}</b></label>
+							<input type="text" formControlName="adicionalSite" style="text-indent:20px;"
+								class="form-control" id="adicionalSite"
+								placeholder="{{'BUTTON_TEXT.TYPE' | translate}}">
 						</div>
 
+						<!-- <div class="col-12 mt-3">
+							<h5>{{"CREATE_BIDDING.BIDDING_FILES" | translate}}</h5>
+							<h6>{{"CREATE_BIDDING.REQUIREMENTS" | translate}}
+								<span class="f-size-16
+								text-danger">*</span></h6>
+						</div>
+						<div class="col-12 upload-file-container cursor-pointer mx-3">
+							<div class="d-flex align-items-center justify-content-center py-4">
+
+								<div>
+									<img src="../../../assets/images/upload-icon.svg" class="img-msg-error" alt>
+								</div>
+								<div>
+									<input type="file" (change)="onSelectFileEdital($event)" accept=".pdf" formControlName="editalFile" id="editalFile">
+								</div>
+							</div>
+						</div> -->
+
 						<div class="col-12 mt-3">
-							<h5>Anexar arquivos do edital</h5>
-							<h6>Requisitos - Arquivo PDF. Tamanho máximo: 50 MB</h6>
+							<h5>{{"CREATE_BIDDING.MINUTES_FILES" | translate}}</h5>
+							<h6>{{"CREATE_BIDDING.REQUIREMENTS" | translate}}</h6>
 						</div>
 						<div class="col-12 upload-file-container cursor-pointer mx-3">
 							<div class="d-flex align-items-center justify-content-center py-4">
@@ -183,26 +234,10 @@
 									<img src="../../../assets/images/upload-icon.svg" class="img-msg-error" alt>
 								</div>
 								<div>
-									<input type="file" (change)="onSelectFileEdital($event)" accept=".pdf">
+									<input type="file" (change)="onSelectAdditionalFiles($event)" accept=".pdf" id="ataFile" multiple>
 								</div>
 							</div>
 						</div>
-
-						<div class="col-12 mt-3">
-							<h5>Anexar arquivos do ata</h5>
-							<h6>Requisitos - Arquivo PDF. Tamanho máximo: 50 MB</h6>
-						</div>
-						<div class="col-12 upload-file-container cursor-pointer mx-3">
-							<div class="d-flex align-items-center justify-content-center py-4">
-								<div>
-									<img src="../../../assets/images/upload-icon.svg" class="img-msg-error" alt>
-								</div>
-								<div>
-									<input type="file" (change)="onSelectFileAta($event)" accept=".pdf">
-								</div>
-							</div>
-						</div>
-
 
 					</div>
 				</form>
@@ -213,7 +248,7 @@
 
 					<div class="row">
 						<div class="col-12 mt-3">
-							<h4>Adicionar Lotes</h4>
+							<h4>{{"CREATE_BIDDING.ADD_LOTS" | translate}}</h4>
 						</div>
 					</div>
 
@@ -221,51 +256,66 @@
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="batchName"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Nome do lote</b></label>
-							<input type="text" formControlName="batchName" style="text-indent:20px;" class="form-control"
-								id="batchName" placeholder="Digite">
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.LOT_NAME"
+									| translate}}</b></label>
+							<input type="text" formControlName="batchName" style="text-indent:20px;"
+								class="form-control" id="batchName" placeholder="{{'BUTTON_TEXT.TYPE' | translate}}">
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="deliveryTimeDays"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Prazo para entrega (dias)</b></label>
-							<input type="number" formControlName="deliveryTimeDays" style="text-indent:20px;" class="form-control"
-								id="deliveryTimeDays" placeholder="Digite">
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.DELIVERY_DEADLINE"
+									| translate}}</b></label>
+							<input type="number" formControlName="deliveryTimeDays" style="text-indent:20px;"
+								class="form-control" id="deliveryTimeDays" min="0"
+								placeholder="{{'BUTTON_TEXT.TYPE' | translate}}"
+								(keyup)="validationDeliveryTimeDays($event); validateDaysInput();">
+
+							<div *ngIf="daysToDeliveryValidator"
+								class="div-msg-error mt-2">
+								<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
+								<p class="font-poppins font-size-14 m-0">{{"CREATE_BIDDING.DELIVERY_TIME_ERROR_MESSAGE" | translate}}</p>
+							</div>
 						</div>
 
 						<div class="col-sm-12 col-md-4 mt-3">
 							<label for="deliveryPlaceLots"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Local da entrega</b></label>
-							<input type="text" formControlName="deliveryPlaceLots" style="text-indent:20px;" class="form-control"
-								id="deliveryPlaceLots" placeholder="Digite">
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.LOT_DELIVERY_PLACE"
+									| translate}}</b></label>
+							<input type="text" formControlName="deliveryPlaceLots" style="text-indent:20px;"
+								class="form-control" id="deliveryPlaceLots"
+								placeholder="{{'BUTTON_TEXT.TYPE' | translate}}">
 						</div>
 
 						<div class="col-12 mt-3">
-							<h5>Adicionar item</h5>
+							<h5>{{"CREATE_BIDDING.ADD_ITEM" | translate}}</h5>
 						</div>
-
 						<div class="col-sm-12 col-md-7 mt-3">
-							<select type="text" formControlName="item" style="text-indent:20px;" class="form-control" id="item">
-								<option selected readonly disabled [value]="''">Selecione...</option>
-								<option *ngFor="let item of costItemsList" [value]="item._id">{{ item.name }}</option>
+							<select type="text" formControlName="item" style="text-indent:20px;" class="form-control"
+								id="item">
+								<option selected readonly disabled [value]="''">{{"BUTTON_TEXT.SELECT" | translate}}
+								</option>
+								<option *ngFor="let item of costItemsListFilter" [value]="item?._id">{{ item?.name }}</option>
 							</select>
 						</div>
 
 						<div class="col-sm-12 col-md-2">
 							<label for="quantity"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Quantidade</b></label>
-							<input type="number" formControlName="quantity" style="text-indent:20px;" class="form-control"
-								id="quantity" placeholder="Digite">
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"CREATE_BIDDING.QUANTITY"
+									| translate}}</b></label>
+							<input type="number" formControlName="quantity" style="text-indent:20px;"
+								class="form-control" id="quantity" placeholder="{{'BUTTON_TEXT.TYPE' | translate}}" min="0" [max]="form.value.executionDays || '0'">
 						</div>
 
 						<div class="d-flex align-self-end w100 col-md-3">
-							<button [disabled]="!isFormValid()" (click)="addItem();" class="w-100 py-2 br-10 align-self-end com btn btn-dark">
-								+ Adicionar
+							<button [disabled]="!isFormValid() || daysToDeliveryValidator" (click)="addItem();"
+								class="w-100 py-2 br-10 align-self-end com btn btn-dark">
+								+ {{"BUTTON_TEXT.ADD" | translate}}
 							</button>
 						</div>
 
 						<div *ngIf="item.length > 0" class="col-12 mt-3">
-							<h4>Itens Adicionados</h4>
+							<h4>{{"CREATE_BIDDING.ADDED_ITEMS" | translate}}</h4>
 							<div class="row mt-4">
 								<div class="col-md-12">
 									<div class="table-responsive-sm">
@@ -273,20 +323,21 @@
 											<thead>
 												<tr>
 													<th scope="col">Item</th>
-													<th scope="col">Quantidade</th>
+													<th scope="col">{{"CREATE_BIDDING.QUANTITY" | translate}}</th>
 													<th scope="col"></th>
 													<th scope="col"></th>
 												</tr>
 											</thead>
 											<tbody>
 												<tr *ngFor="let items of item; let i = index;">
-													<th class="text-capitalize" scope="row">{{ getItemName(items.item) }}</th>
+													<th class="text-capitalize" scope="row">{{ items.item || '-'}}</th>
 													<td class="text-capitalize">{{ items.quantity }} Unidade(s)</td>
 													<td class="table_icon">
 														<div class="col-lg-12"></div>
 													</td>
 													<td class="table_icon">
-														<button class="btn col-lg-12 btn-danger" (click)="removeItem(i)">
+														<button class="btn btn-danger"
+															(click)="removeItem(i)">
 															<i class="fa fa-trash-o" aria-hidden="true"></i>
 														</button>
 													</td>
@@ -300,8 +351,8 @@
 						</div>
 
 						<div class="col-12 mt-3">
-							<h5>Anexar arquivos do lote</h5>
-							<h6>Requisitos - Arquivo PDF. Tamanho máximo: 50 MB</h6>
+							<h5>{{"CREATE_BIDDING.LOT_FILES" | translate}}</h5>
+							<h6>{{"CREATE_BIDDING.REQUIREMENTS" | translate}} <span class="f-size-16 text-danger"></span></h6>
 						</div>
 
 						<div class="col-12 upload-file-container cursor-pointer">
@@ -310,17 +361,21 @@
 									<img src="../../../assets/images/upload-icon.svg" class="img-msg-error" alt>
 								</div>
 								<div>
-									<input type="file" (change)="onSelectFileProductImage($event)" accept=".pdf">
+									<input #pdfLote type="file" (change)="onSelectFileProductImage($event)"
+										accept=".pdf">
 								</div>
 							</div>
 						</div>
 
 						<div class="col-md-4 mt-4 float-right ml-auto">
-							<button [disabled]="!isLotFormValid()" type="button" class="bg-light btn-lg btn-block mb-4 text-small" (click)="addLot()">Criar lote</button>
+							<button [disabled]="formAddLots.invalid" type="button"
+								class="bg-light btn-lg btn-block mb-4 text-small"
+								(click)="addLot()">{{"CREATE_BIDDING.CREATE_LOT"
+								| translate}}</button>
 						</div>
 
 						<div *ngIf="lots.length > 0" class="col-12 mt-3">
-							<h4>Lotes Criados</h4>
+							<h4>{{"CREATE_BIDDING.LOTS_CREATED" | translate}}</h4>
 
 							<div class="row mt-4">
 								<div class="col-md-12">
@@ -328,33 +383,31 @@
 										<table class="table table-hover">
 											<thead>
 												<tr>
-													<th scope="col">Nome do lote</th>
-													<th scope="col">Quantidade de itens</th>
-													<th scope="col">Arquivo</th>
+													<th scope="col">{{"CREATE_BIDDING.LOT_NAME" | translate}}</th>
+													<th scope="col">{{"CREATE_BIDDING.QUANTITY_ITEMS" | translate}}</th>
+													<th scope="col">{{"CREATE_BIDDING.FILE" | translate}}</th>
 													<th scope="col"></th>
 													<th scope="col"></th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr
-													*ngFor="let lot of lots; let i= index;">
+												<tr *ngFor="let lot of lots; let i= index;">
 													<th class="text-capitalize" scope="row">{{lot.allotment_name}}</th>
 													<td class="text-capitalize">{{lot.add_item.length}}</td>
-													<td class="text-capitalize">{{ 'Arquivo.pdf' }}</td>
+													<td class="text-capitalize">{{lot.files!== '' ? 'Arquivo.pdf' : '-' }}</td>
 													<td class="table_icon">
 														<div class="col-lg-12">
 
 														</div>
 													</td>
 													<td class="table_icon">
-														<button class="btn col-lg-12 btn-danger" (click)="removeLot(i)">
+														<button class="btn btn-danger" (click)="removeLot(i)">
 															<i class="fa fa-trash-o" aria-hidden="true"></i>
 														</button>
 													</td>
 												</tr>
 
 											</tbody>
-
 										</table>
 									</div>
 								</div>
@@ -362,31 +415,19 @@
 						</div>
 
 						<div *ngIf="form.controls['modality'].value !== 'openClosed'" class="col-12 mt-3">
-							<h4>Convidar Fornecedores</h4>
+							<h4>{{"CREATE_BIDDING.INVITE_SUPPLIERS" | translate}}</h4>
 						</div>
-
-						<!-- <div *ngIf="form.controls['modality'].value !== 'openClosed'" class="col-sm-12 col-md-9 mt-3">
-							<div class="input-group">
-								<input type="text" formControlName="inviteSuppliers" class="form-control" placeholder="Busque por fornecedores">
-								<div class="input-group-append">
-									<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-									<div class="dropdown-menu">
-										<a class="dropdown-item" *ngFor="let user of userList" (click)="selectSupplier(user.name)">{{ user.name }}</a>
-									</div>
-								</div>
-							</div>
-						</div> -->
-
 						<div *ngIf="form.controls['modality'].value !== 'openClosed'" class="col-sm-12 col-md-9 mt-3">
-							<ng-select [items]="userList" notFoundText="Nenhum fornecedor encontrado"
-								bindValue="_id" bindLabel="name" placeholder="Selecione..."
+							<ng-select [items]="userList" notFoundText="Nenhum fornecedor encontrado" bindValue="_id"
+								bindLabel="name" placeholder="{{'BUTTON_TEXT.SELECT' | translate}}"
 								formControlName="inviteSuppliers" [closeOnSelect]="true">
 							</ng-select>
 						</div>
 
-						<div *ngIf="form.controls['modality'].value !== 'openClosed'" class="d-flex align-self-end w100 col-md-3">
+						<div *ngIf="form.controls['modality'].value !== 'openClosed'"
+							class="d-flex align-self-end w100 col-md-3">
 							<button class="w-100 py-2 br-10 align-self-end com btn btn-dark" (click)="addSupplier()">
-								+ Adicionar
+								+ {{"BUTTON_TEXT.ADD" | translate}}
 							</button>
 						</div>
 
@@ -394,7 +435,7 @@
 							<div *ngFor="let item of invitedSupplier; let i = index">
 								<div class="d-flex justify-content-between">
 									<div>
-										{{ item.name }} Convidado.
+										{{ item.name }} {{"CREATE_BIDDING.INVITED_SUPPLIER" | translate}}.
 									</div>
 									<div>
 										<div (click)="removeSupplier(i)" class="f-size-16 text-danger">X</div>
@@ -409,12 +450,16 @@
 				<div class="mt-5">
 					<div class="row">
 						<div class="col-md-6">
-							<a href="/pages/dashboard" type="button" class="bg-light btn-lg btn-block mb-4 text-center">
-								Cancelar
+
+							<a href="/pages/associacao/licitacoes" type="button" class="bg-light btn-lg btn-block mb-4 text-center">
+								{{"BUTTON_TEXT.CANCEL" | translate}}
+
 							</a>
 						</div>
 						<div class="col-md-6">
-							<button (click)="onSubmit();" type="submit" class="btn btn-secondary btn-lg btn-block mb-4">Criar licitação</button>
+							<button [disabled]="daysToDeliveryValidator" (click)="onSubmit();" type="submit"
+								class="btn btn-dark btn-lg btn-block mb-4">{{"CREATE_BIDDING.TITLE" |
+								translate}}</button>
 						</div>
 					</div>
 				</div>

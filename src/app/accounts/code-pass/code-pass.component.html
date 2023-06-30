@@ -1,18 +1,17 @@
 <article class="grid-45-55">
-  <section class="bg-redefine shadow d-flex flex-column justify-content-center align-items-center ">
+  <section class="bg-redefine cel shadow d-flex align-items-center justify-content-center flex-column">
     <div class="row">
       <div class="col-md-12"><img src="../../../assets/images/bg01.svg" style="max-height: 250px;" alt=""></div>
     </div>
     <div class="row mt-5">
       <div class="col-md-2">&nbsp;</div>
       <div class="col-md-8 text-white text-center">
-        <h6>Esqueceu a senha</h6>
+        <h6>{{"FORGOT_PASSWORD.TITLE" | translate}}</h6>
       </div>
       <div class="col-md-2">&nbsp;</div>
     </div>
     <div class="row mt-2">
-      <div class="col-md-12 text-white" style="font-size: 12px;">Fique tranquilo, você aqui consegue resetar a sua senha
-        com segurança.</div>
+      <div class="col-md-12 text-white" style="font-size: 12px;">{{"FORGOT_PASSWORD.SAFETY_TEXT" | translate}}</div>
     </div>
   </section>
   <section class="bg-light">
@@ -26,32 +25,30 @@
     </ul>
     <section class="px-5">
       <form class="ml-lg-5 mr-5" [formGroup]="form" (ngSubmit)="onSubmit()">
-        <h2 class="mt-4 text-secondary font-poppins"><b>Esqueceu a senha</b></h2>
-        <p class="mt-3 font-poppins font-size-14 text-secondary">Digite o código recebido no e-mail cadastrado para
-          gerar nova senha.</p>
+        <h2 class="mt-4 text-secondary font-poppins"><b>{{"FORGOT_PASSWORD.TITLE" | translate}}</b></h2>
+        <p class="mt-3 font-poppins font-size-14 text-secondary">{{"FORGOT_PASSWORD.ENTER_CODE" | translate}}</p>
         <div class="mt-5">
-          <label for="email" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>Digite o
-              código</b></label>
+          <label for="email" class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"FIRST_ACCESS.ENTER_CODE" | translate}}</b></label>
           <input type="text" style="text-indent:20px;" class="form-control text-center" formControlName="code" id="code"
             maxlength="5" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
             placeholder="00000">
 
           <div *ngIf="form.controls['code'].errors?.['required'] && isSubmit" class="div-msg-error mt-2">
             <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-            <p class="font-poppins font-size-14 m-0">Código é obrigatório!</p>
+            <p class="font-poppins font-size-14 m-0">{{"ERROR_MESSAGES.REQUIRED_CODE" | translate}}</p>
           </div>
           <div *ngIf="form.controls['code'].errors?.['minlength'] && isSubmit" class="div-msg-error mt-2">
             <img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt="">
-            <p class="font-poppins font-size-14 m-0">Código deve conter 5 números!</p>
+            <p class="font-poppins font-size-14 m-0">{{"ERROR_MESSAGES.VALID_CODE" | translate}}</p>
           </div>
         </div>
         <div class="mt-4">
           <div class="row">
             <div class="col-md-6">
-              <button type="button" class="bg-light btn-lg btn-block mb-4">Reenviar código</button>
+              <button type="button" class="bg-light btn-lg btn-block mb-4">{{"BUTTON_TEXT.RESEND_CODE" | translate}}</button>
             </div>
             <div class="col-md-6">
-              <button type="submit" class="btn btn-secondary btn-lg btn-block mb-4">Confirmar</button>
+              <button type="submit" class="btn btn-dark btn-lg btn-block mb-4">{{"BUTTON_TEXT.CONFIRM" | translate}}</button>
             </div>
           </div>
         </div>

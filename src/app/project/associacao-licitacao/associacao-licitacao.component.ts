@@ -12,6 +12,11 @@ import { AuthService } from 'src/services/auth.service';
 export class AssociacaoLicitacaoComponent {
   licitacoesList: any = [];
 
+  filtered: boolean = false;
+
+  currentPage: number = 1;
+  itensPerPage: number = 6;
+
   constructor(
     private authbase: AuthService,
     private router: Router,
@@ -21,17 +26,36 @@ export class AssociacaoLicitacaoComponent {
   }
 
   ngOnInit(): void {
-    this._associationBidService.list().subscribe({
+    this.listBid();
+  }
+
+  async listBid() {
+    this._associationBidService.listByAssociation().subscribe({
       next: data => {
         this.ngxSpinnerService.hide();
         this.licitacoesList = data;
+        this.licitacoesList.sort((a: any, b:any) => b.bid_count - a.bid_count)
       }
     })
+  }
+
+  async filterBid(event: any) {
+    this.ngxSpinnerService.show();
+
+    if (event.target.value !== 'all') {
+      this._associationBidService.list().subscribe({
+        next: data => {
+          this.licitacoesList = data.filter((el: any) => el.status === event.target.value);
+          this.ngxSpinnerService.hide();
+        }
+      })
+    } else {
+      this.listBid();
+    }
 
   }
 
   detailBids(i: any) {
-    console.log('áaaa', i)
     this.router.navigate(['/pages/licitacoes/licitacao-data', i._id]);
   }
 

@@ -9,6 +9,9 @@ import { DatamockService } from 'src/services/datamock.service';
   styleUrls: ['./cancelar-licitacao.component.scss']
 })
 export class CancelarLicitacaoComponent implements OnInit {
+
+  storedLanguage : string | null
+
   constructor(
     public datamock: DatamockService,
     private modalService: NgbModal,
@@ -16,11 +19,30 @@ export class CancelarLicitacaoComponent implements OnInit {
 
   ) { }
   ngOnInit(): void {
-
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
   }
+
   closeModal(value: string) {
     this.modalService.dismissAll();
     if (value === 'cancel') {
+
+      let successMessage = 'Cancelado com sucesso!';
+
+      switch(this.storedLanguage) {
+        case 'pt': 
+          successMessage = 'Cancelado com sucesso!'
+          break;
+        case 'en':
+          successMessage = 'Canceled successfully!'
+          break;
+        case 'fr':
+          successMessage = 'Annulé avec succès !'
+          break;
+        case 'es':
+          successMessage = '¡Cancelado con éxito!'
+          break;
+      }
+      
       this.toastrService.success('Cancelado com sucesso!', '', { progressBar: true });
     }
   }

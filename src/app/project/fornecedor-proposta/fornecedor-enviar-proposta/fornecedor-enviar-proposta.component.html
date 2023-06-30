@@ -11,56 +11,96 @@
             <div class="col-md-12 cursor-pointer border br-10 py-3 px-4 ">
                 <div class="row">
                     <div class="col-md-12 my-2">
-                        <h2 class="w-100 text-dark"><strong>{{datamock.getDataLicitacao().numero}}</strong></h2>
+                        <h2 class="w-100 text-dark"><strong>{{response.bid_count}}/{{response.createdAt |
+                                date:'yyyy'}}</strong></h2>
                     </div>
-                    <div class="col-md-12">
+                    <div *ngFor="let item of response.add_allotment; let ii = index" class="col-md-12">
                         <div class="row d-flex justify-content-start">
-                            <div class="col-md-2 mt-3 ">
+                            <div class="col-md-3 mt-3 ">
                                 <h6 class="font-poppins f-size-14 text-secondary">Lote</h6>
-                                <h5 class="f-size-16">{{datamock.getDataLicitacao().lote}}</h5>
+                                <h5 class="f-size-16">{{item.allotment_name}}</h5>
                             </div>
-                            <div class="col-md-2 mt-3 ">
+                            <div class="col-md-4 mt-3 ">
                                 <h6 class="font-poppins f-size-14 text-secondary">Prazo para entrega</h6>
-                                <h5 class="f-size-16">{{datamock.getDataLicitacao().dias}}</h5>
+                                <h5 class="f-size-16">{{item.days_to_delivery}} Dias</h5>
                             </div>
-                            <div class="col-md-2 mt-3 ">
+                            <div class="col-md-3 mt-3 ">
                                 <h6 class="font-poppins f-size-14 text-secondary">Local da entrega</h6>
-                                <h5 class="f-size-16">Casa</h5>
+                                <h5 class="f-size-16">{{item.place_to_delivery}}</h5>
+                            </div>
+
+                            <div class="col-md-12 mt-3">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="br-tabele bg-light text-dark" scope="col">Item</th>
+                                            <th class=" bg-light text-dark" scope="col">Quantidade</th>
+                                            <th class="br-tabele2 bg-light text-dark" scope="col">Valor unitario</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let content of item.add_item; let idFake = index">
+                                            <td class="text-dark w-50">{{content.item}}</td>
+                                            <td class="text-dark">{{content.quantity}} Unidade</td>
+
+                                            <td>
+                                                <form [formGroup]="formItemValue">
+                                                    <input type="text" #fretealarm
+                                                        [formControlName]="'value-' + item._id + '-position-' +  idFake"
+                                                        class="form-control br-10 py-4" id="valor" currencyMask
+                                                        [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                                                        (keyup)="operation($event, item, idFake)">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <p class="mt-3">Valor total da proposta
+                                    {{ item.totalValue || '0' | currency: 'R$ '}}</p>
+                            </div>
+                            <form [formGroup]="form" class="row w-100" *ngIf="response.bid_type !== 'globalPrice'">
+                                <div class="col-md-6">
+                                    <!--                                     <h6 class="font-poppins f-size-14 text-secondary">Valor Total Itens</h6>
+                                    <input type="tel" [formControlName]="'totalValue-' + item._id"
+                                        class="form-control br-10 py-4" id="valor" currencyMask
+                                        [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"> -->
+                                    <!-- <p class="mt-3">Valor total da proposta
+                                        {{item.totalValue || '0' | currency: 'R$ '}}</p> -->
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="font-poppins f-size-14 text-secondary">Valor do frete</h6>
+                                    <input type="tel" #fretealarm [formControlName]="'frete-' + item._id"
+                                        class="form-control br-10 py-4" id="valor" currencyMask
+                                        [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
+                                </div>
+                                <div class="col-12"></div>
+                                <div class="col-6"></div>
+                            </form>
+                            <div class="w-100 d-flex mt-3 justify-content-end"
+                                *ngIf="response.bid_type !== 'globalPrice'">
+                                <button [disabled]="item.disabledBtn" class="btn bg-pattern text-light w-50 py-2 br-10"
+                                    type="button" (click)="confirm(item._id)"><strong>Enviar proposta</strong></button>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12 mt-3">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th class="br-tabele bg-light text-dark" scope="col">Lote</th>
-                                    <th class=" bg-light text-dark" scope="col">Quantidade</th>
-                                    <th class="br-tabele2 bg-light text-dark" scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="text-dark w-50">{{datamock.getDataLicitacao().Item}}</td>
-                                    <td class="text-dark">{{datamock.getDataLicitacao().quantity}} Unidade
-                                        &nbsp;&nbsp;&nbsp; <span class="text-primary f-size-14">Minha cotação:
-                                            {{datamock.getDataLicitacao().value | currency: 'BRL' }} por um.</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <form [formGroup]="form" class="row w-100">
+                    <form [formGroup]="formGlobal" class="row w-100" *ngIf="response.bid_type === 'globalPrice'">
                         <div class="col-md-6">
-                            <h6 class="font-poppins f-size-14 text-secondary">Valor da proposta</h6>
+
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="font-poppins f-size-14 text-secondary">Valor do frete</h6>
                             <input type="tel" #fretealarm formControlName="frete" class="form-control br-10 py-4"
                                 id="valor" currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }">
                         </div>
                         <div class="col-12"></div>
                         <div class="col-6"></div>
                     </form>
-                    <div class="w-100 d-flex mt-3 justify-content-end">
-                        <button class="btn bg-pattern text-light w-50 py-2 br-10" type="button"
-                            (click)="confirm()"><strong>Enviar proposta</strong></button>
+                    <div class="w-100 d-flex mt-3 justify-content-end" *ngIf="response.bid_type === 'globalPrice'">
+                        <button [disabled]="!response.enableBtn" class="btn bg-pattern text-light w-50 py-2 br-10"
+                            type="button" (click)="confirm('')"><strong>Enviar proposta</strong></button>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -78,7 +118,9 @@
             <div class="col-md-12 cursor-pointer border br-10 py-3 px-4 ">
                 <div class="row">
                     <div class="col-md-12 d-flex justify-content-between">
-                        <h2 class="w-100 text-dark"><strong>{{datamock.getDataLicitacao().numero}}</strong></h2>
+                        <h2 class="w-100 text-dark"><strong>
+                                <h2 class="w-100 text-dark"><strong>{{response.bid_count}}</strong></h2>
+                            </strong></h2>
                         <div class="col-md-4">
                             <button type="button" (click)="download()"
                                 class="btn bg-pattern br-10 h50 w-100 text-light"><strong>Baixar planilha do
@@ -86,7 +128,7 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div class="row d-flex justify-content-start">
+                        <!-- <div class="row d-flex justify-content-start">
                             <div class="col-md-2 mt-3 ">
                                 <h6 class="font-poppins f-size-14 text-secondary">Lote</h6>
                                 <h5 class="f-size-16">{{datamock.getDataLicitacao().lote}}</h5>
@@ -107,6 +149,29 @@
                                         currency : 'BRL'}})”</strong> .
                                 </p>
                             </div>
+                        </div> -->
+                        <div *ngFor="let item of response.add_allotment" class="col-md-12">
+                            <div class="row d-flex justify-content-start">
+                                <div class="col-md-3 mt-3 ">
+                                    <h6 class="font-poppins f-size-14 text-secondary">Lote</h6>
+                                    <h5 class="f-size-16">{{item.allotment_name}}</h5>
+                                </div>
+                                <div class="col-md-4 mt-3 ">
+                                    <h6 class="font-poppins f-size-14 text-secondary">Prazo para entrega</h6>
+                                    <h5 class="f-size-16">{{item.days_to_delivery}} Dias</h5>
+                                </div>
+                                <div class="col-md-3 mt-3 ">
+                                    <h6 class="font-poppins f-size-14 text-secondary">Local da entrega</h6>
+                                    <h5 class="f-size-16">{{item.place_to_delivery}}</h5>
+                                </div>
+                                <div class="col-md-6 align-items-center d-flex justify-content-end">
+                                    <p class="b-pattern f-size-10 br-10 px-2 w-75 text-center py-1 color-pattern">
+                                        <i class="bi bi-info-circle-fill"></i> &nbsp; Baixe a planilha e preencha apenas
+                                        os
+                                        campos <strong>“proposta"</strong> e o campo <strong>“Frete”</strong> .
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <form [formGroup]="formDoc" class="col-md-12 mt-3">
@@ -124,11 +189,12 @@
                             <span class="">{{docName}}</span> <i (click)="deleteDoc()"
                                 class="bi text-danger h3 mb-0 bi-x"></i>
                         </div>
-                        <div class="col-md-12 mt-3">
+                        <div *ngIf="" class="col-md-12 mt-3">
                             <div class="row d-flex justify-content-end">
                                 <div class="col-md-4">
-                                    <button [disabled]="docsINput" (click)="confirm()" class="btn w-100 br-10 h50"
-                                        type="sumbit"><strong>Enviar Proposta</strong></button>
+                                    <button [disabled]="docsINput && response.add_allotment[0].disabledBtn"
+                                        (click)="confirm('')" class="btn w-100 br-10 h50" type="sumbit"><strong>Enviar
+                                            Proposta</strong></button>
                                 </div>
                             </div>
                         </div>

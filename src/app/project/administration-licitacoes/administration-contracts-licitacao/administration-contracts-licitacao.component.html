@@ -1,11 +1,11 @@
 <div class="container mb-5">
     <div class="row mt-5">
         <div class="col-md-12">
-            <h1><strong>Contratos da Licitação</strong></h1>
+            <h1><strong>{{'ADMINISTRATION_BIDDING_DETAIL.CONTRACT_AGREEMENT'  | translate}}</strong></h1>
             <hr class="bg-primary">
         </div>
         <div class="col-md-11 mt-2">
-            <input type="text" class="form-control h50 br-10 text-dark" placeholder="Busque por nome, CPF, telefone ou e-mail do usuário"/>
+            <input type="text" class="form-control h50 br-10 text-dark" placeholder="{{'BUTTON_TEXT.INPUT_SEARCH' | translate}}"/>
         </div>
     </div>
 
@@ -13,29 +13,23 @@
         <table class="table table-hover">
             <thead>
               <tr>
-                <th class="bg-pattern text-light br-tabele" scope="col">Contrato<i class="bi ml-1 bi-caret-down-fill"></i></th>
-                <th class="bg-pattern text-light" scope="col">Licitação</th>
-                <th class="bg-pattern text-light" scope="col">Fornecedor</th>
-                <th class="bg-pattern text-light" scope="col">Valor</th>
-                <th class="bg-pattern text-light" scope="col">Situação</th>
+                <th class="bg-pattern text-light br-tabele" scope="col">{{'ADMINISTRATION_CONTRACTS.CONTRACT'  | translate}}<i class="bi ml-1 bi-caret-down-fill"></i></th>
+                <th class="bg-pattern text-light" scope="col">{{'SIDEBAR.BIDDING'  | translate}}</th>
+                <th class="bg-pattern text-light" scope="col">{{'SIDEBAR.SUPPLIER'  | translate}}</th>
+                <th class="bg-pattern text-light" scope="col">{{'ASSOCIATION_CONTRACTS.VALUE'  | translate}}</th>
+                <th class="bg-pattern text-light" scope="col">{{'ASSOCIATION_CONTRACTS.VALUE'  | translate}}</th>
                 <th class="bg-pattern text-light br-tabele2" scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              <tr class="border">
-                <td class="text-capitalize text-dark">000{{datamock.getDataLicitacao()._id}}/2023</td>
-                <td class="text-capitalize text-dark">Convênio2023</td>
-                <td class="text-capitalize text-dark">{{datamock.getDataLicitacao().supplier}}</td>
-                <td class="text-capitalize text-dark">{{datamock.getDataLicitacao().convenio | currency: 'BRL'}}</td>
-                <td *ngIf="datamock.getDataLicitacao().status ==='Aberta'" class="text-capitalize text-primary">{{datamock.getDataLicitacao().status}}</td>
-                <td *ngIf="datamock.getDataLicitacao().status ==='Cancelada'" class="text-capitalize text-danger">{{datamock.getDataLicitacao().status}}</td>
-                <td *ngIf="datamock.getDataLicitacao().status ==='Deserta'" class="text-capitalize text-danger">{{datamock.getDataLicitacao().status}}</td>
-                <td *ngIf="datamock.getDataLicitacao().status ==='Concluída '" class="text-capitalize text-success">{{datamock.getDataLicitacao().status}}</td>
-                <td *ngIf="datamock.getDataLicitacao().status ==='Em Rascunho'" class="text-capitalize text-dark">{{datamock.getDataLicitacao().status}}</td>
-                <td *ngIf="datamock.getDataLicitacao().status ==='Aguardando Liberação'" class="f-size-16" style="color: #F1CF1C">{{datamock.getDataLicitacao().status}}</td>
-                <td *ngIf="datamock.getDataLicitacao().status ==='Em Análise'" class="text-capitalize text-warning">{{datamock.getDataLicitacao().status}}</td>
+              <tr class="border" *ngFor="let item of contract">
+                <td class="text-capitalize text-dark">{{item?.contract_number}}/{{item.createdAt | date:'yyyy'}}</td>
+                <td class="text-capitalize text-dark">{{item?.bid_number?.bid_count}}/{{item?.bid_number?.createdAt | date:'yyyy'}}</td>
+                <td class="text-capitalize text-dark">{{item?.supplier_id?.name}}</td>
+                <td class="text-capitalize text-dark">{{item?.value | currency: 'BRL'}}</td>
+                <td class="text-capitalize text-dark">{{handlerStatus(item.status)}}</td>
                 <td class="text-capitalize text-dark">
-                    <buton class="btn btn-dark w-100  br-10 text-center" type="button" (click)="goBackDetail()"><strong>Detalhes</strong></buton>
+                    <buton class="btn btn-dark w-100  br-10 text-center" type="button" (click)="goBackDetail(item?._id)"><strong>{{'ADMINISTRATION_BIDDING.DETAILS'  | translate}}</strong></buton>
                 </td>
               </tr>
             </tbody>

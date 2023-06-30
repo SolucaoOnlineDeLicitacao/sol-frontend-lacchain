@@ -9,6 +9,7 @@ import { ProductResponseDto } from 'src/dtos/product/product.response.dto';
 import { CategoryService } from 'src/services/category.service';
 import { CostItemsService } from 'src/services/cost-items.service';
 import { ProductService } from 'src/services/product.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register-cost-items',
@@ -26,6 +27,7 @@ export class RegisterCostItemsComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private costItemsService: CostItemsService,
+    private translate: TranslateService,
     private productService: ProductService,
     private categoryService: CategoryService,
     private toastrService: ToastrService,
@@ -73,6 +75,7 @@ export class RegisterCostItemsComponent implements OnInit {
   }
 
   onSubmit() {
+
     this.isSubmit = true;
     if (this.form.status == 'INVALID') {
       return;
@@ -90,7 +93,7 @@ export class RegisterCostItemsComponent implements OnInit {
     }
     this.costItemsService.register(this.request).subscribe({
       next: (success) => {
-        this.toastrService.success('Item cadastrado com sucesso!', '', { progressBar: true });
+        this.toastrService.success(this.translate.instant('TOASTRS.NEW_ITEM'), '', { progressBar: true });
         this.router.navigate(['/pages/itens-custo']);
       },
       error: (error) => {

@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row mt-5">
         <div class="col-md-12">
-            <h1>Contratos</h1>
+            <h1>{{'ADMINISTRATION_CONTRACTS.CONTRACTS' | translate}}</h1>
             <hr class="bg-primary">
         </div>
     </div>
@@ -11,24 +11,26 @@
 
         <div class="row col-12 p-2">
             <div class="col-12 col-md-10">
-                <h5 class="text-dark"> <b> Contrato </b></h5>
+                <h5 class="text-dark"> <b> {{'ADMINISTRATION_CONTRACTS.CONTRACT' | translate}} {{item.contract_number}}</b></h5>
             </div>
             <div class="col-12 col-md-2">
                 <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
-                <h5 *ngIf="item.status ==='Assinado'" class="f-size-16 text-primary">{{item.status}}</h5>
-                <h5 *ngIf="item.status ==='aguardando_assinaturas'" class="f-size-16 text-dark"> Aguardando Assinaturas
-                </h5>
-                <h5 *ngIf="item.status ==='concluido'" class="f-size-16 text-dark"> {{item.status}}</h5>
+                <h5 class="f-size-16 text-warning" *ngIf="item.status === 'aguardando_assinaturas'">{{'ADMINISTRATION_CONTRACTS.AWAITING_SIGNATURES' | translate}}</h5>
+                <h5 class="f-size-16 text-success" *ngIf="item.status === 'concluido'">{{'ADMINISTRATION_CONTRACTS.CONCLUED' | translate}}</h5>
+                <h5 class="f-size-16 text-info" *ngIf="item.status === 'executado_parcialmente'">{{'ADMINISTRATION_CONTRACTS.EXECULTING_STEPS' | translate}}</h5>
+                <h5 class="f-size-16 text-danger" *ngIf="item.status === 'inexecucao_total'">{{'ADMINISTRATION_CONTRACTS.TOTAL_NON_EXECUTION' | translate}}</h5>
+                <h5 class="f-size-16 text-success" *ngIf="item.status === 'assinado'">{{'ADMINISTRATION_CONTRACTS.ASSINED' | translate}}</h5>
+                <h5 class="f-size-16 text-warning" *ngIf="item.status === 'aguardando_fornecedor'">{{'ADMINISTRATION_CONTRACTS.AWAITING_SUPPLIER' | translate}}</h5>
             </div>
         </div>
 
         <div class="col-12 col-lg-2 p-2">
-            <h6 class="font-poppins f-size-14 text-dark">Licitação</h6>
-            <h6 class="font-poppins f-size-16 text-secondary">{{item?.contract_number}}</h6>
+            <h6 class="font-poppins f-size-14 text-dark">{{'ASSOCIATION_CONTRACTS.BIDDING' | translate}}</h6>
+            <h6 class="font-poppins f-size-16 text-secondary">{{item?.bid_number?.bid_count}} / {{item.createdAt | date:'YYYY'}}</h6>
         </div>
 
         <div class="col-12 col-lg-2 p-2">
-            <h6 class="font-poppins f-size-14 text-dark">Valor</h6>
+            <h6 class="font-poppins f-size-14 text-dark">{{'ASSOCIATION_CONTRACTS.VALUE' | translate}}</h6>
             <h6 class="font-poppins f-size-16 text-secondary">{{item?.value | currency:'R$'}}</h6>
         </div>
 

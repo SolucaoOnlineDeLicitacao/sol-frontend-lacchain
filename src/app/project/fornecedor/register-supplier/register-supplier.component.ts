@@ -11,6 +11,7 @@ import { LegalRepresentativeDto } from "../../../../dtos/shared/legal.representa
 import { SupplierService } from "../../../../services/supplier.service";
 import { CategoryService } from "../../../../services/category.service";
 import { CategoryResponseDto } from "../../../../dtos/category/category-response.dto";
+import { TranslateService } from "@ngx-translate/core";
 
 
 @Component({
@@ -28,6 +29,7 @@ export class RegisterSupplierComponent implements OnInit {
   isSubmit: boolean = false;
   categoriesAndSegments: CategoryResponseDto[] = [];
   selectCategoriesAndSegments: CategoryResponseDto[] = [];
+  regex =  /\b(\d)\1+\b/
 
   @ViewChild('addressnumber') inputNumber: ElementRef;
   @ViewChild('addressnumberlegal') inputNumberLegalRepresentative: ElementRef;
@@ -36,6 +38,8 @@ export class RegisterSupplierComponent implements OnInit {
     private formBuilder: FormBuilder,
     private toastrService: ToastrService,
     private router: Router,
+    private translate: TranslateService,
+
     private cepService: CepService,
     private nominatimService: NominatimService,
     private supplierService: SupplierService,
@@ -96,8 +100,6 @@ export class RegisterSupplierComponent implements OnInit {
 
   onSubmit() {
 
-    console.log('onSubmit')
-
     this.isSubmit = true;
     if (this.formAddress.status == 'INVALID' || this.formLegalRepresentative.status == 'INVALID' ||
       this.formLegalRepresentativeAddress.status == 'INVALID') {
@@ -146,11 +148,11 @@ export class RegisterSupplierComponent implements OnInit {
 
     this.supplierService.register(newSupplier).subscribe({
       next:success => {
-        this.toastrService.success('Fornecedor criado com sucesso!', '', { progressBar: true });
+        this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_CREATE_SUPPLIER'), '', { progressBar: true });
         this.router.navigate(['/pages/fornecedor']);
       },
       error:error => {
-        this.toastrService.error('Erro ao cadastrar o fornecedor!', '', { progressBar: true });
+        this.toastrService.success(this.translate.instant('TOASTRS.ERROR_CREATE_SUPPLIER'), '', { progressBar: true });
       },}
     );
   }
@@ -218,7 +220,12 @@ export class RegisterSupplierComponent implements OnInit {
 
     const address = { ...this.formAddress.value };
 
-    const result: any = await this.nominatimService.getLatLongByAddressq(address.zipCode);
+    const result: any = await this.nominatimService.getLatLongByAddress(
+      address.publicPlace,
+      address.city,
+      'brazil',
+      address.state,
+    );
 
     let lat = 1;
     let lng = 1;

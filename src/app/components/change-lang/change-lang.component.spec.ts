@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IntegracoesComponent } from './integracoes.component';
+import { ChangeLangComponent } from './change-lang.component';
 
-describe('IntegracoesComponent', () => {
-  let component: IntegracoesComponent;
-  let fixture: ComponentFixture<IntegracoesComponent>;
+describe('ChangeLangComponent', () => {
+  let component: ChangeLangComponent;
+  let fixture: ComponentFixture<ChangeLangComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IntegracoesComponent ]
+      declarations: [ ChangeLangComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(IntegracoesComponent);
+    fixture = TestBed.createComponent(ChangeLangComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

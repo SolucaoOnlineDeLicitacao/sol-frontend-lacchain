@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row mt-5">
     <div class="col-md-12">
-      <h1><strong>Convênios</strong></h1>
+      <h1><strong>{{'AGREEMENTS.AGREEMENTS' | translate}}</strong></h1>
       <hr class="bg-primary">
     </div>
   </div>
@@ -9,11 +9,11 @@
     <div class="row mt-4">
       <div class="col-md-9">
         <input type="text" class="form-control text-secondary input-height-border"
-          placeholder="Busque por nome ou número">
+          [placeholder]="'AGREEMENTS.SEARCH_PLACEHOLDER' | translate">
       </div>
       <div class="col-md-3">
-        <button type="button" class="btn btn-dark br-10 btn-lg btn-block"
-          [routerLink]="['/pages/convenios/novo-convenio']">Novo Convênio</button>
+        <button type="button" class="btn btn-dark btn-lg btn-block"
+          [routerLink]="['/pages/convenios/novo-convenio']">{{'AGREEMENTS.NEW_AGREEMENT_BUTTON' | translate}}</button>
       </div>
 
     </div>
@@ -23,33 +23,44 @@
           <table class="table table-hover">
             <thead>
               <tr>
-                <th class="br-tabele bg-pattern text-light" scope="col">Nome</th>
-                <th class="bg-pattern text-light" scope="col">Objeto</th>
-                <th class="bg-pattern text-light" scope="col">Associação</th>
-                <th class="bg-pattern text-light" scope="col">Revisor (Adm)</th>
-                <th class="br-tabele2 bg-pattern text-light" scope="col">Ações</th>
+                <th class="br-tabele bg-pattern text-light" scope="col">{{'AGREEMENTS.NAME' | translate}}</th>
+                <th class="bg-pattern text-light" scope="col">{{'AGREEMENTS.OBJECT' | translate}}</th>
+                <th class="bg-pattern text-light" scope="col">{{'AGREEMENTS.ASSOCIATION' | translate}}</th>
+                <th class="bg-pattern text-light" scope="col">{{'AGREEMENTS.PROOFREADER' | translate}}</th>
+                <th class="bg-pattern text-light" scope="col">{{'AGREEMENTS.ACTIONS' | translate}}</th>
+                <th class="bg-pattern text-light" scope="col"></th>
+                <th class="br-tabele2 bg-pattern text-light" scope="col"></th>
               </tr>
-
             <tbody>
               <tr class="border-right border-left"
                 *ngFor="let item of convenioList | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage } let i = index">
-                <th (click)="detalheConvenios(item)" class="text-capitalize" scope="row">{{item.register_number}}</th>
-                <td (click)="detalheConvenios(item)" class="text-capitalize">{{item.register_object}}</td>
-                <td (click)="detalheConvenios(item)" class="text-capitalize">{{item.association.name || '--'}}</td>
-                <td (click)="detalheConvenios(item)" class="text-capitalize">{{item.reviewer.name || '--'}}</td>
-                <td class="table_icon d-flex justify-content-between align-items-center">
-                  <i (click)="editConvenio(item._id)" class="fa color-patte0rn h4 mb-0 fa-pencil-square-o"
-                    aria-hidden="true"></i>
-                  <i class="fa text-danger h4 mb-0 fa-trash-o" (click)="delete(item)" aria-hidden="true"></i>
+                <th class="text-capitalize" scope="row">{{item.register_number}}</th>
+                <td class="text-capitalize">{{item.register_object}}</td>
+                <td class="text-capitalize">{{item.association.name || '--'}}</td>
+                <td class="text-capitalize">{{item.reviewer.name || '--'}}</td>
+                <td (click)="detalheConvenios(item)" ><i class="bi bi-eye-fill"></i></td>
+                <td class="table_icon d-flex justify-content-start align-items-center">
+                  <div class="dropdown">
+                    <i class="fa fa-plus color-patte0rn h4 mb-0"
+                    aria-hidden="true" id="dropdownOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                    <div class="dropdown-menu" aria-labelledby="dropdownOptions">
+                      <a class="dropdown-item" (click)="editConvenio(item._id)">{{'TOASTRS.EDIT_BID' | translate}}</a>
+                      <a class="dropdown-item" (click)="addGroup(item._id)">{{'TOASTRS.CREATE_BID' | translate}}</a>
+                    </div>
+                  </div>
+                </td>
+                <td class="table_icon">
+                  <button class="btn btn-danger" (click)="delete(item)">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                  </button>
                 </td>
               </tr>
-
             </tbody>
 
           </table>
           <div class="row">
-            <div class="col-md-12"> <pagination-controls (pageChange)="currentPage = $event" previousLabel="Anterior"
-                nextLabel="Próximo"></pagination-controls>
+            <div class="col-md-12"> <pagination-controls (pageChange)="currentPage = $event" [previousLabel]="'AGREEMENTS.PREVIOUS' | translate"
+                [nextLabel]="'AGREEMENTS.NEXT' | translate"></pagination-controls>
             </div>
           </div>
         </div>

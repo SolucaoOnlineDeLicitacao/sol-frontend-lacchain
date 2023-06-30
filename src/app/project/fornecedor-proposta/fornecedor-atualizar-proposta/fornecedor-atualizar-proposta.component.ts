@@ -1,45 +1,66 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-import { Location } from '@angular/common';
-import { DatamockService } from 'src/services/datamock.service';
+import { Component, ElementRef, ViewChild } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ToastrService } from "ngx-toastr";
+import { Location } from "@angular/common";
+import { ActivatedRoute } from "@angular/router";
+import { ProposalService } from "src/services/proposal.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
-  selector: 'app-fornecedor-atualizar-proposta',
-  templateUrl: './fornecedor-atualizar-proposta.component.html',
-  styleUrls: ['./fornecedor-atualizar-proposta.component.scss']
+  selector: "app-fornecedor-atualizar-proposta",
+  templateUrl: "./fornecedor-atualizar-proposta.component.html",
+  styleUrls: ["./fornecedor-atualizar-proposta.component.scss"],
 })
 export class FornecedorAtualizarPropostaComponent {
-  @ViewChild('fretealarm') fretealarm: ElementRef;
   form: FormGroup;
-  FRETEaLERT = 'Valor do frete'
+  response: any = {};
+  quantity: number = 0;
+
   constructor(
-    public datamock: DatamockService,
     private formBuilder: FormBuilder,
     private toastrService: ToastrService,
     private location: Location,
+    private translate: TranslateService,
+
+    private route: ActivatedRoute,
+    private proposalService: ProposalService
   ) {
     this.form = this.formBuilder.group({
-      frete: ['', [Validators.required]],
+      frete: ["", [Validators.required]],
+      valueUnity: ["", [Validators.required]],
     });
   }
   ngOnInit(): void {
-    this.form.patchValue({
-      frete: this.datamock.getDataLote().frete,
+    this.route.data.subscribe({
+      next: data => {
+        this.response = data["proposal"];
+        this.quantity = this.response?.allotment?.reduce(
+          (acc: number, curr: any) =>
+            acc + curr.add_item.reduce((accc: number, item: any) => accc + Number(item.quantity), 0),
+          0
+        );
+        this.form.patchValue({
+          valueUnity: (+this.response?.total_value)/this.quantity,
+          frete: this.response?.freight,
+        })
+      },
     });
   }
 
   backProposal() {
-    if (this.form.controls['frete'].value === '' || this.form.controls['frete'].value === null) {
-      this.fretealarm.nativeElement.classList.add("border-danger", "border", "text-danger");
-      this.FRETEaLERT = 'Valor do frete necessário'
-      setInterval(() => {
-        this.fretealarm.nativeElement.classList.remove("border-danger", "border", "text-danger");
-        this.FRETEaLERT = 'Valor do frete'
-      }, 3000);
-    } else {
-      this.toastrService.success('Atualizado com sucesso!', '', { progressBar: true });
-      this.location.back();
+    let request = {
+      freight:+this.form.value.frete,
+      total_value:(+(this.form.value.valueUnity) * this.quantity).toFixed(0)
     }
+    this.proposalService.updateValues(this.response._id, request).subscribe({
+      next: data => {
+        this.toastrService.success(this.translate.instant('TOASTRS.UPDATE_PROPOSAL'), '', { progressBar: true });
+        this.location.back();
+      },
+      error: error => {
+        console.error(error);
+        this.toastrService.error(this.translate.instant('TOASTRS.ERROR_UPDATE_PROPOSAL'), '', { progressBar: true });
+      }
+    })
   }
 }

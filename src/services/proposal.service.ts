@@ -25,6 +25,11 @@ export class ProposalService extends BaseService {
             .pipe(map(this.extractData), catchError(this.serviceError));
     }
 
+    listProposal(): Observable<any[]> {
+        return this.httpClient
+            .get<ProposalGetResponseDto[]>(`${this.url}/list`, this.authorizedHeader);
+    }
+
     listProposalByBid(bidId: any): Observable<any[]> {
         return this.httpClient
             .get<ProposalGetResponseDto[]>(`${this.url}/list-proposal-in-bid/${bidId}`, this.authorizedHeader);
@@ -44,6 +49,26 @@ export class ProposalService extends BaseService {
     getProposalAcceptByBid(bidId: string): Observable<any> {
         return this.httpClient
             .get<ProposalGetResponseDto>(`${this.url}/get-proposal-accepted-bid/${bidId}`, this.authorizedHeader);
+    }
+
+    getbyId(proposalId: string): Observable<any> {
+        return this.httpClient
+            .get<ProposalGetResponseDto>(`${this.url}/get-by-id/${proposalId}`, this.authorizedHeader);
+    }
+
+    updateValues(_id:string, dto:{freight:number,total_value:string}): Observable<any>{
+        return this.httpClient.put(`${this.url}/update-values/${_id}`, dto, this.authorizedHeader)
+    }
+    
+    getProposalVerify(allotmentId: string): Observable<any> {
+        return this.httpClient
+            .get<boolean>(`${this.url}/verify-proposal-by-user/${allotmentId}`, this.authorizedHeader);
+    }
+
+    sendTieBreaker(proposalId: string): Observable<any> {
+        return this.httpClient
+            .post(`${this.url}/send-tie-breaker/${proposalId}`, null, this.authorizedHeader)
+            .pipe(map(this.extractData), catchError(this.serviceError));
     }
 
 }

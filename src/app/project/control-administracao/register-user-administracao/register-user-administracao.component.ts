@@ -21,6 +21,8 @@ export class RegisterUserAdministracaoComponent implements OnInit {
     { value: 'visualizador', name: 'Visualizador' },
   ];
 
+  storedLanguage : string | null
+
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
@@ -38,6 +40,7 @@ export class RegisterUserAdministracaoComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
   }
 
   onSubmit() {
@@ -48,19 +51,65 @@ export class RegisterUserAdministracaoComponent implements OnInit {
 
     this.userService.register(this.form.value).subscribe({
       next: (success) => {
-        this.toastrService.success('Usuário cadastrado com sucesso!', '', { progressBar: true });
+
+        let successMessage = 'Usuário cadastrado com sucesso!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Usuário cadastrado com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'User successfully registered!'
+            break;
+          case 'fr':
+            successMessage = 'Utilisateur enregistré avec succès !'
+            break;
+          case 'es':
+            successMessage = '¡Usuario registrado con éxito!'
+            break;
+        }
+
+        this.toastrService.success(successMessage, '', { progressBar: true });
         this.router.navigate(['/controle-admin']);
       },
       error: (error) => {
+
+        let errorEmail = 'Esse email ja foi cadastrado!';
+        let errorPhone = 'Esse telefone ja foi cadastrado!';
+        let errorCPFCNPJ = 'Esse CPF/CNPJ ja foi cadastrado!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            errorEmail = 'Esse email ja foi cadastrado!';
+            errorPhone = 'Esse telefone ja foi cadastrado!';
+            errorCPFCNPJ = 'Esse CPF/CNPJ ja foi cadastrado!';
+            break;
+          case 'en':
+            errorEmail = 'This email has already been registered!';
+            errorPhone = 'This phone has already been registered!';
+            errorCPFCNPJ = 'This CPF/CNPJ has already been registered!';
+            break;
+          case 'fr':
+            errorEmail = 'Cet e-mail a déjà été enregistré !';
+            errorPhone = 'Ce téléphone a déjà été enregistré !';
+            errorCPFCNPJ = 'Ce CPF/CNPJ est déjà inscrit !';
+            break;
+          case 'es':
+            errorEmail = '¡Este correo electrónico ya ha sido registrado!';
+            errorPhone = '¡Este teléfono ya ha sido registrado!';
+            errorCPFCNPJ = '¡Este CPF/CNPJ ya ha sido registrado!';
+            break;
+        }
+
         console.error(error);
 
         if (error.error.errors[0].includes('duplicate key')) {
           if (error.error.errors[0].includes('email')) {
-            this.toastrService.error('Esse email ja foi cadastrado!', '', { progressBar: true });
+            this.toastrService.error(errorEmail, '', { progressBar: true });
           } else if (error.error.errors[0].includes('phone')) {
-            this.toastrService.error('Esse telefone ja foi cadastrado!', '', { progressBar: true });
+            this.toastrService.error(errorPhone, '', { progressBar: true });
           } else if (error.error.errors[0].includes('cpf')) {
-            this.toastrService.error('Esse CPF/CNPJ ja foi cadastrado!', '', { progressBar: true });
+            this.toastrService.error(errorCPFCNPJ, '', { progressBar: true });
           }
         } else {
           this.toastrService.error(error.error.errors[0], '', { progressBar: true });

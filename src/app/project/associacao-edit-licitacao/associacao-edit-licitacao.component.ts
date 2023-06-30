@@ -26,7 +26,7 @@ export class AssociacaoEditLicitacaoComponent {
   formAddLots!: FormGroup;
   isSubmit: boolean = false;
   selectedFile: File | null = null;
-  invitedSupplier: string[] = [];
+  invitedSupplier: any = [];
   invitedSupplierId: string[] = [];
   supplierImg: string = '';
   selectedImageUrl: string;
@@ -38,8 +38,14 @@ export class AssociacaoEditLicitacaoComponent {
   // userList!: UserListResponseDto[];
   userList: any;
   licitacaoId: any;
-  convenioList:ConvenioResponseDto[];
+  convenioList: ConvenioResponseDto[];
   costItemsList: CostItemsResponseDto[];
+
+  classification: any[] = [];
+  costItemsListFilter: any[] = [];
+  storedLanguage: string | null;
+
+  daysToDeliveryValidator: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -80,7 +86,6 @@ export class AssociacaoEditLicitacaoComponent {
     this.supplierService.supplierList().subscribe({
       next: (data) => {
         this.userList = data;
-        console.log(this.userList, 'lista fornecedores');
       },
       error: (err) => {
         console.error(err);
@@ -92,8 +97,13 @@ export class AssociacaoEditLicitacaoComponent {
     if (this.licitacaoId) {
       this.associationBidService.getById(this.licitacaoId).subscribe({
         next: (data: any) => {
-          const bidData: any = data;
 
+          this.invitedSupplier = data.invited_suppliers;
+
+          this.invitedSupplierId = data.invited_suppliers.map((objeto: any) => objeto._id);
+
+          const bidData: any = data;
+          this.lots = bidData.add_allotment;
           this.form.patchValue({
             description: bidData.description,
             status: bidData.status || 'awaiting',
@@ -110,33 +120,104 @@ export class AssociacaoEditLicitacaoComponent {
             add_allotment: this.lots,
             invited_suppliers: this.invitedSupplierId,
           });
+          this.convenioService.getConvenio().subscribe({
+            next: (data) => {
+              this.convenioList = data.filter((item: any) => !!item.association);
+              this.changeAgreement();
+              this.form.patchValue({
+                classification: bidData.classification,
+              });
+              this.changeClassification();
+            },
+            error: (err) => {
+              console.error(err);
+            }
+          })
+
 
         },
         error: (error) => {
-          this.toastrService.error('Não foi possível criar a Licitação, verifique os campos', '', { progressBar: true });
+          let errorMessage = 'Não foi possível criar a Licitação, verifique os campos';
+
+          switch (this.storedLanguage) {
+            case 'pt':
+              errorMessage = 'Não foi possível criar a Licitação, verifique os campos'
+              break;
+            case 'en':
+              errorMessage = 'Unable to create the Tender, check the fields'
+              break;
+            case 'fr':
+              errorMessage = "Impossible de créer l'offre, vérifiez les champs"
+              break;
+            case 'es':
+              errorMessage = 'No se pudo crear la Oferta, verifique los campos'
+              break;
+          }
+
+          this.toastrService.error(errorMessage, '', { progressBar: true });
         }
       });
     } else {
-      this.toastrService.error('Não foi possível encontrar um ID válido para essa licitação', '', { progressBar: true });
-    }
+      let errorMessage = 'Não foi possível encontrar um ID válido para essa licitação';
 
-    this.convenioService.getConvenio().subscribe({
-      next: (data) => {
-        this.convenioList = data.filter((item: any) => !!item.association);
-      },
-      error: (err) => {
-        console.error(err);
+      switch (this.storedLanguage) {
+        case 'pt':
+          errorMessage = 'Não foi possível encontrar um ID válido para essa licitação'
+          break;
+        case 'en':
+          errorMessage = 'Could not find a valid ID for this bid'
+          break;
+        case 'fr':
+          errorMessage = "Impossible de trouver un ID valide pour cette enchère"
+          break;
+        case 'es':
+          errorMessage = 'No se pudo encontrar una identificación válida para esta oferta'
+          break;
       }
-    })
+
+      this.toastrService.error(errorMessage, '', { progressBar: true });
+    }
 
     this.costItemsService.list().subscribe({
       next: success => {
         this.costItemsList = success;
       },
       error: error => {
-        console.log(error);
+        console.error(error);
       },
     });
+
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
+  }
+
+  changeAgreement() {
+    this.classification = [];
+    let convenioIndex = this.convenioList.findIndex((el: any) => el._id == this.form.controls['insurance'].value);
+    for (const workPlan of this.convenioList[convenioIndex].workPlan) {
+      const categorys = workPlan.product.map((a: any) => a.costItems?.category?.category_name);
+      for (const category of categorys) {
+        if (!this.classification.includes(category)) {
+          this.classification.push(category);
+        }
+      }
+    }
+    this.costItemsList = [];
+    for (const workPlan of this.convenioList[convenioIndex].workPlan) {
+      const costItems = workPlan.product.map((a: any) => a.costItems);
+      for (const item of costItems) {
+        this.costItemsList.push(item);
+      }
+    }
+  }
+
+  changeClassification() {
+    this.costItemsListFilter = [];
+    this.costItemsListFilter = this.costItemsList.filter((a: any) => a.category?.category_name == this.form.controls['classification'].value);
+    for (const costItem of this.costItemsList) {
+      if (costItem?.category?.category_name == this.form.controls['insurance'].value) {
+        this.costItemsListFilter.push(costItem);
+      }
+    }
   }
 
   generateRandomId() {
@@ -145,10 +226,40 @@ export class AssociacaoEditLicitacaoComponent {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  validateDaysInput() {
+    const executionDaysValue = parseInt(this.form.controls["executionDays"].value);
+    const deliveryTimeDaysValue = parseInt(this.formAddLots.controls["deliveryTimeDays"].value);
+
+    if (deliveryTimeDaysValue > executionDaysValue) {
+      this.daysToDeliveryValidator = true;
+    } else {
+      this.daysToDeliveryValidator = false;
+    }
+  }
+
   onSubmit() {
 
     this.isSubmit = true;
     if (this.form.status == 'INVALID') {
+
+      let errorMessage = 'Preencha todos os campos obrigatórios';
+
+      switch (this.storedLanguage) {
+        case 'pt':
+          errorMessage = 'Preencha todos os campos obrigatórios'
+          break;
+        case 'en':
+          errorMessage = 'Fill in all required fields'
+          break;
+        case 'fr':
+          errorMessage = "Remplissez tous les champs obligatoires"
+          break;
+        case 'es':
+          errorMessage = 'Rellene todos los campos obligatorios'
+          break;
+      }
+
+      this.toastrService.error(errorMessage);
       return;
     }
 
@@ -189,14 +300,49 @@ export class AssociacaoEditLicitacaoComponent {
         invited_suppliers: this.invitedSupplierId,
       };
     }
+    console.log('new bid ==>', newBid)
 
     this.associationBidService.updateBid(this.licitacaoId, newBid).subscribe({
       next: (data) => {
-        this.toastrService.success('Licitação editada com sucesso!', '', { progressBar: true, });
+        let successMessage = 'Licitação editada com sucesso!';
+
+        switch (this.storedLanguage) {
+          case 'pt':
+            successMessage = 'Licitação editada com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'Bid edited successfully!'
+            break;
+          case 'fr':
+            successMessage = 'Enchère modifiée avec succès !'
+            break;
+          case 'es':
+            successMessage = '¡Oferta editada con éxito!'
+            break;
+        }
+
+        this.toastrService.success(successMessage, '', { progressBar: true, });
         this.router.navigate(['/pages/dashboard']);
       },
       error: (error) => {
-        this.toastrService.error('Não foi possível editada a Licitação, verifique os campos', '', { progressBar: true, });
+        let errorMessage = 'Não foi possível editar a Licitação, verifique os campos';
+
+        switch (this.storedLanguage) {
+          case 'pt':
+            errorMessage = 'Não foi possível editar a Licitação, verifique os campos'
+            break;
+          case 'en':
+            errorMessage = 'Unable to edit Bid, check fields'
+            break;
+          case 'fr':
+            errorMessage = "Impossible de modifier l'enchère, vérifiez les champs"
+            break;
+          case 'es':
+            errorMessage = 'No se puede editar la oferta, verifique los campos'
+            break;
+        }
+
+        this.toastrService.error(errorMessage, '', { progressBar: true, });
       }
 
     });
@@ -229,7 +375,7 @@ export class AssociacaoEditLicitacaoComponent {
   addSupplier() {
     const supplier = this.formAddLots.controls['inviteSuppliers'].value;
     if (supplier.trim() !== '' && !this.invitedSupplier.includes(supplier)) {
-      this.invitedSupplier.push(supplier);
+      this.invitedSupplier.push({ name: supplier });
     }
 
     const supplierId = this.formAddLots.controls['inviteSuppliers'].value;
@@ -240,7 +386,9 @@ export class AssociacaoEditLicitacaoComponent {
   }
 
   removeSupplier(index: number) {
+    console.log('index', index)
     this.invitedSupplier.splice(index, 1);
+    this.invitedSupplierId.splice(index, 1)
   }
 
   onSelectFileProductImage(event: any) {
@@ -288,7 +436,24 @@ export class AssociacaoEditLicitacaoComponent {
       this.formAddLots.reset();
       this.supplierImg = '';
     } else {
-      this.toastrService.error('É necessário adicionar pelo menos um item ao lote', '', { progressBar: true });
+      let errorMessage = 'É necessário adicionar pelo menos um item ao lote';
+
+      switch (this.storedLanguage) {
+        case 'pt':
+          errorMessage = 'É necessário adicionar pelo menos um item ao lote'
+          break;
+        case 'en':
+          errorMessage = 'You must add at least one item to the batch'
+          break;
+        case 'fr':
+          errorMessage = "Vous devez ajouter au moins un article au lot"
+          break;
+        case 'es':
+          errorMessage = 'Debe agregar al menos un artículo al lote'
+          break;
+      }
+
+      this.toastrService.error(errorMessage, '', { progressBar: true });
     }
   }
 

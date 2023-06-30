@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryResponseDto } from 'src/dtos/category/category-response.dto';
@@ -26,6 +27,8 @@ export class NewProdutoComponent implements OnInit {
     private formBuilder: FormBuilder,
     private ngxSpinnerService: NgxSpinnerService,
     private productService: ProductService,
+    private translate: TranslateService,
+
     private toastrService: ToastrService,
     private router: Router
   ) {
@@ -48,13 +51,12 @@ export class NewProdutoComponent implements OnInit {
     }
     this.productService.register(this.request).subscribe({
       next: (success) => {
-        this.toastrService.success('Produto cadastrado com sucesso!', '', { progressBar: true });
+        this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_DELETE_USER'), '', { progressBar: true });
         this.router.navigate(['/pages/produtos']);
       },
       error: (error) => {
         console.error(error);
-        this.toastrService.error('Error ao cadastrar o produto!', '', { progressBar: true });
-        this.toastrService.error(error.error.errors[0], '', { progressBar: true });
+        this.toastrService.success(error.error.errors[0],this.translate.instant('TOASTRS.ERROR_CREATE_PRODUCT'),{ progressBar: true });
       }
     });
   }

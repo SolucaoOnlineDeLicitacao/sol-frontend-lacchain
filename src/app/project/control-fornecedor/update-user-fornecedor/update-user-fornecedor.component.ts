@@ -46,15 +46,30 @@ export class UpdateUserFornecedorComponent implements OnInit {
       this.userService.getById(params['id']).subscribe({
         next: (success) => {
           this.userId = success._id;
-          this.form.patchValue({
-            name: success.name,
-            email: success.email,
-            supplier: success.supplier,
-            phone: success.phone,
-            document: success.document
+          this.supplierService.supplierList().subscribe({
+            next: (successSup) => {
+              for(let sup of successSup){
+                if(success.supplier == sup._id){
+                  this.form.patchValue({
+                    name: success.name,
+                    email: success.email,
+                    supplier: sup.name,
+                    phone: success.phone,
+                    document: success.document
+                  });
+        
+                }
+              }
+              this.ngxSpinnerService.hide();
+              
+              this.supplierList = successSup;
+            },
+            error: (error) => {
+              console.error(error.error.errors[0]);
+              this.ngxSpinnerService.hide();
+            }
           });
-
-          this.ngxSpinnerService.hide();
+      
         },
         error: (error) => {
           console.error(error);
@@ -62,15 +77,6 @@ export class UpdateUserFornecedorComponent implements OnInit {
           this.ngxSpinnerService.hide();
         }
       });
-    });
-
-    this.supplierService.supplierList().subscribe({
-      next: (success) => {
-        this.supplierList = success;
-      },
-      error: (error) => {
-        console.error(error.error.errors[0]);
-      }
     });
 
   }

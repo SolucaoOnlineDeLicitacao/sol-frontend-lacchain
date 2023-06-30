@@ -10,7 +10,6 @@ import { ControlFornecedorComponent } from "./control-fornecedor/control-fornece
 import { ConveniosComponent } from "./convenios/convenios.component";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { FornecedorComponent } from "./fornecedor/fornecedor.component";
-import { IntegracoesComponent } from "./integracoes/integracoes.component";
 import { PagesRoutingModule } from "./pages.route";
 import { RelatoriosComponent } from "./relatorios/relatorios.component";
 import { NavbarComponent } from "../components/navbar/navbar.component";
@@ -115,6 +114,22 @@ import { AceitarPropostaModalComponent } from './associacao-licitacao-view-propo
 import { ModelContractService } from 'src/services/model-contract.service';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { AccountModule } from '../accounts/account.module';
+import { DetailsContractComponent } from './administration-licitacoes/administration-contracts-licitacao/details-contract/details-contract.component';
+import { GetProposalByIdResolve } from '../resolvers/get-proposal-by-id.resolver';
+import { UpdateContractModalComponent } from './associacao-contratos-data/update-contract-modal/update-contract-modal.component';
+import { DashbordService } from 'src/services/dashboard.service';
+
+import { AdministrationRelatorioComponent } from './administration-relatorio/administration-relatorio.component';
+
+import { ReportContractComponent } from './report-contract/report-contract.component';
+import { NgChartsModule } from 'ng2-charts';
+import { ReportsService } from 'src/services/reports.service';
+import { ReportGeneralComponent } from './report-general/report-general.component';
+import { ReportGeneratedComponent } from './report-generated/report-generated.component';
+import { AdministrationIntegrationsComponent } from './administration-integrations/administration-integrations.component';
+import { EndPointsService } from 'src/services/endpoints.service';
 
 @NgModule({
     declarations: [
@@ -125,7 +140,6 @@ import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
         ControlAdministracaoComponent,
         FornecedorComponent,
         ConveniosComponent,
-        IntegracoesComponent,
         RelatoriosComponent,
         NavbarComponent,
         SidebarComponent,
@@ -210,6 +224,13 @@ import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
         RecusarPropostaModalComponent,
         VisualizarPropostaModalComponent,
         AceitarPropostaModalComponent,
+        DetailsContractComponent,
+        UpdateContractModalComponent,
+        AdministrationRelatorioComponent,
+        ReportContractComponent,
+        ReportGeneralComponent,
+        ReportGeneratedComponent,
+        AdministrationIntegrationsComponent
     ],
     imports: [
         CommonModule,
@@ -229,7 +250,10 @@ import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
         CurrencyMaskModule,
         NgbAccordionModule,
         AngularEditorModule,
-        NgbModule
+        NgbModule,
+        TranslateModule,
+        AccountModule,
+        NgChartsModule,
     ],
     providers: [
         AuthGuard,
@@ -244,7 +268,11 @@ import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
         ProposalService,
         ModelContractService,
         CepService,
-        GetProposalsByBidIdResolve
+        GetProposalsByBidIdResolve,
+        GetProposalByIdResolve,
+        DashbordService,
+        ReportsService,
+        EndPointsService
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,

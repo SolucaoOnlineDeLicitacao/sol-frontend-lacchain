@@ -4,11 +4,11 @@
 
 export const environment = {
   production: false,
-  encrypt_key: '',
+  encrypt_key: '5708c8d4-0b2a-4cbd-bea4-99981079020a',
   api: {
-    server: "",
+    server: "http://localhost:3002",
     port: "",
-    path: '',
+    path: 'http://localhost:4002',
     
   }
 };

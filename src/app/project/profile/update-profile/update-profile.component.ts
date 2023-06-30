@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { LocalStorageKeysEnum } from 'src/enums/local-storage-keys.enum';
@@ -21,6 +22,8 @@ export class UpdateProfileComponent {
     public authService: AuthService,
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private translate: TranslateService,
+
     private ngxSpinnerService: NgxSpinnerService,
     private toastrService: ToastrService,
     private router: Router
@@ -53,14 +56,13 @@ export class UpdateProfileComponent {
             }
           })
         }
-        
-        this.toastrService.success('Nome atualizado com sucesso!', '', { progressBar: true });
+        this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_UPDATE_NAME'), '', { progressBar: true });
         this.ngxSpinnerService.hide();
         this.router.navigate(['/pages/profile'])
       },
       error: (error) => {
         console.error(error);
-        this.toastrService.error('Error ao atualizar o usuário', '', { progressBar: true });
+        this.toastrService.error(this.translate.instant('TOASTRS.ERROR_UPDATE_NAME'), '', { progressBar: true });
       }
     })
   }

@@ -36,11 +36,12 @@
                     </div>
                     <div class="col-12 col-lg-6 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Fornecedor</h6>
-                        <h5 class="f-size-16">{{user?.supplier}}</h5>
+                        <h5 class="f-size-16">{{user?.supplier.name}}</h5>
                     </div>
                     <div class="col-12 col-lg-6 p-2 text-capitalize">
                         <h6 class="font-poppins f-size-14 text-secondary">Status</h6>
-                        <h5 class="f-size-16">{{user?.status}}</h5>
+                        <h5 *ngIf="user?.status ==='inactive'" class="f-size-16">Inativo</h5>
+                        <h5 *ngIf="user?.status ==='active'" class="f-size-16">Ativo</h5>
                     </div>
                 </div>
             </div>

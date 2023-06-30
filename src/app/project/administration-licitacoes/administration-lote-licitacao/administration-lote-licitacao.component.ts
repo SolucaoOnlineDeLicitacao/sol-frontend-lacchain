@@ -20,11 +20,6 @@ export class AdministrationLoteLicitacaoComponent {
   ) { }
 
   ngOnInit(): void {
-    console.log("ESSA RESPOSTA", this.response, 'teste');
-  }
-
-  ngOnDestroy(): void {
-    localStorage.removeItem("lotes");
   }
 
   open(value: string) {

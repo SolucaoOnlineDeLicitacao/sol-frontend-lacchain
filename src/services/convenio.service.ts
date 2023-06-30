@@ -21,7 +21,12 @@ export class ConvenioService extends BaseService {
   getConvenio(): Observable<any[]> {
     return this.httpClient
       .get(`${this.url}`, this.authorizedHeader)
-      .pipe(map<any,any>(response => response), catchError(this.serviceError));
+      .pipe(map<any, any>(response => response), catchError(this.serviceError));
+  }
+
+  getConvenioForAssociation(): Observable<any[]> {
+    return this.httpClient
+      .get<any[]>(`${this.url}/for-association`, this.authorizedHeader);
   }
 
   getConvenioById(convenioId: string): Observable<any> {
@@ -48,13 +53,13 @@ export class ConvenioService extends BaseService {
       .pipe(map(this.extractData), catchError(this.serviceError));
   }
 
-  addWorkPlan(Id: string, dto: {workPlanId:string}): Observable<ConvenioResponseDto> {
+  addWorkPlan(Id: string, dto: { workPlanId: string }): Observable<ConvenioResponseDto> {
     return this.httpClient
       .put(`${this.url}/add-work-plan/${Id}`, dto, this.authorizedHeader)
       .pipe(map(this.extractData), catchError(this.serviceError));
   }
 
-  removeWorkPlan(Id: string, dto: {workPlanId:string}): Observable<ConvenioResponseDto> {
+  removeWorkPlan(Id: string, dto: { workPlanId: string }): Observable<ConvenioResponseDto> {
     return this.httpClient
       .put(`${this.url}/remove-work-plan/${Id}`, dto, this.authorizedHeader)
       .pipe(map(this.extractData), catchError(this.serviceError));

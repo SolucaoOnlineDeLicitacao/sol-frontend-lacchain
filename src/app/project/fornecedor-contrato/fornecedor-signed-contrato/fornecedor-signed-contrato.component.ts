@@ -16,6 +16,7 @@ export class FornecedorSignedContratoComponent {
   constructor(
     private datamockService: DatamockService,
     private authbase: AuthService,
+    
     private router: Router
   ) {
   }

@@ -5,6 +5,8 @@ import * as XLSX from 'xlsx';
 import { RecusarPropostaModalComponent } from '../../associacao-licitacao-view-proposal/components/recusar-proposta-modal/recusar-proposta-modal.component';
 import { Location } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from 'src/services/user.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-proposal-accepted',
@@ -14,12 +16,15 @@ import { ToastrService } from 'ngx-toastr';
 export class ProposalAcceptedComponent {
 
   responseBid: any;
-
+  haveAccept: Boolean = false;
   responseProposal: any;
 
   constructor(
     private proposalService: ProposalService,
+    private userService: UserService,
     private modalService: NgbModal,
+    private translate: TranslateService,
+
     private location: Location,
     private toastrService: ToastrService
   ) {
@@ -29,12 +34,18 @@ export class ProposalAcceptedComponent {
   ngOnInit(): void {
     let response: any = localStorage.getItem('bidResponse');
     this.responseBid = JSON.parse(response);
-
-    console.log('response bid', this.responseBid)
-
-    this.proposalService.getProposalAcceptByBid(this.responseBid._id).subscribe({
+    this.proposalService.listProposalByBid(this.responseBid._id).subscribe({
       next: data => {
         this.responseProposal = data;
+        this.responseProposal.proposals.sort((a: any, b: any) => {
+          if (a.status === 'aceitoAssociacao') {
+            return -1;
+          }
+          if (b.status === 'aceitoAssociacao') {
+            return 1;
+          }
+          return 0;
+        });
       },
       error: error => {
         console.error(error)
@@ -70,8 +81,8 @@ export class ProposalAcceptedComponent {
     URL.revokeObjectURL(excelUrl);
   }
 
-  refused() {
-    localStorage.setItem('proposalAction', JSON.stringify(this.responseProposal))
+  refused(pro: any) {
+    localStorage.setItem('proposalAction', JSON.stringify(pro))
     const modalRef = this.modalService.open(RecusarPropostaModalComponent, { centered: true });
     modalRef.result.then(data => {
     }, error => {
@@ -79,16 +90,15 @@ export class ProposalAcceptedComponent {
     });
   }
 
-  approve() {
-    this.proposalService.acceptProposal(this.responseProposal._id).subscribe({
+  approve(_id: string) {
+    this.proposalService.acceptProposal(_id).subscribe({
       next: data => {
-        this.toastrService.success('Proposta aceita com sucesso', '', { progressBar: true });
+        this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_ACCEPT_PROPOSAL'), '', { progressBar: true });
         this.location.back();
       },
       error: error => {
         console.error(error);
-        this.toastrService.error('Erro ao aceitar proposta', '', { progressBar: true })
-
+        this.toastrService.error(this.translate.instant('TOASTRS.ERROR_ACCEPT_PROPOSAL'), '', { progressBar: true });
       }
     })
   }

@@ -20,6 +20,9 @@ export class RegisterAssociationComponent implements OnInit {
   formLegalRepresentative!: FormGroup;
   formLegalRepresentativeAddress!: FormGroup;
   isSubmit: boolean = false;
+  regex =  /\b(\d)\1+\b/
+
+  storedLanguage : string | null
 
   @ViewChild('addressnumber') inputNumber: ElementRef;
   @ViewChild('addressnumberlegal') inputNumberLegalRepresentative: ElementRef;
@@ -68,11 +71,11 @@ export class RegisterAssociationComponent implements OnInit {
       neighborhood: ['', [Validators.required]],
       city: ['', [Validators.required]],
       state: ['', [Validators.required]],
-      latitude: ['', [Validators.required]],
-      longitude: ['', [Validators.required]],
       complement: [''],
       referencePoint: [''],
     });
+
+    this.storedLanguage = localStorage.getItem('selectedLanguage');
   }
 
 
@@ -96,8 +99,26 @@ export class RegisterAssociationComponent implements OnInit {
     this.ngxSpinnerService.show();
     this.associationService.register(dto).subscribe({
       next: (success) => {
+
+        let successMessage = 'Associação cadastrada com sucesso!';
+
+        switch(this.storedLanguage) {
+          case 'pt': 
+            successMessage = 'Associação cadastrada com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'Association successfully registered!'
+            break;
+          case 'fr':
+            successMessage = 'Association enregistrée avec succès!'
+            break;
+          case 'es':
+            successMessage = '¡Asociación registrada con éxito!'
+            break;
+        }
+
         this.ngxSpinnerService.hide();
-        this.toastrService.success('Associação cadastrada com sucesso!', '', { progressBar: true });
+        this.toastrService.success(successMessage, '', { progressBar: true });
         this.router.navigate(['/pages/associacao'])
       },
       error: (error) => {
@@ -163,7 +184,12 @@ export class RegisterAssociationComponent implements OnInit {
 
     const address = { ...this.formAddress.value };
 
-    const result: any = await this.nominatimService.getLatLongByAddressq(address.zipCode);
+    const result: any = await this.nominatimService.getLatLongByAddress(
+      address.publicPlace,
+      address.city,
+      'brazil',
+      address.state,
+    );
 
     if (result && result.length > 0) {
 

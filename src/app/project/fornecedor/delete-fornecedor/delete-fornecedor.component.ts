@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { EventEmitter } from '@angular/core';
 import { SupplierService } from '../../../../services/supplier.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-delete-fornecedor',
@@ -19,6 +20,7 @@ export class DeleteFornecedorComponent implements OnInit {
     private toastrService: ToastrService,
     private ngbModal: NgbModal,
     public activeModal: NgbActiveModal,
+    private translate: TranslateService,
     public _supplierService: SupplierService,
   ) { }
 
@@ -38,8 +40,7 @@ export class DeleteFornecedorComponent implements OnInit {
 
   async deleteSupplierById(): Promise<void> {
     await this._supplierService.deleteById(this.fornecedor._id).subscribe((response: any) => {
-      if (response.success)
-        this.toastrService.success('Fornecedor excluído com sucesso!');
+      if (response.success) this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_DELETE_SUPPLIER'), '', { progressBar: true });
     });
 
   }

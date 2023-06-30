@@ -552,7 +552,7 @@ button[disabled] {
 }
 
 .custom-th-contrato {
-  background-color: #F8F8FD;
+  background-color: #f8f8fd;
 }
 
 .association-data-border {
@@ -581,7 +581,7 @@ button[disabled] {
   font-weight: 700;
   line-height: 22px;
   letter-spacing: 2%;
-  color: #F34C41;
+  color: #f34c41;
 }
 
 .content {
@@ -595,4 +595,42 @@ button[disabled] {
 .opener-icon {
   width: 25px;
   height: 25px;
+}
+
+.bi-eye-fill {
+  font-size: 20px;
+}
+
+.grid-45-55 {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 1fr;
+  min-height: 100vh;
+}
+.bg-redefine {
+  background: rgb(83, 116, 135);
+  background: radial-gradient(circle, rgba(83, 116, 135, 1) 0%, rgba(58, 89, 109, 1) 0%, rgba(83, 116, 135, 1) 100%);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+}
+.email {
+  background-image: url("/src/assets/images/icon-email.svg");
+  background-position: 7px 7px;
+  background-repeat: no-repeat;
+}
+.senha {
+  background-image: url("/src/assets/images/icon-senha.svg");
+  background-position: 7px 7px;
+  background-repeat: no-repeat;
+}
+@media only screen and (max-width: 991px) {
+  .grid-45-55 {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    min-height: auto;
+  }
+  .cel {
+    display: none !important;
+  }
 }

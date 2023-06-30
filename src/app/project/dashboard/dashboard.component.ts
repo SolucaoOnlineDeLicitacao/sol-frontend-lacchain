@@ -3,11 +3,18 @@ import { Component, AfterViewInit } from '@angular/core';
 import * as L from "leaflet";
 import { AuthService } from 'src/services/auth.service';
 import { Router } from '@angular/router';
-import { DatamockService } from 'src/services/datamock.service';
 import { AssociationService } from 'src/services/association.service';
 import { AssociationResponseDto } from 'src/dtos/association/association-response.dto';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AssociationBidService } from 'src/services/association-bid.service';
+
+import { ToastrService } from 'ngx-toastr';
+
+import { DashbordService } from 'src/services/dashboard.service';
+import { DashboardResponseDto } from 'src/dtos/dashboard/dashboard-response.dto';
+import { SupplierService } from '../../../services/supplier.service';
+import { SupplierRequestDto } from '../../../dtos/supplier/supplier-request.dto';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -16,83 +23,141 @@ import { AssociationBidService } from 'src/services/association-bid.service';
 export class DashboardComponent implements AfterViewInit {
 
   licitacoes: any = [];
+  licitacoesSearchFormore: any = [];
   associationList!: AssociationResponseDto[];
+  fornecedorList!: SupplierRequestDto[];
 
-  options = {
-    layers: [
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
-    ],
-    zoom: 5,
-    center: L.latLng(-5.79448, -35.211)
-  };
-  layers = [
-    L.circle([-5.79448, -35.211], { radius: 5000 }),
-    L.polygon([[-5.79448, -35.211], [-5.79448, -35.211], [-5.79448, -35.211]]),
-    L.marker([-5.79448, -35.211])
-  ];
+  map: L.DrawMap;
 
-  layersControl = {
-    baseLayers: {
-      'Open Street Map': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' }),
-      'Open Cycle Map': L.tileLayer('https://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
-    },
-    overlays: {
-      'Big Circle': L.circle([46.95, -122], { radius: 5000 }),
-      'Big Square': L.polygon([[46.8, -121.55], [46.9, -121.55], [46.9, -121.7], [46.8, -121.7]])
-    }
-  }
   licitacoesId: any;
   licitacoesList: any[];
   currentPage: number = 1;
-  itensPerPage: number = 6;
+  itensPerPage: number = 10;
+
+  responseDashboard: DashboardResponseDto = {
+    associationRegister: 0,
+    bidInProgress: 0,
+    supplierRegister: 0
+  }
 
   constructor(
-    private datamockService: DatamockService,
     public authService: AuthService,
     private router: Router,
     private associationService: AssociationService,
+    private _supplierService: SupplierService,
     private ngxSpinnerService: NgxSpinnerService,
     private _associationBidService: AssociationBidService,
+
+    private toastrService: ToastrService,
+
+    private dashboardService: DashbordService
+
   ) {
   }
 
   ngAfterViewInit(): void {
-    // this.ngxSpinnerService.show();
 
-    if (this.authService.getAuthenticatedUser().type == 'administrador' || this.authService.getAuthenticatedUser().type == 'fornecedor') {
-      this.ngxSpinnerService.hide();
+    this.ngxSpinnerService.show();
+
+    if (this.authService.getAuthenticatedUser().type == 'fornecedor') {
+      this._associationBidService.listForSupplier().subscribe({
+        next: (data: any[]) => {
+          this.licitacoesList = data
+          this.licitacoesId = data;
+          this.ngxSpinnerService.hide();
+        },
+        error: (error) => {
+          console.error(error)
+          this.ngxSpinnerService.hide();
+        }
+      });
     }
-    this._associationBidService.list().subscribe({
-      next: (data: any[]) => {
-        this.licitacoesList = data;
-        const filterList = this.licitacoesList.filter((licitacao: { invited_suppliers: string[]; }) => {
-          if (licitacao.invited_suppliers && Array.isArray(licitacao.invited_suppliers)) {
-            return licitacao.invited_suppliers.includes(this.authService.getAuthenticatedUser().id);
-          }
-          return false;
-        });
-        console.log(filterList);
-        this.licitacoesId = filterList;
-      },
-      error: (error) => {
-        console.log(error)
-      }
-    });
+
+    if (this.authService.getAuthenticatedUser().type == 'administrador') {
+
+      this.map = L.map('map').setView([-23.6820635, -46.924961], 8);
+
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(this.map);
+
+      this._associationBidService.list().subscribe({
+        next: (data: any[]) => {
+          this.licitacoesSearchFormore = data.filter((item) =>
+            item.modality === 'openClosed' && item.status === 'open').sort((a: any, b: any) =>
+              b.bid_count - a.bid_count);
+          this.ngxSpinnerService.hide();
+        },
+        error: (error) => {
+          console.error(error)
+          this.ngxSpinnerService.hide();
+        }
+      });
+    }
 
     if (this.authService.getAuthenticatedUser().type == 'associacao') {
       // this.ngxSpinnerService.show();
       this._associationBidService.list().subscribe({
         next: data => {
           this.ngxSpinnerService.hide();
-          this.licitacoes = data;
+          this.licitacoes = data.sort((a: any, b: any) => b.bid_count - a.bid_count);
+
+        },
+        error: (error) => {
+          console.error(error)
+          this.ngxSpinnerService.hide();
         }
       })
+    }
+
+  }
+
+  ngOnInit(): void {
+
+    if (this.authService.getAuthenticatedUser().type == 'administrador') {
+
+      this.dashboardService.getData().subscribe({
+        next: data => {
+          this.responseDashboard = data
+        }
+      });
+
+      this.associationService.list().subscribe({
+        next: response => {
+          this.associationList = response;
+          this.associationList.map(item => {
+            this.addMarker(
+              item.name,
+              `/pages/associacao/dados-associacao/${item._id}`,
+              item.address.latitude,
+              item.address.longitude,
+              'association',
+            );
+          })
+        }
+      });
+
+      this._supplierService.supplierList().subscribe({
+        next: response => {
+          this.fornecedorList = response;
+          this.fornecedorList.map(item => {
+            this.addMarker(
+              item.name,
+              `/pages/fornecedor/dados-fornecedor/${item._id}`,
+              item.address.latitude,
+              item.address.longitude,
+              'fornecedor',
+            )
+          })
+        }
+      });
     }
   }
 
   goLicitacoes() {
 
-    this.router.navigate(['/pages/fornecedor/licitacoes']);
+    this.licitacoesList = this.licitacoesSearchFormore;
   }
 
   detailBidsAsAssociation(i: any) {
@@ -100,8 +165,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   detailBids(i: any) {
-    this.router.navigate(['/pages/fornecedor/detalhes-licitacoes']);
-    localStorage.setItem('licitacao', JSON.stringify(i));
+    this.router.navigate(["/pages/fornecedor/licitacoes/detalhes-licitacoes/" + i._id]);
   }
 
   associationDetailBids(i: any) {
@@ -113,4 +177,38 @@ export class DashboardComponent implements AfterViewInit {
     this.router.navigate(['/pages/licitacoes/licitacao-edit', i._id]);
   }
 
+  addMarker(name: string, link: string, lat: string, lng: string, type: string) {
+
+    let icon: L.Icon<L.IconOptions>;
+
+    switch (type) {
+      case 'association':
+        icon = L.icon({
+          iconUrl: '../../../assets/markers/blue.png',
+          iconSize: [36, 59],
+          iconAnchor: [22, 94],
+          popupAnchor: [-3, -76],
+          shadowSize: [68, 95],
+          shadowAnchor: [22, 94]
+        });
+        break;
+      default:
+        icon = L.icon({
+          iconUrl: '../../../assets/markers/green.png',
+          iconSize: [36, 59],
+          iconAnchor: [22, 94],
+          popupAnchor: [-3, -76],
+          shadowSize: [68, 95],
+          shadowAnchor: [22, 94]
+        })
+        break;
+    }
+
+    L.marker(
+      [+lat, +lng],
+      { icon: icon })
+      .bindPopup(
+        `<a href='${link}'>${name}</a>`)
+      .addTo(this.map);
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { CategoryResponseDto } from 'src/dtos/category/category-response.dto';
@@ -34,6 +35,7 @@ export class UpdateCostItemsComponent implements OnInit {
     public localStorage: LocalStorageService,
     private productService: ProductService,
     private categoryService: CategoryService,
+    private translate: TranslateService,
     private toastrService: ToastrService,
     private router: Router,
     private route: ActivatedRoute,
@@ -108,15 +110,16 @@ export class UpdateCostItemsComponent implements OnInit {
       product_relation:'string',
       specification: this.form.controls['specification'].value,
       sustainable: this.form.controls['sustainable'].value,
-    }
+    };
+    
     this.costItemsService.update(this.response._id, this.request).subscribe({
       next: (success) => {
-        this.toastrService.success('Item editado com sucesso!', '', { progressBar: true });
+        this.toastrService.success(this.translate.instant('TOASTRS.EDIT_ITEM'), '', { progressBar: true });
         this.router.navigate(['/pages/itens-custo']);
       },
       error: (error) => {
         console.error(error);
-        this.toastrService.error(error.error.errors[0], 'Erro ao editadar o item', { progressBar: true });
+        this.toastrService.error(error.error.errors[0],this.translate.instant('TOASTRS.ERROR_EDIT_ITEM'), { progressBar: true });
       }
     });
   }

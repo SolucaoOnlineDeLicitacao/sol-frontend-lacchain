@@ -21,29 +21,35 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private toastrService: ToastrService
-  ) { 
+  ) {
     this.form = this.formBuilder.group({
-      email: ['', [ Validators.required, Validators.email ]],
-      password: ['', [ Validators.required ]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
       keep_conn: [false],
     });
   }
 
   ngOnInit(): void {
+    localStorage.clear();
+  }
 
+  clearSpace(event: any) {
+    if(event.charCode === 32) {
+      event.preventDefault()
+    }
   }
 
   onSubmit() {
 
     this.isSubmit = true;
-    if(this.form.status == 'INVALID') {
+    if (this.form.status == 'INVALID') {
       return;
     }
-    
+
     this.ngxSpinnerService.show();
 
     this.authService.authenticate(this.form.value).subscribe({
-      next: async(data) => {
+      next: async (data) => {
         this.authService.setAuthenticatedUser(data);
         this.router.navigate(['/pages/dashboard']);
         this.ngxSpinnerService.hide();

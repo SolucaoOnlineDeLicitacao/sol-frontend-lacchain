@@ -3,7 +3,7 @@ import { AssociationBidRequestDto } from "../association/association-bid.dto";
 export abstract class ModelContractDto {
     _id: string;
     name!: string;
-    bid!: AssociationBidRequestDto;
+    classification!: string;
     createdAt: Date;
     contract: string;
 }
