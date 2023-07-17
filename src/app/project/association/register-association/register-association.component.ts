@@ -21,6 +21,7 @@ export class RegisterAssociationComponent implements OnInit {
   formLegalRepresentativeAddress!: FormGroup;
   isSubmit: boolean = false;
   regex =  /\b(\d)\1+\b/
+  language: string
 
   storedLanguage : string | null
 
@@ -80,6 +81,8 @@ export class RegisterAssociationComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.language = localStorage.getItem('selectedLanguage')
+    console.log('selectedLanguage',this.language)
   }
 
   onSubmit() {

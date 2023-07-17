@@ -19,9 +19,9 @@ export class ModelContractService extends BaseService {
         super();
     }
 
-    modelContractRegister(dto: ModelContractRegisterDto) {
+    modelContractRegister(dto: any) {
         return this.httpClient
-            .post<ModelContractRegisterDto>(`${this.url}/register`, dto, this.authorizedHeader);
+            .post<ModelContractRegisterDto>(`${this.url}/register`, dto, this.authorizedHeaderMulti);
     }
 
     list(): Observable<any> {
@@ -36,9 +36,9 @@ export class ModelContractService extends BaseService {
           .get<ModelContractDto>(`${this.url}/get-by-id/${_id}`, this.authorizedHeader);
       }
 
-    updateModelContract(_Id: string, dto: ModelContractRegisterDto) {
+    updateModelContract(_Id: string, dto: any) {
         return this.httpClient
-            .put(`${this.url}/update/${_Id}`, dto, this.authorizedHeader);
+            .put(`${this.url}/update/${_Id}`, dto, this.authorizedHeaderMulti);
     }
 
     delete(_id: string) {

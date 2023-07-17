@@ -6,44 +6,43 @@ import { HttpClient } from "@angular/common/http";
 import { acceptSupplierDto } from "src/dtos/contratos/acceptSupplier";
 import { singAssociationDto } from "src/dtos/contratos/sing-association";
 import { ContractUpdateStatusItemDto } from "src/dtos/contratos/contract-update-register-request.dto";
-
-
+import { ModelContractClassificationEnum } from "src/enums/modelContract-classification.enum";
+import { LanguageContractEnum } from "src/enums/language-contract.enum";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ContractsService extends BaseService {
-
   private url = `${environment.api.path}/contract`;
 
-  constructor(
-    private httpClient: HttpClient
-  ) {
+  constructor(private httpClient: HttpClient) {
     super();
   }
 
-
   getContract(): Observable<any> {
-    return this.httpClient
-      .get(`${this.url}/list`, this.authorizedHeader)
-      .pipe(map(response => response), catchError(this.serviceError));
+    return this.httpClient.get(`${this.url}/list`, this.authorizedHeader).pipe(
+      map(response => response),
+      catchError(this.serviceError)
+    );
   }
 
   getContractById(_id: string): Observable<any> {
-    return this.httpClient
-      .get(`${this.url}/get-by-id/` + _id, this.authorizedHeader)
-      .pipe(map(response => response), catchError(this.serviceError));
+    return this.httpClient.get(`${this.url}/get-by-id/` + _id, this.authorizedHeader).pipe(
+      map(response => response),
+      catchError(this.serviceError)
+    );
   }
 
   getContractByBidId(_id: string): Observable<any> {
-    return this.httpClient
-      .get(`${this.url}/get-by-bid/` + _id, this.authorizedHeader)
-      .pipe(map(response => response), catchError(this.serviceError));
+    return this.httpClient.get(`${this.url}/get-by-bid/` + _id, this.authorizedHeader).pipe(
+      map(response => response),
+      catchError(this.serviceError)
+    );
   }
 
   updateStatuss(_id: string, dto: acceptSupplierDto): Observable<any> {
     return this.httpClient
-      .put(`${this.url}/update/${_id}`, dto, )
+      .put(`${this.url}/update/${_id}`, dto)
       .pipe(map(this.extractData), catchError(this.serviceError));
   }
 
@@ -71,10 +70,18 @@ export class ContractsService extends BaseService {
       .pipe(map(this.extractData), catchError(this.serviceError));
   }
 
-  getPdf(_id: string) {
-    return firstValueFrom(this.httpClient
-      .get(`${this.url}/contract-pdf/${_id}`, this.authorizedHeader)
-      .pipe(map((response:any) => response))
+  getPdf(
+    _id: string,
+    lang: string = LanguageContractEnum.english,
+    type: ModelContractClassificationEnum = ModelContractClassificationEnum.bens
+  ) {
+    return firstValueFrom(
+      this.httpClient
+        .get(`${this.url}/create-document/${_id}/${lang}/${type}`, {
+          headers: this.authorizedHeaderFile.headers,
+          responseType: "blob",
+        })
+        .pipe(map((response: any) => response))
     );
   }
 }

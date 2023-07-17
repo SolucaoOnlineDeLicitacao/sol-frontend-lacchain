@@ -72,7 +72,7 @@
 
 						<div class="col-sm-12 col-md-6 mt-3">
 							<label for="document"
-								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>CPF/CNPJ</b></label>
+								class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"REGISTER_SUPPLIER.CPF_CNPJ" | translate}}</b></label>
 							<input type="text" formControlName="document" style="text-indent:20px;" class="form-control"
 								mask="000.000.000-00||00.000.000/0000-00" id="document" placeholder="000.000.000-00">
 
@@ -92,6 +92,15 @@
 					</div>
 
 					<div class="mt-3">
+						<label for="type"
+							class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"SIDEBAR.SUPPLIER" | translate}}</b></label>
+					<input *ngIf="supplierList" type="text" value={{supplierList}} readonly style="text-indent:20px;"
+							class="form-control" id="type">
+
+					</div>
+
+
+					<!-- <div class="mt-3">
 						<label for="supplier"
 							class="font-archivo font-size-16 font-weight-medium text-secondary m-0"><b>{{"SIDEBAR.SUPPLIER" | translate}}</b></label>
 						<ng-select formControlName="supplier" [items]="supplierList"
@@ -103,7 +112,7 @@
 							<img src="../../../assets/images/icon-alert.svg" class="img-msg-error" alt>
 							<p class="font-poppins font-size-14 m-0">{{"ERROR_MESSAGES.REQUIRED_SUPPLIER" | translate}}</p>
 						</div>
-					</div>
+					</div> -->
 
 					<div class="mt-4">
 						<div class="row">

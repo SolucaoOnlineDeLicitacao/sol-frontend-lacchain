@@ -47,6 +47,11 @@ export class AssociacaoEditLicitacaoComponent {
 
   daysToDeliveryValidator: boolean = false;
 
+  disableEditLot = false
+
+  lotToEdit: any
+  lotNumber: number
+
   constructor(
     private formBuilder: FormBuilder,
     private toastrService: ToastrService,
@@ -300,7 +305,6 @@ export class AssociacaoEditLicitacaoComponent {
         invited_suppliers: this.invitedSupplierId,
       };
     }
-    console.log('new bid ==>', newBid)
 
     this.associationBidService.updateBid(this.licitacaoId, newBid).subscribe({
       next: (data) => {
@@ -386,7 +390,6 @@ export class AssociacaoEditLicitacaoComponent {
   }
 
   removeSupplier(index: number) {
-    console.log('index', index)
     this.invitedSupplier.splice(index, 1);
     this.invitedSupplierId.splice(index, 1)
   }
@@ -410,10 +413,13 @@ export class AssociacaoEditLicitacaoComponent {
   }
 
   addItem() {
+    const selectedItem = this.costItemsList.find(item => item._id === this.formAddLots.controls["item"].value);
     const newItem: ItemRequestDto = {
       group: 'grupo',
       item: this.formAddLots.controls['item'].value,
       quantity: this.formAddLots.controls['quantity'].value,
+      unitMeasure: selectedItem?.unitMeasure || "",
+      specification: selectedItem.specification
     };
 
     this.item.push(newItem);
@@ -429,7 +435,7 @@ export class AssociacaoEditLicitacaoComponent {
         place_to_delivery: this.formAddLots.controls['deliveryPlaceLots'].value,
         quantity: this.formAddLots.controls['quantity'].value,
         files: this.supplierImg,
-        add_item: [...this.item],
+        add_item: [...this.item]
       };
       this.lots.push(newAllotment);
       this.item = [];
@@ -455,6 +461,86 @@ export class AssociacaoEditLicitacaoComponent {
 
       this.toastrService.error(errorMessage, '', { progressBar: true });
     }
+  }
+  editAllotment(event: any) {
+    switch (event.target.id) {
+      case 'batchName':
+        this.lots[this.lotNumber].allotment_name = event.target.value;
+
+        break
+      case 'deliveryTimeDays':
+        this.lots[this.lotNumber].days_to_delivery = event.target.value
+        break
+      case 'deliveryPlaceLots':
+        this.lots[this.lotNumber].place_to_delivery = event.target.value
+        break
+      default:
+    }
+
+  }
+
+  addAllotmentItem(item: any) {
+    const selectedItem = this.costItemsList.find(item => item._id === this.formAddLots.controls["item"].value);
+    if (selectedItem) {
+      const newItem: ItemRequestDto = {
+        group: "grupo",
+        item: selectedItem.name || "",
+        quantity: this.formAddLots.controls["quantity"].value,
+        unitMeasure: selectedItem.unitMeasure || "",
+        specification: selectedItem.specification
+      };
+      this.lots[this.lotNumber].add_item.push(newItem);
+      // this.formAddLots.controls["item"].reset()
+      // this.formAddLots.controls["quantity"].reset();
+      // this.formAddLots.markAsPristine();
+
+    }
+  }
+
+  saveChanges() {
+    this.disableEditLot = !this.disableEditLot
+
+    this.lots[this.lotNumber].files = this.supplierImg
+  }
+
+  onSelectFileAllotment(event: any) {
+
+    for (let i = 0; i < event.target.files.length; i++) {
+      this.totalFiles.push(event.target.files[i]);
+    }
+
+    if (event.target.files && event.target.files[0]) {
+      this.notImage = false;
+      var filesAmount = event.target.files.length;
+      for (let i = 0; i < filesAmount; i++) {
+        var reader = new FileReader();
+        reader.onload = (event: any) => {
+          this.supplierImg = event.target.result as string;
+
+        };
+        reader.readAsDataURL(event.target.files[i]);
+
+      }
+    }
+
+  }
+
+  removeAllotmentItem(index: number) {
+
+    this.lots[this.lotNumber].add_item.splice(index, 1)
+
+
+  }
+
+  editLot(index: number) {
+
+    this.lotNumber = index
+    this.disableEditLot = !this.disableEditLot
+    this.lotToEdit = this.lots[index]
+
+
+
+
   }
 
   removeLot(index: number) {

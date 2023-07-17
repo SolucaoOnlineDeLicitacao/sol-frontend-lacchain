@@ -34,6 +34,8 @@
             | translate}}</h5>
           <h5 *ngIf="response.status ==='reopened'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.REOPENED' |
             translate}}</h5>
+          <h5 *ngIf="response.status ==='returned'" class="f-size-16 text-info">{{"CREATE_BIDDING_STATUS.RETURNED" |
+            translate}}</h5>
         </div>
         <div class="col-md-10 mt-3 ">
           <h6 class="font-poppins f-size-14 text-secondary">{{"SIDEBAR.ASSOCIATION" | translate}}</h6>
@@ -60,7 +62,7 @@
         <div class="col-md-4"></div>
         <div class="col-md-4 mt-3 ">
           <h6 class="font-poppins f-size-14 text-secondary">{{"ADMINISTRATION_BIDDING.START_AT" | translate}}</h6>
-          <h5 class="f-size-16">{{response.start_at | date: 'dd/MM/yyyy'}}</h5>
+          <h5 class="f-size-16">{{response.start_at | date: 'dd/MM/yyyy, h:mm a'}}</h5>
         </div>
         <div class="col-md-4 mt-3 ">
           <h6 class="font-poppins f-size-14 text-secondary">{{"ADMINISTRATION_BIDDING.END_AT" | translate}}</h6>
@@ -69,7 +71,7 @@
         <div class="col-md-4">
           <h6 class="font-poppins f-size-14 text-secondary">{{"ADMINISTRATION_BIDDING_DETAIL.DEADLINE_DELIVERY" |
             translate}}</h6>
-          <h5 class="f-size-16">{{response.days_to_delivery | date: 'dd/MM/yyyy'}}</h5>
+          <h5 class="f-size-16">{{response.days_to_delivery}}</h5>
         </div>
         <div class="col-md-4 mt-3 ">
           <h6 class="font-poppins f-size-14 text-secondary">{{"ADMINISTRATION_BIDDING_DETAIL.LOCAL_DELIVERY" |
@@ -112,11 +114,13 @@
             class="br-10 w-100 h50 border btn-light mb-2">
             <strong>{{"ADMINISTRATION_BIDDING_DETAIL.DOWNLOAD_ATA" | translate}}</strong>
           </button>
-          <button (click)="openModal('edital')"
+          <button *ngIf="response.status !=='draft'" (click)="openModal('edital')"
             class="br-10 w-100 h50 border btn btn-light mb-2"><strong>
               {{"ADMINISTRATION_BIDDING_DETAIL.DOWNLOAD_EDITAL" | translate}}</strong></button>
-          <button (click)="downloadComplentary()"
-            class="br-10 w-100 h50 border btn btn-light"><strong>
+          <button *ngIf="response.status ==='draft'" (click)="openModal('edital')"
+            class="br-10 w-100 h50 border btn btn-light mb-2"><strong>
+              {{"ADMINISTRATION_BIDDING_DETAIL.DOWNLOAD_EDITAL" | translate}}</strong></button>
+          <button (click)="downloadComplentary()" class="br-10 w-100 h50 border btn btn-light"><strong>
               {{"DOWNLOAD_COMPLEMENTARY_ARCHIVES" | translate}}</strong></button>
         </div>
       </div>
@@ -136,7 +140,7 @@
             </div>
             <div class="col-md-5  d-flex justify-content-between align-items-center">
               <div>
-                <h6 class="font-poppins f-size-14 text-secondary">Itens</h6>
+                <h6 class="font-poppins f-size-14 text-secondary">{{"SIDEBAR.ITEMS" | translate}}</h6>
                 <h5 class="f-size-16">{{item.add_item.length || '0'}}</h5>
               </div>
 
@@ -167,14 +171,18 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th class="br-tabele bg-light" scope="col">Item</th>
+                    <th class="br-tabele bg-light" scope="col">{{"SIDEBAR.ITEMS" | translate}}</th>
                     <th class="bg-light" scope="col">{{"CREATE_BIDDING.QUANTITY" | translate}}</th>
+                    <th class="bg-light" scope="col">{{"COST_ITEMS.UNIT_TITLE" | translate}}</th>
+                    <th class="bg-light" scope="col">Especificações</th>
                   </tr>
                 </thead>
                 <tbody *ngFor="let ele of item.add_item; let i = index ">
                   <tr>
                     <td>{{ele.item || '--'}}</td>
                     <td>{{ele.quantity || '--'}}</td>
+                    <td>{{ele.unitMeasure || '--'}}</td>
+                    <td>{{ele.specification || '...'}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -182,9 +190,8 @@
             <div class="col-md-12">
               <div class="row" *ngIf="!item.disabledBtn">
                 <div class="col-md-6 mt-3">
-                  <button *ngIf="response.status == 'open'"
-                    (click)="viewProposal(item, 'send')" class="btn btn-outline-dark br-10 w-100 "
-                    type="button"><strong>Preencher
+                  <button *ngIf="response.status == 'open'" (click)="viewProposal(item, 'send')"
+                    class="btn btn-outline-dark br-10 w-100 " type="button"><strong>Preencher
                       {{"SUPPLIER_BIDDING.FILLOUT_PROPOSAL_SPREADSHEET" | translate}}</strong></button>
                   <!-- <button *ngIf="response.status == 'reopened'" (click)="viewProposal(item, 'send')"
                     class="btn btn-outline-dark br-10 w-100 " type="button"><strong>Preencher
@@ -197,7 +204,8 @@
                   <!-- <button *ngIf="response.status == 'open'"
                     (click)="viewProposal(item, 'create')" class="btn btn-dark br-10 w-100"
                     type="button"><strong>Preencher proposta</strong></button> -->
-                  <button *ngIf="response.status == 'open' " (click)="viewProposal(item, 'create')" class="btn btn-dark br-10 w-100" type="button"><strong>{{"SUPPLIER_BIDDING.FILLOUT_PROPOSAL"
+                  <button *ngIf="response.status == 'open' " (click)="viewProposal(item, 'create')"
+                    class="btn btn-dark br-10 w-100" type="button"><strong>{{"SUPPLIER_BIDDING.FILLOUT_PROPOSAL"
                       |
                       translate}}</strong></button>
                   <button *ngIf="response.status == 'awaiting' " (click)="viewProposal(item, 'create')"

@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { BidUpdateDateDto } from 'src/dtos/bid/bid-update-date.dto';
 import { AuthService } from 'src/services/auth.service';
+import { PlataformService } from 'src/services/plataform.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +22,8 @@ export class LoginComponent implements OnInit {
     private ngxSpinnerService: NgxSpinnerService,
     private authService: AuthService,
     private router: Router,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private plataformService: PlataformService,
   ) {
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -51,6 +54,21 @@ export class LoginComponent implements OnInit {
     this.authService.authenticate(this.form.value).subscribe({
       next: async (data) => {
         this.authService.setAuthenticatedUser(data);
+        this.plataformService.list().subscribe({
+          next: async (res: BidUpdateDateDto) => {
+            const config: BidUpdateDateDto = {
+              start_at: res.start_at,
+              end_at: res.end_at
+            }
+            localStorage.setItem("plataform-config", JSON.stringify(config));
+          },
+          error: (error) => {
+            console.error(error);
+            this.toastrService.error(error.error.errors[0], undefined, { progressBar: true, });
+            this.ngxSpinnerService.hide();
+          }
+        })
+    
         this.router.navigate(['/pages/dashboard']);
         this.ngxSpinnerService.hide();
       },

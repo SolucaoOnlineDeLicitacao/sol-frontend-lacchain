@@ -5,6 +5,8 @@ import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ModelContractDto } from 'src/dtos/model-contract/model-contract.copy';
+import { LanguageContractEnum } from 'src/enums/language-contract.enum';
+import { ModelContractClassificationEnum } from 'src/enums/modelContract-classification.enum';
 import { AssociationBidService } from 'src/services/association-bid.service';
 import { ModelContractService } from 'src/services/model-contract.service';
 
@@ -15,8 +17,11 @@ import { ModelContractService } from 'src/services/model-contract.service';
 })
 export class EditContractTemplatesComponent {
 
+  fileToUpload: any;
+  modelContractClassificationEnum = ModelContractClassificationEnum;
   form: FormGroup;
   templateList!: ModelContractDto;
+  languageContractEnum = LanguageContractEnum;
   licitacoesList: any = [];
   modelContractId!: string;
   isSectionOpenFornecedor: boolean = false;
@@ -24,6 +29,7 @@ export class EditContractTemplatesComponent {
   isSectionOpenContrato: boolean = false;
   isSectionOpenConvenio: boolean = false;
   isSectionOpenLicitacao: boolean = false;
+  isSectionOpenLote: boolean = false;
   htmlContent = '';
   config: AngularEditorConfig = {
     editable: true,
@@ -66,10 +72,11 @@ export class EditContractTemplatesComponent {
     private toastrService: ToastrService,
   ) {
     this.form = this.formBuilder.group({
-      _id: [''],
-      name: [''],
-      classification: [''],
-      contract: ['']
+      _id: '',
+      name: '',
+      classification: '',
+      contract: '',
+      language: ''
     })
   }
 
@@ -86,7 +93,6 @@ export class EditContractTemplatesComponent {
             classification: success.classification,
             contract: success.contract
           });
-
         }
       })
     })
@@ -98,13 +104,27 @@ export class EditContractTemplatesComponent {
 
   onSubmit() {
 
+    if(!this.form.value.classification || !this.form.value.language || !this.fileToUpload){
+      this.toastrService.error('Preencha todos os campos obrigatórios!', '', { progressBar: true });
+      return;
+    }
+
     let dto = {
       name: this.form.value.name,
       classification: this.form.value.classification,
-      contract: this.form.value.contract
+      contract: this.form.value.contract,
+      language: this.form.value.language
     }
 
-    this._modelContractService.updateModelContract(this.modelContractId, dto).subscribe({
+    const formData = new FormData();
+    formData.append("name", this.form.value.name);
+    formData.append("classification", this.form.value.classification);
+    formData.append("contract", this.form.value.contract);
+    formData.append("language", this.form.value.language);
+    formData.append("file", this.fileToUpload);
+
+
+    this._modelContractService.updateModelContract(this.modelContractId, formData).subscribe({
       next: (success) => {
 
         let successMessage = 'Modelo de contrato atualizado com sucesso!';
@@ -174,8 +194,24 @@ export class EditContractTemplatesComponent {
     }
   }
 
+  toggleSectionLote() {
+    if (this.isSectionOpenLote) {
+      this.isSectionOpenLote = false
+    } else {
+      this.isSectionOpenLote = true
+    }
+  }
+
   backContact() {
     this.router.navigate(['/pages/modelo-contratos'])
+  }
+
+  onFileSelected(event: any ) {
+    const file: File = event.target.files[0];
+
+    if (file) {
+      this.fileToUpload = file;
+    }
   }
 
 }

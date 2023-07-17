@@ -5,6 +5,9 @@ import { BaseService } from "./base.service";
 import { AssociationBidRequestDto } from "src/dtos/association/association-bid.dto";
 import { BidChangeStatusRequestDto } from "src/dtos/bid/bid-change-status-request.dto";
 import { Observable, catchError, firstValueFrom, map } from "rxjs";
+import { BidUpdateDateDto } from "src/dtos/bid/bid-update-date.dto";
+import { LanguageContractEnum } from "src/enums/language-contract.enum";
+import { ModelContractClassificationEnum } from "src/enums/modelContract-classification.enum";
 
 @Injectable()
 export class AssociationBidService extends BaseService {
@@ -52,8 +55,18 @@ export class AssociationBidService extends BaseService {
     return this.httpClient.put(`${this.url}/change-status/${bidId}`, dto, this.authorizedHeader);
   }
 
+  updateOpenDate(dto: BidUpdateDateDto) {
+    return this.httpClient.put(`${this.url}/update-open-date/`, dto, this.authorizedHeader);
+  }
+
   updateBid(bidId: string, dto: AssociationBidRequestDto) {
     return this.httpClient.put(`${this.url}/update/${bidId}`, dto, this.authorizedHeader);
+  }
+
+  deleteBid(Id: string): Observable<AssociationBidRequestDto> {
+    return this.httpClient
+      .delete(`${this.url}/delete-by-id/${Id}`, this.authorizedHeader)
+      .pipe(map(response => response), catchError(this.serviceError));
   }
 
   download(id: string, type: string): any {
@@ -61,20 +74,31 @@ export class AssociationBidService extends BaseService {
     //     .get(`${this.url}/download/${id}/${type}`, this.authorizedHeader)
 
     return this.httpClient.get(`${this.url}/download/${id}/${type}`, {
-        headers: this.authorizedHeaderFile.headers,
-        responseType: "blob",
-      }).pipe(map(response => response), catchError(this.serviceError))
+      headers: this.authorizedHeaderFile.headers,
+      responseType: "blob",
+    }).pipe(map(response => response), catchError(this.serviceError))
   }
 
 
   bidPdf(_id: string, type: string) {
     return firstValueFrom(this.httpClient
       .get(`${this.url}/bid-pdf/${_id}/${type}`, this.authorizedHeader)
-      .pipe(map((response:any) => response))
+      .pipe(map((response: any) => response))
     );
   }
 
   listByAssociation() {
     return this.httpClient.get(`${this.url}/list-by-association`, this.authorizedHeader);
+  }
+
+  downloadDocument(_id:string, lang: LanguageContractEnum, type:ModelContractClassificationEnum){
+    return firstValueFrom(
+      this.httpClient
+        .get(`${this.url}/create-document/${_id}/${lang}/${type}`, {
+          headers: this.authorizedHeaderFile.headers,
+          responseType: "blob",
+        })
+        .pipe(map((response: any) => response))
+    );
   }
 }

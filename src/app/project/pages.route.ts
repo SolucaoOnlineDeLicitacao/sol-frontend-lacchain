@@ -89,6 +89,8 @@ import { ReportContractComponent } from "./report-contract/report-contract.compo
 import { ReportGeneralComponent } from "./report-general/report-general.component";
 import { ReportGeneratedComponent } from "./report-generated/report-generated.component";
 import { AdministrationIntegrationsComponent } from "./administration-integrations/administration-integrations.component";
+import { AdministrationLicitacoesRevisorComponent } from "./administration-licitacoes-revisor/administration-licitacoes-revisor.component";
+import { AdministrationAgreementRevisorComponent } from "./administration-agreement-revisor/administration-agreement-revisor.component";
 
 
 const routerConfig: Routes = [
@@ -183,6 +185,8 @@ const routerConfig: Routes = [
       },
       { path: "proposal-screening", component: ProposalScreeningComponent },
       { path: "licitacoes", component: AdministrationLicitacoesComponent },
+      { path: "bids-proofreader", component: AdministrationLicitacoesRevisorComponent },
+      { path: "agreement-proofreader", component: AdministrationAgreementRevisorComponent },
       {
         path: "licitacoes/detalhes-licitacoes/:_id",
         component: AdministrationDetailLicitacaoComponent,
@@ -234,4 +238,4 @@ const routerConfig: Routes = [
   imports: [RouterModule.forChild(routerConfig)],
   exports: [RouterModule],
 })
-export class PagesRoutingModule {}
+export class PagesRoutingModule { }

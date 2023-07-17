@@ -7,8 +7,10 @@ import { LocalStorageService } from "src/services/local-storage.service";
 import { ProposalService } from "src/services/proposal.service";
 import { AssociationBidService } from "src/services/association-bid.service";
 import { TranslateService } from "@ngx-translate/core";
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import { LanguageContractEnum } from "src/enums/language-contract.enum";
+import { ModelContractClassificationEnum } from "src/enums/modelContract-classification.enum";
 
 @Component({
   selector: "app-fornecedor-detalhe-licitacao",
@@ -23,7 +25,7 @@ export class FornecedorDetalheLicitacaoComponent {
   associationName: UserListResponseDto;
   listLote: AllotmentResponseDto[];
   map: Map<number, number> = new Map();
-  storedLanguage: string | null
+  storedLanguage: string | null;
   proposals: any = [];
   reviwerInfo: any;
 
@@ -37,7 +39,7 @@ export class FornecedorDetalheLicitacaoComponent {
 
     private proposalService: ProposalService,
     private associationBidService: AssociationBidService
-  ) { }
+  ) {}
   ngOnInit(): void {
     this.route.data.subscribe({
       next: data => {
@@ -52,7 +54,7 @@ export class FornecedorDetalheLicitacaoComponent {
         this.getVerify();
       },
     });
-    this.storedLanguage = localStorage.getItem('selectedLanguage');
+    this.storedLanguage = localStorage.getItem("selectedLanguage");
   }
 
   openDetail(value: number) {
@@ -65,145 +67,121 @@ export class FornecedorDetalheLicitacaoComponent {
 
   async openModal(command: string) {
     if (command === "edital") {
-      const pdfDownaload = await this.bidService.bidPdf(this.response._id, 'De Edital');
-
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = pdfDownaload;
-
-      if (tempDiv) {
-        html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
-          const pdf = new jsPDF('p', 'mm', 'a4');
-        
-          const imgData = canvas.toDataURL('image/png');
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight() / 2;
-          const marginLeft = 10;
-          const marginTop = 10;
-        
-          const maxFontSize = 12;
-          const lineHeight = 1.2;
-        
-          const footerSpacing = 10; 
-        
-          const text = tempDiv.innerText;
-          const textLines = pdf.splitTextToSize(text, pdfWidth - marginLeft * 2);
-        
-          let fontSize = maxFontSize;
-          let textHeight = (1) * pdf.internal.scaleFactor;
-        
-          let startY = marginTop;
-          let remainingText = textLines;
-        
-          while (remainingText.length) {
-            if (startY + textHeight > pdfHeight - marginTop - footerSpacing) {
-              pdf.addPage();
-              startY = marginTop;
-            }
-        
-            const availableSpace = pdfHeight - startY - marginTop - footerSpacing;
-            const maxLines = Math.floor(availableSpace / textHeight);
-            const textPage = remainingText.splice(0, maxLines);
-            const footerY = pdf.internal.pageSize.getHeight() - footerSpacing;
-        
-            pdf.text(textPage, marginLeft, startY);
-            startY += textPage.length * textHeight;
-            
-            if (startY + textHeight > pdfHeight - marginTop) {
-              pdf.text('', marginLeft, footerY);
-            }
-          }
-        
-          const pdfDataUri = pdf.output('datauristring');
-          const link = document.createElement('a');
-          link.href = pdfDataUri;
-          link.download = 'edital.pdf';
-          link.click();
-        
-          document.body.removeChild(tempDiv);
-        });
+      let type = ModelContractClassificationEnum.editalBens;
+      switch (this.response.classification) {
+        case "servicos":
+          type = ModelContractClassificationEnum.editalServicos;
+          break;
+        case "obras":
+          type = ModelContractClassificationEnum.editalObras;
+          break;
+        case "bens":
+          type = ModelContractClassificationEnum.editalBens;
+          break;
+        default:
+          break;
       }
-      //const result = await this.associationBidService.download(this.response._id, "editalFile");
-      //const file = new Blob([result], { type: "application/pdf" });
-      //const fileURL = URL.createObjectURL(file);
-      //window.open(fileURL);
-      //this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_DOWNLOAD'), '', { progressBar: true });
+
+      const selectedLanguage = this.translate.currentLang;
+      let language;
+      switch (selectedLanguage) {
+        case "pt":
+          language = LanguageContractEnum.portuguese;
+          break;
+        case "en":
+          language = LanguageContractEnum.english;
+          break;
+        case "es":
+          language = LanguageContractEnum.spanish;
+          break;
+        case "fr":
+          language = LanguageContractEnum.french;
+          break;
+        default:
+          language = LanguageContractEnum.english;
+          break;
+      }
+
+      await this.bidService
+        .downloadDocument(this.response._id, language, type)
+        .then(data => {
+          const buffer = data;
+          const file = new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const fileURL = URL.createObjectURL(file);
+          const link = document.createElement("a");
+          link.href = fileURL;
+          const name = this.response.bid_count + "/" + new Date(this.response.createdAt).getFullYear();
+          link.setAttribute("download", `Edital-${name}.docx`);
+          link.style.display = "none"; // Oculta o link no DOM
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch(error => {
+          console.error(error);
+          this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+        });
     }
     if (command === "ata") {
       try {
-
-        const pdfDownaload = await this.associationBidService.bidPdf(this.response._id, 'De Ata');
-
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = pdfDownaload;
-
-        if (tempDiv) {
-          html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
-            const pdf = new jsPDF('p', 'mm', 'a4');
-          
-            const imgData = canvas.toDataURL('image/png');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight() / 2;
-            const marginLeft = 10;
-            const marginTop = 10;
-          
-            const maxFontSize = 12;
-            const lineHeight = 1.2;
-          
-            const footerSpacing = 10; 
-          
-            const text = tempDiv.innerText;
-            const textLines = pdf.splitTextToSize(text, pdfWidth - marginLeft * 2);
-          
-            let fontSize = maxFontSize;
-            let textHeight = (1) * pdf.internal.scaleFactor;
-          
-            let startY = marginTop;
-            let remainingText = textLines;
-          
-            while (remainingText.length) {
-              if (startY + textHeight > pdfHeight - marginTop - footerSpacing) {
-                pdf.addPage();
-                startY = marginTop;
-              }
-          
-              const availableSpace = pdfHeight - startY - marginTop - footerSpacing;
-              const maxLines = Math.floor(availableSpace / textHeight);
-              const textPage = remainingText.splice(0, maxLines);
-              const footerY = pdf.internal.pageSize.getHeight() - footerSpacing;
-          
-              pdf.text(textPage, marginLeft, startY);
-              startY += textPage.length * textHeight;
-              
-              if (startY + textHeight > pdfHeight - marginTop) {
-                pdf.text('', marginLeft, footerY);
-              }
-            }
-          
-            const pdfDataUri = pdf.output('datauristring');
-            const link = document.createElement('a');
-            link.href = pdfDataUri;
-            link.download = 'ata.pdf';
-            link.click();
-          
-            document.body.removeChild(tempDiv);
-          });
+        const selectedLanguage = this.translate.currentLang;
+        let language;
+        switch (selectedLanguage) {
+          case "pt":
+            language = LanguageContractEnum.portuguese;
+            break;
+          case "en":
+            language = LanguageContractEnum.english;
+            break;
+          case "es":
+            language = LanguageContractEnum.spanish;
+            break;
+          case "fr":
+            language = LanguageContractEnum.french;
+            break;
+          default:
+            language = LanguageContractEnum.english;
+            break;
         }
-      } catch {
 
-        let errorMessage = 'Modelo de contrato não cadastrado';
+        await this.bidService
+          .downloadDocument(this.response._id, language, ModelContractClassificationEnum.ata)
+          .then(data => {
+            const buffer = data;
+            const file = new Blob([buffer], {
+              type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            });
+            const fileURL = URL.createObjectURL(file);
+            const link = document.createElement("a");
+            link.href = fileURL;
+            const name = this.response.bid_count + "/" + new Date(this.response.createdAt).getFullYear();
+            link.setAttribute("download", `Ata-${name}.docx`);
+            link.style.display = "none"; // Oculta o link no DOM
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          })
+          .catch(error => {
+            console.error(error);
+            this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+          });
+      } catch {
+        let errorMessage = "Modelo de contrato não cadastrado";
 
         switch (this.storedLanguage) {
-          case 'pt':
-            errorMessage = 'Modelo de contrato não cadastrado'
+          case "pt":
+            errorMessage = "Modelo de contrato não cadastrado";
             break;
-          case 'en':
-            errorMessage = 'Unregistered contract template'
+          case "en":
+            errorMessage = "Unregistered contract template";
             break;
-          case 'fr':
-            errorMessage = "Modèle de contrat non enregistré"
+          case "fr":
+            errorMessage = "Modèle de contrat non enregistré";
             break;
-          case 'es':
-            errorMessage = 'Modelo de contrato no registrado'
+          case "es":
+            errorMessage = "Modelo de contrato no registrado";
             break;
         }
 
@@ -216,40 +194,38 @@ export class FornecedorDetalheLicitacaoComponent {
       //window.open(url);
       //this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_DOWNLOAD'), '', { progressBar: true });
     }
-    if(command === 'arquivoComplementar'){
+    if (command === "arquivoComplementar") {
       const result = await this.bidService.download(this.response._id, "ataFile").toPromise();
 
       const reader = new FileReader();
 
       reader.onload = (event: ProgressEvent<FileReader>) => {
         const result = event.target?.result;
-        
-        if (typeof result === 'string') {
+
+        if (typeof result === "string") {
           const array = JSON.parse(result);
-     
-          for(let dados of array){
-            
+
+          for (let dados of array) {
             const pdfData = new Uint8Array(dados.result.data);
-            const file = new Blob([pdfData], { type: 'application/pdf' });
-            
+            const file = new Blob([pdfData], { type: "application/pdf" });
+
             const fileURL = URL.createObjectURL(file);
-  
-            const downloadLink = document.createElement('a');
+
+            const downloadLink = document.createElement("a");
             downloadLink.href = fileURL;
-            downloadLink.download = 'arquivoComplementar.pdf';
-  
+            downloadLink.download = "arquivoComplementar.pdf";
+
             document.body.appendChild(downloadLink);
             downloadLink.click();
             document.body.removeChild(downloadLink);
           }
-          
         } else {
-          console.error('Error ao ler o pdf..');
+          console.error("Error ao ler o pdf..");
         }
       };
 
       reader.onerror = (event: ProgressEvent<FileReader>) => {
-        console.error('Error ao ler o pdf.');
+        console.error("Error ao ler o pdf.");
       };
 
       reader.readAsText(result);
@@ -305,44 +281,40 @@ export class FornecedorDetalheLicitacaoComponent {
     }
   }
 
-  async downloadComplentary(){
-    
+  async downloadComplentary() {
     const result = await this.bidService.download(this.response._id, "ataFile").toPromise();
 
-      const reader = new FileReader();
+    const reader = new FileReader();
 
-      reader.onload = (event: ProgressEvent<FileReader>) => {
-        const result = event.target?.result;
-        
-        if (typeof result === 'string') {
-          const array = JSON.parse(result);
-     
-          for(let dados of array){
-            
-            const pdfData = new Uint8Array(dados.result.data);
-            const file = new Blob([pdfData], { type: 'application/pdf' });
-            
-            const fileURL = URL.createObjectURL(file);
-  
-            const downloadLink = document.createElement('a');
-            downloadLink.href = fileURL;
-            downloadLink.download = 'arquivoComplementar.pdf';
-  
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-          }
-          
-        } else {
-          console.error('Error ao ler o pdf..');
+    reader.onload = (event: ProgressEvent<FileReader>) => {
+      const result = event.target?.result;
+
+      if (typeof result === "string") {
+        const array = JSON.parse(result);
+
+        for (let dados of array) {
+          const pdfData = new Uint8Array(dados.result.data);
+          const file = new Blob([pdfData], { type: "application/pdf" });
+
+          const fileURL = URL.createObjectURL(file);
+
+          const downloadLink = document.createElement("a");
+          downloadLink.href = fileURL;
+          downloadLink.download = "arquivoComplementar.pdf";
+
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
         }
-      };
+      } else {
+        console.error("Error ao ler o pdf..");
+      }
+    };
 
-      reader.onerror = (event: ProgressEvent<FileReader>) => {
-        console.error('Error ao ler o pdf.');
-      };
+    reader.onerror = (event: ProgressEvent<FileReader>) => {
+      console.error("Error ao ler o pdf.");
+    };
 
-      reader.readAsText(result);
-
+    reader.readAsText(result);
   }
 }

@@ -37,7 +37,6 @@ export class UserDataFornecedorComponent implements OnInit {
                   success.supplier = sup.name
                 }
               }
-              console.log('o supp eh', success)
               this.user = success;
               this.ngxSpinnerService.hide();
             },

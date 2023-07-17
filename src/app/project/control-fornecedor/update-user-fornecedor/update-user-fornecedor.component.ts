@@ -17,7 +17,7 @@ export class UpdateUserFornecedorComponent implements OnInit {
   isSubmit: boolean = false;
   userId!: string;
 
-  supplierList: any = []
+  supplierList: any 
 
   constructor(
     private formBuilder: FormBuilder,
@@ -46,29 +46,40 @@ export class UpdateUserFornecedorComponent implements OnInit {
       this.userService.getById(params['id']).subscribe({
         next: (success) => {
           this.userId = success._id;
-          this.supplierService.supplierList().subscribe({
-            next: (successSup) => {
-              for(let sup of successSup){
-                if(success.supplier == sup._id){
-                  this.form.patchValue({
-                    name: success.name,
-                    email: success.email,
-                    supplier: sup.name,
-                    phone: success.phone,
-                    document: success.document
-                  });
-        
-                }
-              }
-              this.ngxSpinnerService.hide();
-              
-              this.supplierList = successSup;
-            },
-            error: (error) => {
-              console.error(error.error.errors[0]);
-              this.ngxSpinnerService.hide();
-            }
+          this.form.patchValue({
+            name: success.name,
+            email: success.email,
+            supplier: success.supplier,
+            phone: success.phone,
+            document: success.document
           });
+          this.supplierList = success.supplier.name
+   
+          this.ngxSpinnerService.hide();
+          // this.supplierService.supplierList().subscribe({
+          //   next: (successSup) => {
+          //     for(let sup of successSup){
+          //       if(success.supplier == sup._id){
+          //         this.form.patchValue({
+          //           name: success.name,
+          //           email: success.email,
+          //           supplier: sup.name,
+          //           phone: success.phone,
+          //           document: success.document
+          //         });
+        
+          //       }
+          //     }
+          //     this.ngxSpinnerService.hide();
+              
+              
+          //     this.supplierList = success;
+          //   },
+          //   error: (error) => {
+          //     console.error(error.error.errors[0]);
+          //     this.ngxSpinnerService.hide();
+          //   }
+          // });
       
         },
         error: (error) => {
@@ -87,6 +98,7 @@ export class UpdateUserFornecedorComponent implements OnInit {
     if (this.form.status == 'INVALID' || (this.form.controls['document'].value?.length !== 11 && this.form.controls['document'].value?.length !== 14)) {
       return;
     }
+    
 
     this.userService.updateById(this.userId, this.form.value).subscribe({
       next: (success) => {

@@ -18,6 +18,7 @@ export class ProposalAcceptedComponent {
   responseBid: any;
   haveAccept: Boolean = false;
   responseProposal: any;
+  user: any
 
   constructor(
     private proposalService: ProposalService,
@@ -32,11 +33,18 @@ export class ProposalAcceptedComponent {
   }
 
   ngOnInit(): void {
+    this.getResponse()
+  }
+
+  getResponse() {
     let response: any = localStorage.getItem('bidResponse');
     this.responseBid = JSON.parse(response);
+    let userType: any = localStorage.getItem('user');
+    this.user = JSON.parse(userType);
     this.proposalService.listProposalByBid(this.responseBid._id).subscribe({
       next: data => {
         this.responseProposal = data;
+        console.log('response proposal', data)
         this.responseProposal.proposals.sort((a: any, b: any) => {
           if (a.status === 'aceitoAssociacao') {
             return -1;
@@ -51,6 +59,45 @@ export class ProposalAcceptedComponent {
         console.error(error)
       }
     })
+  }
+
+  accept(event: any) {
+    const dto = {
+      acceptedRevisorAt:  new Date().toDateString(),
+      reviewer_accept:  true
+    }
+    this.proposalService.acceptProposalReviewer(event._id,dto).subscribe({
+      next: data => {
+        this.getResponse()
+        this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_ACCEPT_PROPOSAL'), '', { progressBar: true });
+       // this.location.back();
+      },
+      error: error => {
+        console.error(error);
+        this.toastrService.error(this.translate.instant('TOASTRS.ERROR_ACCEPT_PROPOSAL'), '', { progressBar: true });
+      }
+    })
+  }
+   
+
+  
+  refuse(event:any) {
+    const dto = {
+      acceptedRevisorAt:  new Date().toDateString(),
+      reviewer_accept:  false
+    }
+    this.proposalService.acceptProposalReviewer(event._id,dto).subscribe({
+      next: data => {
+        this.getResponse()
+        this.toastrService.success('Proposta recusada com sucesso!', '', { progressBar: true });
+       // this.location.back();
+      },
+      error: error => {
+        console.error(error);
+        this.toastrService.error('Erro ao recusar proposta!', '', { progressBar: true });
+      }
+    })
+
   }
 
   open() {
@@ -104,3 +151,8 @@ export class ProposalAcceptedComponent {
   }
 
 }
+
+// so exibe  botoes se for na melhor proposta
+// depois que a associacao aceitou, pode habilitar o botao ou exibir para a adm aceitar tbm
+// depois do aceito ou recusa da adm retirar os botoes
+// se associacao recusar e a adm aceitou a recusa a associacao pode selecionar outra proposta

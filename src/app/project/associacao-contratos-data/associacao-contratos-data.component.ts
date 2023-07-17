@@ -8,8 +8,10 @@ import { ConvenioService } from "src/services/convenio.service";
 import { ContractsService } from "../../../services/contract.service";
 import { ToastrService } from "ngx-toastr";
 import { UpdateContractModalComponent } from "./update-contract-modal/update-contract-modal.component";
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import { LanguageContractEnum } from "src/enums/language-contract.enum";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-associacao-contratos-data",
@@ -23,7 +25,7 @@ export class AssociacaoContratosDataComponent {
 
   totalValue: number = 0;
 
-  storedLanguage : string | null
+  storedLanguage: string | null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -32,6 +34,7 @@ export class AssociacaoContratosDataComponent {
     public ontractsService: AuthService,
     private contractsService: ContractsService,
     private toastrService: ToastrService,
+    private translate: TranslateService
   ) {
     this.blockSupplier = this.formBuilder.group({
       message: [""],
@@ -45,15 +48,15 @@ export class AssociacaoContratosDataComponent {
       next: data => {
         this.convenio = data;
 
-        let quantity: number = 0
+        let quantity: number = 0;
         for (let iterator of data.proposal_id.allotment) {
           quantity = iterator.add_item.reduce((acc: number, item: any) => acc + Number(item.quantity), 0) + quantity;
         }
         this.totalValue = data.value / quantity;
-      }
+      },
     });
 
-    this.storedLanguage = localStorage.getItem('selectedLanguage');
+    this.storedLanguage = localStorage.getItem("selectedLanguage");
   }
 
   open(contentBlocked: any) {
@@ -63,29 +66,34 @@ export class AssociacaoContratosDataComponent {
   openUpdateContractModal() {
     const modalRef = this.modalService.open(UpdateContractModalComponent, { centered: true });
     modalRef.componentInstance.response = this.convenio;
-    modalRef.result.then(data => {
-      this.contractsService.getContractById(this.convenio._id).subscribe({
-        next: data => {
-          this.convenio = data;
-          let quantity: number = 0
-          for (let iterator of data.proposal_id.allotment) {
-            quantity = iterator.add_item.reduce((acc: number, item: any) => acc + Number(item.quantity), 0) + quantity;
-          }
-          this.totalValue = data.value / quantity;
-        }
-      });
-    }, error => {
-      this.contractsService.getContractById(this.convenio._id).subscribe({
-        next: data => {
-          this.convenio = data;
-          let quantity: number = 0
-          for (let iterator of data.proposal_id.allotment) {
-            quantity = iterator.add_item.reduce((acc: number, item: any) => acc + Number(item.quantity), 0) + quantity;
-          }
-          this.totalValue = data.value / quantity;
-        }
-      });
-    });
+    modalRef.result.then(
+      data => {
+        this.contractsService.getContractById(this.convenio._id).subscribe({
+          next: data => {
+            this.convenio = data;
+            let quantity: number = 0;
+            for (let iterator of data.proposal_id.allotment) {
+              quantity =
+                iterator.add_item.reduce((acc: number, item: any) => acc + Number(item.quantity), 0) + quantity;
+            }
+            this.totalValue = data.value / quantity;
+          },
+        });
+      },
+      error => {
+        this.contractsService.getContractById(this.convenio._id).subscribe({
+          next: data => {
+            this.convenio = data;
+            let quantity: number = 0;
+            for (let iterator of data.proposal_id.allotment) {
+              quantity =
+                iterator.add_item.reduce((acc: number, item: any) => acc + Number(item.quantity), 0) + quantity;
+            }
+            this.totalValue = data.value / quantity;
+          },
+        });
+      }
+    );
   }
 
   openUnblockModal(contentUnBlocked: any) {
@@ -102,28 +110,27 @@ export class AssociacaoContratosDataComponent {
     this.isSectionOpen = !this.isSectionOpen;
   }
 
-  refused() { }
+  refused() {}
 
   approve() {
     this.contractsService
       .singAssociation(this.convenio?._id!, { status: "concluido", association_id: this.convenio?.association! })
       .subscribe({
         next: async success => {
+          let successMessage = "Aceito com sucesso!";
 
-          let successMessage = 'Aceito com sucesso!';
-
-          switch(this.storedLanguage) {
-            case 'pt': 
-              successMessage = 'Aceito com sucesso!'
+          switch (this.storedLanguage) {
+            case "pt":
+              successMessage = "Aceito com sucesso!";
               break;
-            case 'en':
-              successMessage = 'Successfully accepted!'
+            case "en":
+              successMessage = "Successfully accepted!";
               break;
-            case 'fr':
-              successMessage = 'Accepté avec succès !'
+            case "fr":
+              successMessage = "Accepté avec succès !";
               break;
-            case 'es':
-              successMessage = '¡Aceptado con éxito!'
+            case "es":
+              successMessage = "¡Aceptado con éxito!";
               break;
           }
 
@@ -134,87 +141,143 @@ export class AssociacaoContratosDataComponent {
             next: data => {
               this.convenio = data;
 
-              let quantity: number = 0
+              let quantity: number = 0;
               for (let iterator of data.proposal_id.allotment) {
-                quantity = iterator.add_item.reduce((acc: number, item: any) => acc + Number(item.quantity), 0) + quantity;
+                quantity =
+                  iterator.add_item.reduce((acc: number, item: any) => acc + Number(item.quantity), 0) + quantity;
               }
               this.totalValue = data.value / quantity;
-            }
+            },
           });
         },
         error: async error => {
-          
-          let errorMessage = 'Erro ao aceitar';
-
-          switch(this.storedLanguage) {
-            case 'pt': 
-              errorMessage = 'Erro ao aceitar'
+          let errorMessage = "Erro ao aceitar";
+          switch (this.storedLanguage) {
+            case "pt":
+              errorMessage = "Erro ao aceitar";
               break;
-            case 'en':
-              errorMessage = 'Error accepting'
+            case "en":
+              errorMessage = "Error accepting";
               break;
-            case 'fr':
-              errorMessage = "Erreur d'acceptation"
+            case "fr":
+              errorMessage = "Erreur d'acceptation";
               break;
-            case 'es':
-              errorMessage = 'Error al aceptar'
+            case "es":
+              errorMessage = "Error al aceptar";
               break;
           }
-
           this.toastrService.error(errorMessage, "", { progressBar: true });
         },
       });
   }
 
+  // async downloadPdf() {
+  //   try {
+  //     const pdfDownaload = await this.contractsService.getPdf(this.convenio._id);
+
+  //     const tempDiv = document.createElement('div');
+  //     tempDiv.innerHTML = pdfDownaload;
+
+  //     if (tempDiv) {
+  //       html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
+  //         const pdf = new jsPDF('p', 'mm', 'a4');
+
+  //         const imgData = canvas.toDataURL('image/png');
+  //         const pdfWidth = pdf.internal.pageSize.getWidth();
+  //         const pdfHeight = pdf.internal.pageSize.getHeight();
+  //         const marginLeft = 10;
+  //         const marginTop = 10;
+
+  //         pdf.addImage(imgData, 'PNG', marginLeft, marginTop, pdfWidth - (2 * marginLeft), pdfHeight - (2 * marginTop));
+
+  //         const pdfDataUri = pdf.output('datauristring');
+  //         const link = document.createElement('a');
+  //         link.href = pdfDataUri;
+  //         link.download = 'contrato.pdf';
+  //         link.click();
+
+  //         document.body.removeChild(tempDiv);
+  //       });
+  //     }
+  //   } catch {
+
+  //     let errorMessage = 'Modelo de contrato não cadastrado';
+
+  //     switch(this.storedLanguage) {
+  //       case 'pt':
+  //         errorMessage = 'Modelo de contrato não cadastrado'
+  //         break;
+  //       case 'en':
+  //         errorMessage = 'Unregistered contract template'
+  //         break;
+  //       case 'fr':
+  //         errorMessage = "Modèle de contrat non enregistré"
+  //         break;
+  //       case 'es':
+  //         errorMessage = 'Modelo de contrato no registrado'
+  //         break;
+  //     }
+
+  //     this.toastrService.error(errorMessage, "", { progressBar: true });
+  //   }
+
+  // }
+
   async downloadPdf() {
-    try {
-      const pdfDownaload = await this.contractsService.getPdf(this.convenio._id);
-
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = pdfDownaload;
-
-      if (tempDiv) {
-        html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
-          const pdf = new jsPDF('p', 'mm', 'a4');
-        
-          const imgData = canvas.toDataURL('image/png');
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight();
-          const marginLeft = 10;
-          const marginTop = 10;
-        
-          pdf.addImage(imgData, 'PNG', marginLeft, marginTop, pdfWidth - (2 * marginLeft), pdfHeight - (2 * marginTop));
-        
-          const pdfDataUri = pdf.output('datauristring');
-          const link = document.createElement('a');
-          link.href = pdfDataUri;
-          link.download = 'contrato.pdf';
-          link.click();
-        
-          document.body.removeChild(tempDiv);
-        });
-      }
-    } catch {
-
-      let errorMessage = 'Modelo de contrato não cadastrado';
-
-      switch(this.storedLanguage) {
-        case 'pt': 
-          errorMessage = 'Modelo de contrato não cadastrado'
-          break;
-        case 'en':
-          errorMessage = 'Unregistered contract template'
-          break;
-        case 'fr':
-          errorMessage = "Modèle de contrat non enregistré"
-          break;
-        case 'es':
-          errorMessage = 'Modelo de contrato no registrado'
-          break;
-      }
-
-      this.toastrService.error(errorMessage, "", { progressBar: true });
+    const selectedLanguage = this.translate.currentLang;
+    let language;
+    switch (selectedLanguage) {
+      case "pt":
+        language = LanguageContractEnum.portuguese;
+        break;
+      case "en":
+        language = LanguageContractEnum.english;
+        break;
+      case "es":
+        language = LanguageContractEnum.spanish;
+        break;
+      case "fr":
+        language = LanguageContractEnum.french;
+        break;
+      default:
+        language = LanguageContractEnum.english;
+        break;
     }
 
+    this.contractsService
+      .getPdf(this.convenio._id, selectedLanguage, this.convenio.bid_number.classification)
+      .then(data => {
+        const buffer = data;
+        const file = new Blob([buffer], {
+          type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        });
+        const fileURL = URL.createObjectURL(file);
+        const link = document.createElement("a");
+        link.href = fileURL;
+        const name =
+          this.convenio.bid_number.bid_count + "/" + new Date(this.convenio.bid_number.createdAt).getFullYear();
+        link.setAttribute("download", `Contract-${name}.docx`);
+        link.style.display = "none"; // Oculta o link no DOM
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link); // Remove o link do DOM após o download
+      })
+      .catch(error => {
+        console.error(error);
+        this.toastrService.error("ERROR DOWNLOAD", "", { progressBar: true });
+      });
+  }
+
+  handlerSumFreight(proposal: any) {
+    let sum = 0;
+    if (proposal && Array.isArray(proposal))
+      if (proposal.length > 0) {
+        proposal.forEach((item: any) => {
+          sum += +item.freight;
+        });
+      }
+    if (proposal && !Array.isArray(proposal)) sum = proposal["freight"];
+
+    return sum;
   }
 }

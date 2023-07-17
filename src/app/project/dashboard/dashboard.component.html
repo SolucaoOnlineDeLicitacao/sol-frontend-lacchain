@@ -1,18 +1,20 @@
-<div *ngIf="authService.getAuthenticatedUser().type == 'administrador'" class="container-fluid">
+<div
+	*ngIf="authService.getAuthenticatedUser().type == 'administrador' 
+	&& authService.getAuthenticatedUser().roles == 'geral' || authService.getAuthenticatedUser().type == 'administrador' 
+	&& authService.getAuthenticatedUser().roles == 'visualizador'"
+	class="container-fluid">
 	<div class="row mt-5">
 		<div class="col-md-4">
 			<div class="card ">
 				<div class="card-body shadow">
 					<div class="row">
 						<div class="col-md-12 text-right"><h5 class="card-title">{{"DASHBOARD.REGISTERED_ASSOCIATIONS" | translate}}</h5></div>
-
 					</div>
 					<div class="row mt-3">
-						<div class="col-md-7 text-left"><img src="../../../../assets/images/associacoesicon.svg" style="max-height: 100px; max-width:
-                                100px;" alt="IMG"></div>
+						<div class="col-md-7 text-left"><img src="../../../../assets/images/associacoesicon.svg"
+								style="max-height: 100px; max-width: 100px;" alt="IMG"></div>
 						<div class="col-md-5 text-right"><h1 class="card-title mt-3">{{responseDashboard.associationRegister}}</h1></div>
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -21,12 +23,52 @@
 				<div class="card-body shadow">
 					<div class="row">
 						<div class="col-md-12 text-right"><h5 class="card-title">{{"DASHBOARD.REGISTERED_SUPPLIERS" | translate}}</h5></div>
+					</div>
+					<div class="row mt-3">
+						<div class="col-md-7 text-left"><img src="../../../../assets/images/fornecedoresicon.svg"
+								style="max-height: 78px; max-width: 78px;" alt="IMG"></div>
+						<div class="col-md-5 text-right"><h1 class="card-title mt-3">{{responseDashboard.supplierRegister}}</h1></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card">
+				<div class="card-body shadow">
+					<div class="row">
+						<div class="col-md-12 text-right"><h5 class="card-title">{{"DASHBOARD.ONGOING_BIDDING" | translate}}</h5></div>
+					</div>
+					<div class="row mt-3">
+						<div class="col-md-7 text-left"><img src="../../../../assets/images/licitacoesicon.svg"
+								style="max-height: 100px; max-width: 100px;" alt="IMG"></div>
+						<div class="col-md-5 text-right"><h1 class="card-title mt-3">{{responseDashboard.bidInProgress}}</h1></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row mt-5">
+		<div class="col-md-12">
+			<div id="map" style="height: 500px;">
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="authService.getAuthenticatedUser().type == 'administrador' && authService.getAuthenticatedUser().roles == 'revisor'"
+	class="container-fluid">
+	<div class="row mt-5">
+		<div class="col-md-4">
+			<div class="card ">
+				<div class="card-body shadow">
+					<div class="row">
+						<div class="col-md-12 text-right"><h5 class="card-title">{{"SIDEBAR.AGREEMENTS" | translate}}</h5></div>
 
 					</div>
 					<div class="row mt-3">
-						<div class="col-md-7 text-left"><img src="../../../../assets/images/fornecedoresicon.svg" style="max-height: 78px; max-width:
-                                78px;" alt="IMG"></div>
-						<div class="col-md-5 text-right"><h1 class="card-title mt-3">{{responseDashboard.supplierRegister}}</h1></div>
+						<div class="col-md-7 text-left"><img src="../../../../assets/images/associacoesicon.svg"
+								style="max-height: 100px; max-width: 100px;" alt="IMG"></div>
+						<div class="col-md-5 text-right"><h1 class="card-title mt-3">{{convenios}}</h1></div>
 					</div>
 
 				</div>
@@ -36,31 +78,44 @@
 			<div class="card">
 				<div class="card-body shadow">
 					<div class="row">
-						<div class="col-md-12 text-right"><h5 class="card-title">{{"DASHBOARD.ONGOING_BIDDING" | translate}}</h5></div>
+						<div class="col-md-12 text-right"><h5 class="card-title">{{"DASHBOARD.PENDING_BIDS" | translate}}</h5></div>
 
 					</div>
 					<div class="row mt-3">
-						<div class="col-md-7 text-left"><img src="../../../../assets/images/licitacoesicon.svg" style="max-height: 100px; max-width:
-                                100px;" alt="IMG"></div>
-						<div class="col-md-5 text-right"><h1 class="card-title mt-3">{{responseDashboard.bidInProgress}}</h1></div>
+						<div class="col-md-7 text-left"><img src="../../../../assets/images/fornecedoresicon.svg"
+								style="max-height: 78px; max-width: 78px;" alt="IMG"></div>
+						<div class="col-md-5 text-right"><h1 class="card-title mt-3">{{licitacoesPendentesSize}}</h1></div>
 					</div>
 
 				</div>
 			</div>
 		</div>
+		<div class="col-md-4">
+			<div class="card">
+				<div class="card-body shadow">
+					<div class="row">
+						<div class="col-md-12 text-right"><h5 class="card-title">{{"DASHBOARD.BIDS_UNDER_REVIEW" | translate}}</h5></div>
 
+					</div>
+					<div class="row mt-3">
+						<div class="col-md-7 text-left"><img src="../../../../assets/images/licitacoesicon.svg"
+								style="max-height: 100px; max-width: 100px;" alt="IMG"></div>
+						<div class="col-md-5 text-right"><h1 class="card-title mt-3">{{licitacoesEmAnaliseSize}}</h1></div>
+					</div>
+
+				</div>
+			</div>
+		</div>
 	</div>
-
-	<div class="row mt-5" *ngIf="authService.getAuthenticatedUser().type == 'administrador'">
+	<div class="row mt-5">
 		<div class="col-md-12">
 			<div id="map" style="height: 500px;">
 			</div>
 		</div>
 	</div>
-
 </div>
 
-<div *ngIf="authService.getAuthenticatedUser().type == 'associacao'" class="container-fluid">
+<div *ngIf="authService.getAuthenticatedUser().type == 'associacao'">
 	<div class="row mt-5">
 		<div class="col-md-12">
 			<h1>Dashboard</h1>
@@ -79,7 +134,7 @@
 
 	</div>
 
-	<div *ngFor="let item of licitacoes; let i= index;" class="row p-3 user-data-border mt-5 cursor-pointer">
+	<div *ngFor="let item of licitacoesList | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }; let i= index;" class="row p-3 user-data-border mt-5 cursor-pointer">
 
 		<div class="row col-12 p-2" (click)="associationDetailBids(item);">
 			<div class="col-12 col-md-10">
@@ -98,6 +153,7 @@
 				<h5 *ngIf="item.status ==='open'" class="f-size-16 text-success">{{"CREATE_BIDDING_STATUS.LAUNCHED" | translate}}</h5>
 				<h5 *ngIf="item.status ==='completed'" class="f-size-16 text-success">{{"CREATE_BIDDING_STATUS.COMPLETED" | translate}}</h5>
 				<h5 *ngIf="item.status ==='reopened'" class="f-size-16 text-success">{{"CREATE_BIDDING_STATUS.REOPENED" | translate}}</h5>
+				<h5 *ngIf="item.status ==='returned'" class="f-size-16 text-info">{{"CREATE_BIDDING_STATUS.RETURNED" | translate}}</h5>
 			</div>
 		</div>
 
@@ -107,16 +163,24 @@
 
 		<div class="row col-12 p-2">
 			<div class="col-12 col-md-10" (click)="associationDetailBids(item);">
-				<h6 class="font-poppins f-size-14 text-dark">{{"DASHBOARD.DURATION" | translate}}</h6>
-				<h6 class="font-poppins f-size-16 text-secondary">{{item.start_at | date: 'dd/MM/yyyy'}} - {{item.end_at | date: 'dd/MM/yyyy'}}</h6>
+				<h6 *ngIf="item.status !== 'draft' && item.status !== 'awaiting' && item.status !== 'returned'" class="font-poppins f-size-14 text-dark">
+					{{"DASHBOARD.DURATION" | translate}}</h6>
+				<h6 *ngIf="item.status !== 'draft' && item.status !== 'awaiting' && item.status !== 'returned'" class="font-poppins f-size-16 text-secondary">
+					{{item.start_at | date: 'dd/MM/yyyy'}} - {{item.end_at | date: 'dd/MM/yyyy'}}</h6>
 			</div>
 			<div class="col-12 col-md-2">
-				<button (click)="editBids(item);" *ngIf="item.status ==='draft'" type="button" class="bg-light btn-lg btn-block mb-4 text-small text-dark">{{"BUTTON_TEXT.EDIT"
-					| translate}}</button>
+				<button (click)="editBids(item);" *ngIf="item.status ==='draft' || item.status ==='returned'" type="button"
+					class="bg-light btn-lg btn-block mb-4 text-small text-dark">
+					{{"BUTTON_TEXT.EDIT" | translate}}</button>
 			</div>
 		</div>
 	</div>
-
+	<div *ngIf="licitacoesList && licitacoesList.length > 6" class="row">
+		<div class="col-12 d-flex justify-content-end">
+		  <pagination-controls (pageChange)="currentPage= $event" previousLabel="{{'BUTTON_TEXT.PREVIOUS' | translate}}"
+			nextLabel="{{'BUTTON_TEXT.NEXT' | translate}}"></pagination-controls>
+		</div>
+	  </div>
 </div>
 
 <div *ngIf="authService.getAuthenticatedUser().type == 'fornecedor'" class="container-fluid">
@@ -154,6 +218,7 @@
 					<h5 *ngIf="item.status ==='open'" class="f-size-16 text-success">{{"CREATE_BIDDING_STATUS.OPEN" | translate}}</h5>
 					<h5 *ngIf="item.status ==='completed'" class="f-size-16 text-success">{{"CREATE_BIDDING_STATUS.COMPLETED" | translate}}</h5>
 					<h5 *ngIf="item.status ==='reopened'" class="f-size-16 text-success">{{"CREATE_BIDDING_STATUS.REOPENED" | translate}}</h5>
+					<h5 *ngIf="item.status ==='returned'" class="f-size-16 text-info">{{"CREATE_BIDDING_STATUS.RETURNED" | translate}}</h5>
 				</div>
 				<div class="col-md-12 mt-2 ">
 					<h6 class="font-poppins f-size-14 text-secondary">{{"SIDEBAR.ASSOCIATION" | translate}}</h6>

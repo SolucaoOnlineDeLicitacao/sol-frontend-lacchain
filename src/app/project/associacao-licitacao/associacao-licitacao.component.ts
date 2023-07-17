@@ -31,10 +31,12 @@ export class AssociacaoLicitacaoComponent {
 
   async listBid() {
     this._associationBidService.listByAssociation().subscribe({
-      next: data => {
+      next: (data: any) => {
         this.ngxSpinnerService.hide();
-        this.licitacoesList = data;
-        this.licitacoesList.sort((a: any, b:any) => b.bid_count - a.bid_count)
+        const List = Object.values(data);
+        this.licitacoesList = List.filter((item: any) => item.deleted === false);
+        console.log(data)
+        this.licitacoesList.sort((a: any, b: any) => b.bid_count - a.bid_count)
       }
     })
   }

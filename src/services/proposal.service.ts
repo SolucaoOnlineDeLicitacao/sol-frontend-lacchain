@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { BaseService } from './base.service';
 import { ProposalGetResponseDto } from 'src/dtos/proposals/proposal-get-response.dto';
 import { ProposalRefusedRegisterRequestDto } from 'src/dtos/proposals/proposal-refused-register-request.dto';
+import { ProposalAcceptReviewerDto } from 'src/dtos/proposals/proposal-accept-reviewer-request.dto';
 
 @Injectable({
     providedIn: 'root'
@@ -43,6 +44,13 @@ export class ProposalService extends BaseService {
     acceptProposal(proposalId: string): Observable<any> {
         return this.httpClient
             .put(`${this.url}/accept/${proposalId}`, null, this.authorizedHeader)
+            .pipe(map(this.extractData), catchError(this.serviceError));
+    }
+
+    acceptProposalReviewer(proposalId: string, dto: ProposalAcceptReviewerDto): Observable<any> {
+        console.log(this.authorizedHeader)
+        return this.httpClient
+            .put(`${this.url}/update-accept-reviwer/${proposalId}`, dto, this.authorizedHeader)
             .pipe(map(this.extractData), catchError(this.serviceError));
     }
 

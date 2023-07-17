@@ -12,7 +12,7 @@ import { Chart, registerables } from 'chart.js';
   styleUrls: ['./administration-relatorio.component.scss']
 })
 export class AdministrationRelatorioComponent {
-  BarChar = []
+  BarChar: any = []
   licitacoesList: any = [];
   currentPage: number = 1;
   itensPerPage: number = 5;
@@ -69,7 +69,6 @@ export class AdministrationRelatorioComponent {
       
     }
     this.objKeys = [...this.map.keys()]
-    console.log('mapa', this.map.keys(), 'opbj', this.objKeys)
 
   }
 
@@ -104,7 +103,8 @@ export class AdministrationRelatorioComponent {
           'Fracassada',
           'Reaberta',
           'Deserta',
-          'Em rascunho'
+          'Em rascunho',
+          'Devolvida'
         ]
         break;
       case 'en':
@@ -119,7 +119,8 @@ export class AdministrationRelatorioComponent {
           'Failed',
           'Reopened',
           'Deserted',
-          'Draft'
+          'Draft',
+          'Returned'
           ]
         break;
       case 'fr':
@@ -134,7 +135,8 @@ export class AdministrationRelatorioComponent {
           'Échouée',
           'Réouverte',
           'Abandonnée',
-          'Brouillon'
+          'Brouillon',
+          'Revenu'
           ]
         break;
       case 'es':
@@ -149,7 +151,8 @@ export class AdministrationRelatorioComponent {
           'Fracasada',
           'Reabierta',
           'Desierta',
-          'En borrador'
+          'En borrador',
+          'Devuelto'
         ]
         break;
     }
@@ -189,7 +192,8 @@ export class AdministrationRelatorioComponent {
               this.map.get('failed')?.length,
               this.map.get('reopened')?.length,
               this.map.get('reopened')?.length,
-              this.map.get('draft')?.length],
+              this.map.get('draft')?.length,
+              this.map.get('returned')?.length],
             indexAxis: 'y',
             
             backgroundColor: [

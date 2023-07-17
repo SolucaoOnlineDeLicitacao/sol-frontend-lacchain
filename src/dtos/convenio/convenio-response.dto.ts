@@ -22,7 +22,10 @@ export interface WorkPlanInterface {
   _id: string;
   name: string;
   product: Array<{ quantity: number; unitValue: number; costItems: CostItemsResponseDto; _id: string }>;
-  // costItems: CostItemsResponseDto;
-  // quantity: string;
-  // unitValue: number;
+}
+
+export interface WorkPlanDto {
+  _id: string;
+  name: string;
+  product: Array<{ quantity: number; unitValue: number; costItems: string; _id: string }>;
 }

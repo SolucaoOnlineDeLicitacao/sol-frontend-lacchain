@@ -22,7 +22,6 @@ export interface LicitationInterface {
     site: string;
     proposal: string;
 }
-
 export interface AllotmentRequestDto {
     allotment_name: string;
     days_to_delivery: string;
@@ -30,9 +29,12 @@ export interface AllotmentRequestDto {
     quantity: string;
     add_item: ItemRequestDto[];
     files: string;
+    isSectionOpen? : Boolean;
 }
 export interface ItemRequestDto {
     group: string;
     item: string;
     quantity: string;
+    unitMeasure: any;
+    specification: string;
 }

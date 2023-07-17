@@ -24,6 +24,7 @@
         <h5 *ngIf="response.status ==='open'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.OPEN' | translate}}</h5>
         <h5 *ngIf="response.status ==='completed'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.COMPLETED' | translate}}</h5>
         <h5 *ngIf="response.status ==='reopened'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.REOPENED' | translate}}</h5>
+        <h5 *ngIf="response.status ==='returned'" class="f-size-16 text-info">{{"CREATE_BIDDING_STATUS.RETURNED" | translate}}</h5>
       </div>
 
     </div>
@@ -48,6 +49,7 @@
         <h5 *ngIf="response.status ==='open'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.OPEN' | translate}}</h5>
         <h5 *ngIf="response.status ==='completed'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.COMPLETED' | translate}}</h5>
         <h5 *ngIf="response.status ==='reopened'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.REOPENED' | translate}}</h5>
+        <h5 *ngIf="response.status ==='returned'" class="f-size-16 text-info">{{"CREATE_BIDDING_STATUS.RETURNED" | translate}}</h5>
       </div>
       <div class="col-md-4 d-flex align-items-center flex-column">
         <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_AGREEMENTS_BIDDING.QUANTITY_ITEMS' | translate}}</h6>
@@ -60,7 +62,8 @@
           <tr>
             <th class="bg-pattern text-light br-tabele" scope="col">{{'ADMINISTRATION_AGREEMENTS_BIDDING.LIST_ITEMS' | translate}}</th>
             <th class="bg-pattern text-light br-tabele3" scope="col">{{'ADMINISTRATION_AGREEMENTS_BIDDING.GROUPS_AGREEMENTS' | translate}}</th>
-            <th class="bg-pattern text-light br-tabele2" scope="col">{{'ADMINISTRATION_AGREEMENTS_BIDDING.QUANTITY' | translate}}</th>
+            <th class="bg-pattern text-light br-tabele3" scope="col">{{'ADMINISTRATION_AGREEMENTS_BIDDING.QUANTITY' | translate}}</th>
+            <th class="bg-pattern text-light br-tabele2" scope="col">{{"COST_ITEMS.UNIT_TITLE" | translate}}</th>
           </tr>
         </thead>
         <tbody>
@@ -68,6 +71,7 @@
             <td class="text-capitalize text-dark" scope="row">{{ele.item}}</td>
             <td class="text-capitalize text-dark" scope="row">{{ele.group}}</td>
             <td class="text-capitalize textdark">{{ele.quantity}}</td>
+            <td class="text-capitalize textdark">{{ele.unitMeasure}}</td>
           </tr>
         </tbody>
       </table>

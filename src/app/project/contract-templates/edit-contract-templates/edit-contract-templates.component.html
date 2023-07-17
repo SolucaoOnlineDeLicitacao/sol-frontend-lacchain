@@ -117,6 +117,34 @@
         </div>
         <div class="d-flex align-items-center justify-content-between">
             <div>
+                <h6>Tags de lote</h6>
+            </div>
+            <div class="col-md-1 p-0 d-flex justify-content-end">
+                <i class="bi" [ngClass]="{'bi-caret-down-fill': !isSectionOpenLote, 'bi-caret-up': isSectionOpenLote}"
+                    (click)="toggleSectionLote()"></i>
+            </div>
+        </div>
+        <div class="content" [ngClass]="{ 'open': isSectionOpenLote }">
+            <hr>
+            <div class="row col-12 ">
+                <div class="col-md-12">
+                    <div class="table-responsive-sm">
+                        <h6>[batch_list] = Lista com o nome dos lotes</h6>
+                        <h6>[batch_complete_list] = Lista completa(nome do lote,
+                            nome do item,
+                            especificação do item,
+                            quantidade de item no lote,
+                            unidade do item,
+                            valor unitario proposta,
+                            valor frete lote,
+                            valor total proposta)</h6>
+                        <h6>[batch_specification_list] = (Nome do item, especificação)</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
                 <h6>Tags de contrato</h6>
             </div>
             <div class="col-md-1 p-0 d-flex justify-content-end">
@@ -136,7 +164,7 @@
                         <h6>[supplier] = Fornecedor</h6>
                         <h6>[documentcontract_date]: Data criação do contrato</h6>
                         <h6>[document_minutes]: Data criação ATA</h6>
-                        <h6>[document_notice_ date]: Data criação Edital</h6>
+                        <h6>[document_notice_date]: Data criação Edital</h6>
                     </div>
                 </div>
             </div>
@@ -144,11 +172,11 @@
     </div>
     <div class="col-md-9">
         <form [formGroup]="form" class="row" (ngSubmit)="onSubmit()">
-            <div class="col-md-6 mt-2">
+            <div class="col-md-4 mt-2">
                 <label class="text-dark" for="name"><strong>{{'AGREEMENTS.NAME' | translate}}</strong></label>
                 <input type="text" class="form-control br-10 py-4" formControlName="name" id="name" placeholder="nome">
             </div>
-            <div class="col-md-6 mt-2">
+            <div class="col-md-4 mt-2">
                 <label for="classification" class="text-dark text-capitalize"><b>{{"CREATE_BIDDING.CLASSIFICATION"
                         | translate}}</b><span class="f-size-16
 									text-danger">*</span></label>
@@ -156,18 +184,47 @@
                     id="classification">
                     <option selected readonly disabled [value]="''">{{"BUTTON_TEXT.SELECT" | translate}}
                     </option>
-                    <option value="bens">{{"CREATE_BIDDING.OF_GOODS" | translate}}</option>
-                    <option value="obras">{{"CREATE_BIDDING.OF_WORKS" | translate}}</option>
-                    <option value="servicos">{{"CREATE_BIDDING.OF_Services" | translate}}</option>
-                    <option value="De Ata">{{"CREATE_BIDDING.OF_Minutes" | translate}}</option>
-                    <option value="De Edital">{{"CREATE_BIDDING.OF_Notice" | translate}}</option>
+                    <option [value]="modelContractClassificationEnum.bens">{{"CREATE_BIDDING.CONCTRACT" | translate}}
+                        {{"CREATE_BIDDING.OF_GOODS" | translate}}</option>
+                    <option [value]="modelContractClassificationEnum.obras">{{"CREATE_BIDDING.CONCTRACT" | translate}}
+                        {{"CREATE_BIDDING.OF_WORKS" | translate}}</option>
+                    <option [value]="modelContractClassificationEnum.servicos">{{"CREATE_BIDDING.CONCTRACT" |
+                        translate}} {{"CREATE_BIDDING.OF_Services" | translate}}</option>
+                    <option [value]="modelContractClassificationEnum.ata">{{"CREATE_BIDDING.OF_Minutes" | translate}}
+                    </option>
+                    <option [value]="modelContractClassificationEnum.editalBens">{{"CREATE_BIDDING.OF_Notice" |
+                        translate}} {{"CREATE_BIDDING.OF_GOODS" | translate}}</option>
+                    <option [value]="modelContractClassificationEnum.editalObras">{{"CREATE_BIDDING.OF_Notice" |
+                        translate}} {{"CREATE_BIDDING.OF_WORKS" | translate}}</option>
+                    <option [value]="modelContractClassificationEnum.editalServicos">{{"CREATE_BIDDING.OF_Notice" |
+                        translate}} {{"CREATE_BIDDING.OF_Services" | translate}}</option>
+                </select>
+
+            </div>
+            <div class="col-md-4 mt-2">
+                <label for="classification" class="text-dark text-capitalize"><b>{{"CREATE_BIDDING.LANGUAGE" |
+                        translate}}</b><span class="f-size-16 text-danger">*</span></label>
+                <select type="text" formControlName="language" class="form-control br-10 h50" id="language">
+                    <option selected readonly disabled [value]="''">{{"BUTTON_TEXT.SELECT" | translate}}
+                    </option>
+                    <option [value]="languageContractEnum.english">{{"CREATE_BIDDING.SELECT_LANGUAGE_ENGLISH" |
+                        translate}}</option>
+                    <option [value]="languageContractEnum.spanish">{{"CREATE_BIDDING.SELECT_LANGUAGE_SPANISH" |
+                        translate}}</option>
+                    <option [value]="languageContractEnum.french">{{"CREATE_BIDDING.SELECT_LANGUAGE_FRENCH" |
+                        translate}}</option>
+                    <option [value]="languageContractEnum.portuguese">{{"CREATE_BIDDING.SELECT_LANGUAGE_PORTUGUESE" |
+                        translate}}</option>
                 </select>
 
             </div>
             <div class="col-12 mb-5">
-                <label class="text-dark text-capitalize" for="licitacoes"><strong>{{'CONTRACT_MODELS.CONTRACT_MODELS' |
-                        translate}}</strong></label>
-                <angular-editor [(ngModel)]="htmlContent" formControlName="contract" [config]="config"></angular-editor>
+                <div class="d-flex flex-column  ">
+                    <label class="text-dark text-capitalize"
+                        for="licitacoes"><strong>{{'CONTRACT_MODELS.CONTRACT_MODELS' |
+                            translate}}</strong></label>
+                    <input type="file" class="file-upload" (change)="onFileSelected($event)" accept=".docx">
+                </div>
                 <div class="row d-flex justify-content-end">
                     <div class="col-md-4 mt-4 ">
                         <button (click)="backContact()" type="button"
@@ -181,7 +238,7 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div>s
         </form>
     </div>
 </div>

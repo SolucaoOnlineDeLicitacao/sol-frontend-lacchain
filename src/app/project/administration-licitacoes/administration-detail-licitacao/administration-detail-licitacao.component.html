@@ -6,6 +6,9 @@
         </div>
 
         <div class="col-md-11 border mt-3 br-10 py-3 ">
+            <div class="col-12 user-data-border mb-1" >
+                <h3 class="text-danger text-center f-size-16 pt-1" *ngIf="response.status === 'returned'">{{response.declined_reason}}</h3>
+              </div>
             <div class="row px-2">
                 <div class="col-md-10">
                     <h2 class="mb-0 text-dark"><strong>{{response.bid_count}}/{{response.createdAt | date:'yyyy'}}</strong></h2>
@@ -23,6 +26,7 @@
                     <h5 *ngIf="response.status ==='open'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.OPEN' | translate}}</h5>
                     <h5 *ngIf="response.status ==='completed'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.COMPLETED' | translate}}</h5>
                     <h5 *ngIf="response.status ==='reopened'" class="f-size-16 text-success">{{'ADMINISTRATION_BIDDING.REOPENED' | translate}}</h5>
+                    <h5 *ngIf="response.status ==='returned'" class="f-size-16 text-info">{{"CREATE_BIDDING_STATUS.RETURNED" | translate}}</h5>
                 </div>
                 <div class="col-md-10 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING.ASSOCIATION' | translate}}</h6>
@@ -45,15 +49,15 @@
                 <div class="col-md-4"></div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING.START_AT' | translate}}</h6>
-                    <h5 class="f-size-16">{{response.start_at | date: 'dd/MM/yyyy'}}</h5>
+                    <h5 class="f-size-16" *ngIf="response.status !== 'returned' && response.status !== 'awaiting' && response.status !== 'draft'">{{response.start_at | date: 'dd/MM/yyyy, h:mm a'}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING.END_AT' | translate}}</h6>
-                    <h5 class="f-size-16">{{response.end_at | date: 'dd/MM/yyyy'}}</h5>
+                    <h5 *ngIf="response.status !== 'returned' && response.status !== 'awaiting' && response.status !== 'draft'" class="f-size-16">{{response.end_at | date: 'dd/MM/yyyy, h:mm a'}}</h5>
                 </div>
                 <div class="col-md-4">
                     <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING_DETAIL.DEADLINE_DELIVERY' | translate}}</h6>
-                    <h5 class="f-size-16">{{prazoEmdias}}</h5>
+                    <h5 class="f-size-16">{{response.days_to_delivery}}</h5>
                 </div>
                 <div class="col-md-4 mt-3 ">
                     <h6 class="font-poppins f-size-14 text-secondary">{{'ADMINISTRATION_BIDDING_DETAIL.LOCAL_DELIVERY' | translate}}</h6>
@@ -94,8 +98,16 @@
                 <div class="col-md-12 mt-1">
                     <div class="row d-flex justify-content-end">
                         <div class="col-md-4 mt-3">
-                            <button (click)="openModal('edital', null)"
-                                class="br-10 w-100 h50 border btn btn-light"><strong>{{'ADMINISTRATION_BIDDING_DETAIL.DOWNLOAD_EDITAL' | translate}}</strong></button>
+                            <button *ngIf=" response.status === 'returned' "(click)="openModal('edital', null)" class="br-10 w-100 h50 border btn btn-light"><strong>Baixar Rascunho do Edital</strong></button>
+
+                            <button *ngIf="response.status !== 'draft' && 
+                                response.status !== 'returned' "(click)="openModal('edital', null)" class="br-10 w-100 h50 border btn btn-light">
+                                <strong>{{'ADMINISTRATION_BIDDING_DETAIL.DOWNLOAD_EDITAL' | translate}}
+
+                                </strong>
+                            </button>
+                            <button *ngIf="response.status === 'draft'" (click)="openModal('edital', null)" class="br-10 w-100 h50 border btn btn-light"><strong>{{'DOWNLOAD_EDITAL_DRAFT' | translate}}</strong></button>
+
                         </div>
                     </div>
                 </div>

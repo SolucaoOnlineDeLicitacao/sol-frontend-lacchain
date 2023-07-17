@@ -19,13 +19,13 @@
                     <h3>{{'GROUP_ITEMS.ITEM_GROUP_COST' | translate}}</h3>
                 </div>
                 <div class="w100 col-md-4">
-                    <label class= text-dark for="nome">{{'ADMINISTRATION_AGREEMENTS_BIDDING.QUANTITY' | translate}}:</label>
+                    <label class= text-dark for="nome">{{'ADMINISTRATION_AGREEMENTS_BIDDING.ITEMS_QUANTITY' | translate}}:</label>
                     <select formControlName="items" class="form-control br-10 h50">
                         <option *ngFor="let item of costItemsList" [value]="item._id">{{item.name}}</option>
                     </select>
                 </div>
                 <div class="w100 col-md-2">
-                    <label class= text-dark for="nome">{{'ADMINISTRATION_AGREEMENTS_BIDDING.QUANTITY' | translate}}</label>
+                    <label class= text-dark for="nome">{{'ADMINISTRATION_AGREEMENTS_BIDDING.QUANTITY' | translate}}:</label>
                     <input type="text" formControlName="quantity" [maxlength]="10" class="w100 py-4 br-10 form-control text-dark h50 " placeholder="Digite a quantidade">
                 </div>
                 <div class="w100 col-md-3">

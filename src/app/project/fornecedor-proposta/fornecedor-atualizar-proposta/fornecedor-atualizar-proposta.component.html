@@ -1,7 +1,7 @@
-<div class="container">
+<div class="container-fluid">
   <div class="row mt-5">
     <div class="col-md-12">
-      <h1><strong class="text-dark">Atualizar Proposta</strong></h1>
+      <h1><strong class="text-dark">{{"SUPPLIER_BIDDING.UPDATE_PROPOSAL" | translate}}</strong></h1>
       <hr class="bg-primary">
     </div>
   </div>
@@ -16,15 +16,15 @@
           <div class="col-md-12">
             <div class="row d-flex justify-content-start">
               <div class="col-md-4 mt-3 ">
-                <h6 class="font-poppins f-size-14 text-secondary">Lote</h6>
+                <h6 class="font-poppins f-size-14 text-secondary">{{"SUPPLIER_BIDDING.LOT" | translate}}</h6>
                 <h5 class="f-size-16">{{item.lote}}</h5>
               </div>
               <div class="col-md-4 mt-3 ">
-                <h6 class="font-poppins f-size-14 text-secondary">Prazo para entrega</h6>
+                <h6 class="font-poppins f-size-14 text-secondary">{{"SUPPLIER_BIDDING.DELIVERY_DEADLINE" | translate}}</h6>
                 <h5 class="f-size-16">{{item.days_to_delivery}}</h5>
               </div>
               <div class="col-md-4 mt-3 ">
-                <h6 class="font-poppins f-size-14 text-secondary">Local da entrega</h6>
+                <h6 class="font-poppins f-size-14 text-secondary">{{"CREATE_BIDDING.DELIVERY_PLACE" | translate}}</h6>
                 <h5 class="f-size-16">{{item.place_to_delivery}}</h5>
               </div>
             </div>
@@ -33,17 +33,18 @@
             <table class="table table-hover">
               <thead>
                 <tr>
-                  <th class="br-tabele bg-light text-dark" scope="col">Item</th>
-                  <th class=" bg-light text-dark" scope="col">Quantidade</th>
-                  <th class="br-tabele2 bg-light text-dark" scope="col"></th>
+                  <th class="br-tabele bg-light text-dark" scope="col">{{"SIDEBAR.ITEMS" | translate}}</th>
+                  <th class="bg-light text-dark" scope="col">{{"CREATE_BIDDING.QUANTITY" | translate}}</th>
+                  <th class="br-tabele2 bg-light text-dark" scope="col">{{"COST_ITEMS.UNIT_TITLE" | translate}}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let products of item.add_item">
-                  <td class="text-dark w-50">{{products.item}}</td>
-                  <td class="text-dark">{{products.quantity}} Unidade(s) *<span
+                  <td class="text-dark">{{products.item}}</td>
+                  <td class="text-dark">{{products.quantity}} {{"SUPPLIER_BIDDING.UNITS" | translate}} *<span
                       class="text-primary f-size-14">{{form.value.valueUnity | currency:
                       'BRL' }}</span></td>
+                  <td class="text-dark">{{products.unitMeasure}}</td>
                 </tr>
               </tbody>
             </table>
@@ -51,20 +52,22 @@
         </div>
         <form [formGroup]="form" class="col-md-12 d-flex justify-content-end">
           <div class="col mt-1" *ngIf="form.value.valueUnity">
-            <h6 class="font-poppins f-size-14 text-secondary">Valor total</h6>
+            <h6 class="font-poppins f-size-14 text-secondary">{{"ASSOCIATION_AGREEMENTS.TOTAL_VALUE" | translate}}</h6>
             <span class="text-primary f-size-16">{{form.value.valueUnity * quantity | currency: 'BRL' }}</span>
           </div>
           <div class="col-md-3">
-            <h6 class="font-poppins f-size-14 text-secondary">Valor por Unidade</h6>
-            <input type="tel" #fretealarm formControlName="valueUnity" class="form-control br-10 py-4" id="valor" separatorLimit="100000000" prefix="R$" mask="0*" mask="separator.2" thousandSeparator="," placeholder="R$">
+            <h6 class="font-poppins f-size-14 text-secondary">{{"SUPPLIER_BIDDING.PRICE_PER_UNIT" | translate}}</h6>
+            <input type="tel" #fretealarm formControlName="valueUnity" class="form-control br-10 py-4" id="valor" separatorLimit="100000000"
+              prefix="R$" mask="0*" mask="separator.2" thousandSeparator="," placeholder="R$">
           </div>
           <div class="col-md-3">
-            <h6 class="font-poppins f-size-14 text-secondary">Valor do frete</h6>
-            <input type="tel" #fretealarm formControlName="frete" class="form-control br-10 py-4" id="valor" separatorLimit="100000000" prefix="R$" mask="0*" mask="separator.2" thousandSeparator="," placeholder="R$">
+            <h6 class="font-poppins f-size-14 text-secondary">{{"ASSOCIATION_CONTRACTS.SHIPPING_COST" | translate}}</h6>
+            <input type="tel" #fretealarm formControlName="frete" class="form-control br-10 py-4" id="valor" separatorLimit="100000000" prefix="R$"
+              mask="0*" mask="separator.2" thousandSeparator="," placeholder="R$">
           </div>
           <div class="col-md-4 d-flex align-self-end">
             <button class="btn bg-pattern text-light w-100 h50 br-10" type="button"
-              (click)="backProposal()"><strong>Atualizar proposta</strong></button>
+              (click)="backProposal()"><strong>{{"SUPPLIER_BIDDING.UPDATE_PROPOSAL" | translate}}</strong></button>
           </div>
         </form>
       </div>

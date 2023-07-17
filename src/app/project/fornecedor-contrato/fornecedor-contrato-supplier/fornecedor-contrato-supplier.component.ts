@@ -8,9 +8,8 @@ import { acceptSupplierDto } from "src/dtos/contratos/acceptSupplier";
 import { singAssociationDto } from "src/dtos/contratos/sing-association";
 import { ContractStatusEnum } from "src/enums/contract-status.enum";
 import { NgxSpinnerService } from "ngx-spinner";
-import { jsPDF } from 'jspdf';
 import { TranslateService } from "@ngx-translate/core";
-import html2canvas from 'html2canvas';
+import { LanguageContractEnum } from "src/enums/language-contract.enum";
 
 @Component({
   selector: "app-fornecedor-contrato-supplier",
@@ -82,12 +81,12 @@ export class FornecedorContratoSupplierComponent {
     };
     this.contractsService.singSupplier(this.id, this.request1).subscribe({
       next: async success => {
-        this.toastrService.success(this.translate.instant('TOASTRS.ACCEPT_SUCCESS'), '', { progressBar: true });
+        this.toastrService.success(this.translate.instant("TOASTRS.ACCEPT_SUCCESS"), "", { progressBar: true });
         this.loteList.supplier_accept = "true";
         this.ngOnInit();
       },
       error: async error => {
-        this.toastrService.error(this.translate.instant('TOASTRS.ACCEPT_ERROR'), '', { progressBar: true });
+        this.toastrService.error(this.translate.instant("TOASTRS.ACCEPT_ERROR"), "", { progressBar: true });
       },
     });
   }
@@ -98,10 +97,10 @@ export class FornecedorContratoSupplierComponent {
     };
     this.contractsService.updateStatus(this.id, this.request).subscribe({
       next: async success => {
-        this.toastrService.success(this.translate.instant('TOASTRS.ACCEPT_SUCCESS'), '', { progressBar: true });
+        this.toastrService.success(this.translate.instant("TOASTRS.ACCEPT_SUCCESS"), "", { progressBar: true });
       },
       error: async error => {
-        this.toastrService.success(this.translate.instant('TOASTRS.ACCEPT_ERROR'), '', { progressBar: true });
+        this.toastrService.success(this.translate.instant("TOASTRS.ACCEPT_ERROR"), "", { progressBar: true });
       },
     });
   }
@@ -125,39 +124,77 @@ export class FornecedorContratoSupplierComponent {
     }
   }
 
-  
   async downloadPdf() {
     try {
-      const pdfDownaload = await this.contractsService.getPdf(this.id.toString());
-
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = pdfDownaload;
-
-      if (tempDiv) {
-        html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
-          const pdf = new jsPDF('p', 'mm', 'a4');
-        
-          const imgData = canvas.toDataURL('image/png');
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight();
-          const marginLeft = 10;
-          const marginTop = 10;
-        
-          pdf.addImage(imgData, 'PNG', marginLeft, marginTop, pdfWidth - (2 * marginLeft), pdfHeight - (2 * marginTop));
-        
-          const pdfDataUri = pdf.output('datauristring');
-          const link = document.createElement('a');
-          link.href = pdfDataUri;
-          link.download = 'contrato.pdf';
-          link.click();
-        
-          document.body.removeChild(tempDiv);
-        });
+      const selectedLanguage = this.translate.currentLang;
+      let language;
+      switch (selectedLanguage) {
+        case "pt":
+          language = LanguageContractEnum.portuguese;
+          break;
+        case "en":
+          language = LanguageContractEnum.english;
+          break;
+        case "es":
+          language = LanguageContractEnum.spanish;
+          break;
+        case "fr":
+          language = LanguageContractEnum.french;
+          break;
+        default:
+          language = LanguageContractEnum.english;
+          break;
       }
-    } catch {
 
-     
-    }
+      this.contractsService
+        .getPdf(this.id.toString(), language, this.loteList.bid_number.classification)
+        .then(data => {
+          const buffer = data;
+          const file = new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const fileURL = URL.createObjectURL(file);
+          const link = document.createElement("a");
+          link.href = fileURL;
+          const name =
+            this.loteList.bid_number.bid_count + "/" + new Date(this.loteList.bid_number.createdAt).getFullYear();
+          link.setAttribute("download", `Contract-${name}.docx`);
+          link.style.display = "none"; // Oculta o link no DOM
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch(error => {
+          console.error(error);
+          this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+        });
 
+      // const pdfDownaload = await this.contractsService.getPdf(this.id.toString());
+
+      // const tempDiv = document.createElement('div');
+      // tempDiv.innerHTML = pdfDownaload;
+
+      // if (tempDiv) {
+      //   html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
+      //     const pdf = new jsPDF('p', 'mm', 'a4');
+
+      //     const imgData = canvas.toDataURL('image/png');
+      //     const pdfWidth = pdf.internal.pageSize.getWidth();
+      //     const pdfHeight = pdf.internal.pageSize.getHeight();
+      //     const marginLeft = 10;
+      //     const marginTop = 10;
+
+      //     pdf.addImage(imgData, 'PNG', marginLeft, marginTop, pdfWidth - (2 * marginLeft), pdfHeight - (2 * marginTop));
+
+      //     const pdfDataUri = pdf.output('datauristring');
+      //     const link = document.createElement('a');
+      //     link.href = pdfDataUri;
+      //     link.download = 'contrato.pdf';
+      //     link.click();
+
+      //     document.body.removeChild(tempDiv);
+      //   });
+      // }
+    } catch {}
   }
 }

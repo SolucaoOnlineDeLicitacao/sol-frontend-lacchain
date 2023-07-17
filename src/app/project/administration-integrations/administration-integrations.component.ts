@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from "ngx-toastr";
 import { EndPointsInterface } from "src/app/interface/endpoints.interface";
@@ -26,13 +27,17 @@ export class AdministrationIntegrationsComponent {
   token = false;
   info = true;
   idList = -1;
+
+  translate: string = '';
+
   constructor(
     private authbase: AuthService,
     private router: Router,
     private formBuilder: FormBuilder,
     private endPointsService: EndPointsService,
     private spinnerService: NgxSpinnerService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private translateService: TranslateService,
   ) {
     this.form = this.formBuilder.group({
       endpoint: ["", [Validators.required]],
@@ -49,7 +54,7 @@ export class AdministrationIntegrationsComponent {
       next: response => {
         this.endpointList = response;
         this.endpointList.forEach(item => {
-          this.seeToken.set(item._id,false);
+          this.seeToken.set(item._id, false);
         });
         this.spinnerService.hide();
       },
@@ -58,6 +63,11 @@ export class AdministrationIntegrationsComponent {
         console.error(error);
       },
     });
+
+    // this.translateService.onLangChange.subscribe((lang: any) => {
+    //   this.translate = lang.lang
+    // });
+
   }
 
   detailBids(i: any) {
@@ -65,7 +75,7 @@ export class AdministrationIntegrationsComponent {
   }
 
   showToken(item: EndPointsInterface) {
-    this.seeToken.set(item._id,!this.seeToken.get(item._id));
+    this.seeToken.set(item._id, !this.seeToken.get(item._id));
   }
 
   handlerEdit(i: number, items: EndPointsInterface) {

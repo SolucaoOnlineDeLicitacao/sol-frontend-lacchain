@@ -3,14 +3,21 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
+import { Location } from "@angular/common";
 import { forkJoin } from "rxjs";
 import { BidStatusEnum } from "src/enums/bid-status.enum";
 import { AllotmentsService } from "src/services/allotments.service";
 import { AssociationBidService } from "src/services/association-bid.service";
 import { AuthService } from "src/services/auth.service";
 import { SupplierService } from "src/services/supplier.service";
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import { AllotmentResponseDto } from "src/dtos/allotment/allotment-response.dto";
+import { WorkPlanService } from "src/services/work-plan.service";
+import { WorkPlanProductInterface, WorkPlanRegisterRequest } from "src/dtos/workPlan/work-plan-register-request.dto";
+import { ModelContractClassificationEnum } from "src/enums/modelContract-classification.enum";
+import { LanguageContractEnum } from "src/enums/language-contract.enum";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-associacao-licitacao-data",
@@ -30,19 +37,27 @@ export class AssociacaoLicitacaoDataComponent {
   allAllotmentsList: any;
   date = new Date();
 
-  storedLanguage: string | null
+  storedLanguage: string | null;
+  responseAddAlloment: AllotmentResponseDto[];
+  workPlanId: any;
+  quantityItems: any;
+  quantityLotes: string;
+  workplandto: WorkPlanRegisterRequest;
 
   constructor(
     private modalService: NgbModal,
     private formBuilder: FormBuilder,
     public authService: AuthService,
+    private location: Location,
+    private translate: TranslateService,
     private associationBidService: AssociationBidService,
     private bidService: AssociationBidService,
+    private workPlanService: WorkPlanService,
     private route: ActivatedRoute,
     private toastrService: ToastrService,
     private router: Router,
     private supplierService: SupplierService,
-    private allotmentsService: AllotmentsService,
+    private allotmentsService: AllotmentsService
   ) {
     this.blockSupplier = this.formBuilder.group({
       message: [""],
@@ -57,7 +72,7 @@ export class AssociacaoLicitacaoDataComponent {
     });
     this.prazoEmdias = this.calcularPrazoEmDias(this.response.start_at, this.response.end_at);
 
-    this.storedLanguage = localStorage.getItem('selectedLanguage');
+    this.storedLanguage = localStorage.getItem("selectedLanguage");
   }
 
   calcularPrazoEmDias(prazoInicial: any, prazoFinal: any) {
@@ -75,14 +90,72 @@ export class AssociacaoLicitacaoDataComponent {
   open(contentBlocked: any) {
     this.modalService.open(contentBlocked, { size: "lg" });
   }
+
+  deleteBid(bid: any) {
+    this.modalService.open(bid, { size: "lg" });
+  }
+
+  confirmDeleteBid() {
+    this.responseAddAlloment = this.response.add_allotment;
+    for (let i = 0; i < this.responseAddAlloment.length; i++) {
+      for (let x = 0; x < this.responseAddAlloment[i].add_item.length; x++) {
+        this.quantityLotes = this.responseAddAlloment[i].add_item[x].quantity;
+      }
+    }
+    this.workPlanId = this.response.agreement.workPlan;
+    const listIdworkPlan = this.response.agreement.workPlan.map((id: string) => this.workPlanService.getById(id));
+    forkJoin(listIdworkPlan).subscribe({
+      next: (responses: any) => {
+        // console.log('foi tudo', responses)
+        for (let i = 0; i < responses.length; i++) {
+          const workPlan = responses[i];
+          const updatedProducts = workPlan.product.map((item: WorkPlanProductInterface) => {
+            const actualQuantity = item.quantity + Number(this.quantityLotes);
+            return {
+              quantity: actualQuantity,
+              unitValue: item.unitValue,
+              costItems: item.costItems,
+            };
+          });
+          const updatedWorkPlan: WorkPlanRegisterRequest = {
+            name: workPlan.name,
+            product: updatedProducts,
+          };
+          // console.log(updatedWorkPlan);
+          this.workPlanService.update(workPlan._id, updatedWorkPlan).subscribe({
+            next: (response: any) => {
+              // console.log('foi tudo', response);
+            },
+            error: err => {
+              console.error(err);
+            },
+          });
+        }
+      },
+      error: err => {
+        console.error(err);
+      },
+    });
+    // console.log(listIdworkPlan)
+
+    this.associationBidService.deleteBid(this.response._id).subscribe({
+      next: data => {
+        console.log("success");
+        this.modalService.dismissAll();
+        this.location.back();
+      },
+      error: error => {
+        console.error("error", error);
+      },
+    });
+  }
+
   async openModal(command: string, item: any = this.response) {
     if (this.response !== null) {
       localStorage.setItem("bidId", this.response._id);
     }
 
     if (command === "contract") this.router.navigate(["/pages/licitacoes/contratos-licitacoes"]);
-
-  
   }
 
   openUnblockModal(contentUnBlocked: any) {
@@ -118,23 +191,65 @@ export class AssociacaoLicitacaoDataComponent {
     let request = {
       status: "canceled",
     };
+
+    this.responseAddAlloment = this.response.add_allotment;
+    for (let i = 0; i < this.responseAddAlloment.length; i++) {
+      for (let x = 0; x < this.responseAddAlloment[i].add_item.length; x++) {
+        this.quantityLotes = this.responseAddAlloment[i].add_item[x].quantity;
+      }
+    }
+    this.workPlanId = this.response.agreement.workPlan;
+    const listIdworkPlan = this.response.agreement.workPlan.map((id: string) => this.workPlanService.getById(id));
+    forkJoin(listIdworkPlan).subscribe({
+      next: (responses: any) => {
+        // console.log('foi tudo', responses)
+        for (let i = 0; i < responses.length; i++) {
+          const workPlan = responses[i];
+          const updatedProducts = workPlan.product.map((item: WorkPlanProductInterface) => {
+            const actualQuantity = item.quantity + Number(this.quantityLotes);
+            return {
+              quantity: actualQuantity,
+              unitValue: item.unitValue,
+              costItems: item.costItems,
+            };
+          });
+          const updatedWorkPlan: WorkPlanRegisterRequest = {
+            name: workPlan.name,
+            product: updatedProducts,
+          };
+          // console.log(updatedWorkPlan);
+          this.workPlanService.update(workPlan._id, updatedWorkPlan).subscribe({
+            next: (response: any) => {
+              // console.log('foi tudo', response);
+            },
+            error: err => {
+              console.error(err);
+            },
+          });
+        }
+      },
+      error: err => {
+        console.error(err);
+      },
+    });
+    // console.log(listIdworkPlan)
+
     this.associationBidService.changeStatus(this.response._id, request).subscribe({
       next: data => {
-
-        let successMessage = 'Licitação cancelada com sucesso!';
+        let successMessage = "Licitação cancelada com sucesso!";
 
         switch (this.storedLanguage) {
-          case 'pt':
-            successMessage = 'Licitação cancelada com sucesso!'
+          case "pt":
+            successMessage = "Licitação cancelada com sucesso!";
             break;
-          case 'en':
-            successMessage = 'Bid canceled successfully!'
+          case "en":
+            successMessage = "Bid canceled successfully!";
             break;
-          case 'fr':
-            successMessage = 'Enchère annulée avec succès !'
+          case "fr":
+            successMessage = "Enchère annulée avec succès !";
             break;
-          case 'es':
-            successMessage = '¡Puja cancelada con éxito!'
+          case "es":
+            successMessage = "¡Puja cancelada con éxito!";
             break;
         }
 
@@ -148,21 +263,20 @@ export class AssociacaoLicitacaoDataComponent {
         }
       },
       error: error => {
-
-        let errorMessage = 'Erro ao recusar licitação!';
+        let errorMessage = "Erro ao recusar licitação!";
 
         switch (this.storedLanguage) {
-          case 'pt':
-            errorMessage = 'Erro ao recusar licitação!'
+          case "pt":
+            errorMessage = "Erro ao recusar licitação!";
             break;
-          case 'en':
-            errorMessage = 'Error rejecting bid!'
+          case "en":
+            errorMessage = "Error rejecting bid!";
             break;
-          case 'fr':
-            errorMessage = "Erreur lors du rejet de l'enchère !"
+          case "fr":
+            errorMessage = "Erreur lors du rejet de l'enchère !";
             break;
-          case 'es':
-            errorMessage = '¡Error al rechazar la oferta!'
+          case "es":
+            errorMessage = "¡Error al rechazar la oferta!";
             break;
         }
 
@@ -177,21 +291,20 @@ export class AssociacaoLicitacaoDataComponent {
     };
     this.associationBidService.changeStatus(this.response._id, request).subscribe({
       next: data => {
-
-        let successMessage = 'Licitação enviada com sucesso!';
+        let successMessage = "Licitação enviada com sucesso!";
 
         switch (this.storedLanguage) {
-          case 'pt':
-            successMessage = 'Licitação enviada com sucesso!'
+          case "pt":
+            successMessage = "Licitação enviada com sucesso!";
             break;
-          case 'en':
-            successMessage = 'Bid sent successfully!'
+          case "en":
+            successMessage = "Bid sent successfully!";
             break;
-          case 'fr':
-            successMessage = 'Enchère envoyée avec succès !'
+          case "fr":
+            successMessage = "Enchère envoyée avec succès !";
             break;
-          case 'es':
-            successMessage = '¡Oferta enviada con éxito!'
+          case "es":
+            successMessage = "¡Oferta enviada con éxito!";
             break;
         }
 
@@ -205,21 +318,20 @@ export class AssociacaoLicitacaoDataComponent {
         }
       },
       error: error => {
-
-        let errorMessage = 'Erro ao recusar licitação!';
+        let errorMessage = "Erro ao recusar licitação!";
 
         switch (this.storedLanguage) {
-          case 'pt':
-            errorMessage = 'Erro ao recusar licitação!'
+          case "pt":
+            errorMessage = "Erro ao recusar licitação!";
             break;
-          case 'en':
-            errorMessage = 'Error rejecting bid!'
+          case "en":
+            errorMessage = "Error rejecting bid!";
             break;
-          case 'fr':
-            errorMessage = "Erreur lors du rejet de l'enchère !"
+          case "fr":
+            errorMessage = "Erreur lors du rejet de l'enchère !";
             break;
-          case 'es':
-            errorMessage = '¡Error al rechazar la oferta!'
+          case "es":
+            errorMessage = "¡Error al rechazar la oferta!";
             break;
         }
 
@@ -248,7 +360,7 @@ export class AssociacaoLicitacaoDataComponent {
 
   download(_id: string) {
     this.allotmentsService.download(_id).subscribe((response: any) => {
-      const blob = new Blob([response], { type: 'application/pdf' });
+      const blob = new Blob([response], { type: "application/pdf" });
       let url = window.URL.createObjectURL(blob);
       window.open(url);
       // const url = URL.createObjectURL(blob);
@@ -257,68 +369,62 @@ export class AssociacaoLicitacaoDataComponent {
       // link.download = 'file.pdf';
       // link.click();
     });
-
-
   }
 
   getFileName(filePath: string): string {
-    const splited = filePath.split('/');
+    const splited = filePath.split("/");
     return splited[splited.length - 1];
   }
 
   getClassStatus(status: string) {
-    return '';
+    return "";
   }
 
   goViewProposals() {
-    this.router.navigate([`associacao/licitacoes/view-proposal/${this.response._id}`])
+    this.router.navigate([`associacao/licitacoes/view-proposal/${this.response._id}`]);
   }
 
-  async downloadComplentary(){
-    
+  async downloadComplentary() {
     const result = await this.bidService.download(this.response._id, "ataFile").toPromise();
 
-      const reader = new FileReader();
+    const reader = new FileReader();
 
-      reader.onload = (event: ProgressEvent<FileReader>) => {
-        const result = event.target?.result;
-        
-        if (typeof result === 'string') {
-          const array = JSON.parse(result);
-     
-          for(let dados of array){
-            
-            const pdfData = new Uint8Array(dados.result.data);
-            const file = new Blob([pdfData], { type: 'application/pdf' });
-            
-            const fileURL = URL.createObjectURL(file);
-  
-            const downloadLink = document.createElement('a');
-            downloadLink.href = fileURL;
-            downloadLink.download = 'arquivoComplementar.pdf';
-  
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-          }
-          
-        } else {
-          console.error('Error ao ler o pdf..');
+    reader.onload = (event: ProgressEvent<FileReader>) => {
+      const result = event.target?.result;
+
+      if (typeof result === "string") {
+        const array = JSON.parse(result);
+
+        for (let dados of array) {
+          const pdfData = new Uint8Array(dados.result.data);
+          const file = new Blob([pdfData], { type: "application/pdf" });
+
+          const fileURL = URL.createObjectURL(file);
+
+          const downloadLink = document.createElement("a");
+          downloadLink.href = fileURL;
+          downloadLink.download = "arquivoComplementar.pdf";
+
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
         }
-      };
+      } else {
+        console.error("Error ao ler o pdf..");
+      }
+    };
 
-      reader.onerror = (event: ProgressEvent<FileReader>) => {
-        console.error('Error ao ler o pdf.');
-      };
+    reader.onerror = (event: ProgressEvent<FileReader>) => {
+      console.error("Error ao ler o pdf.");
+    };
 
-      reader.readAsText(result);
-
+    reader.readAsText(result);
   }
   async downloadEdital() {
     //if (!this.response.editalFile) {
-//
+    //
     //  let errorMessage = 'Não há edital para essa licitação!';
-//
+    //
     //  switch (this.storedLanguage) {
     //    case 'pt':
     //      errorMessage = 'Não há edital para essa licitação!'
@@ -333,7 +439,7 @@ export class AssociacaoLicitacaoDataComponent {
     //      errorMessage = '¡No hay aviso público para esta licitación!'
     //      break;
     //  }
-//
+    //
     //  this.toastrService.error(errorMessage, "", { progressBar: true });
     //  return;
     //}
@@ -345,81 +451,134 @@ export class AssociacaoLicitacaoDataComponent {
     //window.open(fileURL);
 
     try {
-
-      const pdfDownaload = await this.associationBidService.bidPdf(this.response._id, 'De Edital');
-
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = pdfDownaload;
-
-      if (tempDiv) {
-        
-        html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
-          const pdf = new jsPDF('p', 'mm', 'a4');
-        
-          const imgData = canvas.toDataURL('image/png');
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight() / 2;
-          const marginLeft = 10;
-          const marginTop = 10;
-        
-          const maxFontSize = 12;
-          const lineHeight = 1.2;
-        
-          const footerSpacing = 10; 
-        
-          const text = tempDiv.innerText;
-          const textLines = pdf.splitTextToSize(text, pdfWidth - marginLeft * 2);
-        
-          let fontSize = maxFontSize;
-          let textHeight = (1) * pdf.internal.scaleFactor;
-        
-          let startY = marginTop;
-          let remainingText = textLines;
-        
-          while (remainingText.length) {
-            if (startY + textHeight > pdfHeight - marginTop - footerSpacing) {
-              pdf.addPage();
-              startY = marginTop;
-            }
-        
-            const availableSpace = pdfHeight - startY - marginTop - footerSpacing;
-            const maxLines = Math.floor(availableSpace / textHeight);
-            const textPage = remainingText.splice(0, maxLines);
-            const footerY = pdf.internal.pageSize.getHeight() - footerSpacing;
-        
-            pdf.text(textPage, marginLeft, startY);
-            startY += textPage.length * textHeight;
-            
-            if (startY + textHeight > pdfHeight - marginTop) {
-              pdf.text('', marginLeft, footerY);
-            }
-          }
-        
-          const pdfDataUri = pdf.output('datauristring');
-          const link = document.createElement('a');
-          link.href = pdfDataUri;
-          link.download = 'edital.pdf';
-          link.click();
-        
-          document.body.removeChild(tempDiv);
-        });
+      let type = ModelContractClassificationEnum.editalBens;
+      switch (this.response.classification) {
+        case "servicos":
+          type = ModelContractClassificationEnum.editalServicos;
+          break;
+        case "obras":
+          type = ModelContractClassificationEnum.editalObras;
+          break;
+        case "bens":
+          type = ModelContractClassificationEnum.editalBens;
+          break;
+        default:
+          break;
       }
-    } catch {
 
-      let errorMessage = 'Modelo de edital não cadastrado';
+      const selectedLanguage = this.translate.currentLang;
+      let language;
+      switch (selectedLanguage) {
+        case "pt":
+          language = LanguageContractEnum.portuguese;
+          break;
+        case "en":
+          language = LanguageContractEnum.english;
+          break;
+        case "es":
+          language = LanguageContractEnum.spanish;
+          break;
+        case "fr":
+          language = LanguageContractEnum.french;
+          break;
+        default:
+          language = LanguageContractEnum.english;
+          break;
+      }
+
+      await this.bidService
+        .downloadDocument(this.response._id, language, type)
+        .then(data => {
+          const buffer = data;
+          const file = new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const fileURL = URL.createObjectURL(file);
+          const link = document.createElement("a");
+          link.href = fileURL;
+          const name = this.response.bid_count + "/" + new Date(this.response.createdAt).getFullYear();
+          link.setAttribute("download", `Edital-${name}.docx`);
+          link.style.display = "none"; // Oculta o link no DOM
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch(error => {
+          console.error(error);
+          this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+        });
+
+      // const tempDiv = document.createElement('div');
+      // tempDiv.innerHTML = pdfDownaload;
+
+      // if (tempDiv) {
+
+      //   html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
+      //     const pdf = new jsPDF('p', 'mm', 'a4');
+
+      //     const imgData = canvas.toDataURL('image/png');
+      //     const pdfWidth = pdf.internal.pageSize.getWidth();
+      //     const pdfHeight = pdf.internal.pageSize.getHeight() / 2;
+      //     const marginLeft = 10;
+      //     const marginTop = 10;
+
+      //     const maxFontSize = 12;
+      //     const lineHeight = 1.2;
+
+      //     const footerSpacing = 10;
+
+      //     const text = tempDiv.innerText;
+      //     const textLines = pdf.splitTextToSize(text, pdfWidth - marginLeft * 2);
+
+      //     let fontSize = maxFontSize;
+      //     let textHeight = (1) * pdf.internal.scaleFactor;
+
+      //     let startY = marginTop;
+      //     let remainingText = textLines;
+
+      //     while (remainingText.length) {
+      //       if (startY + textHeight > pdfHeight - marginTop - footerSpacing) {
+      //         pdf.addPage();
+      //         startY = marginTop;
+      //       }
+
+      //       const availableSpace = pdfHeight - startY - marginTop - footerSpacing;
+      //       const maxLines = Math.floor(availableSpace / textHeight);
+      //       const textPage = remainingText.splice(0, maxLines);
+      //       const footerY = pdf.internal.pageSize.getHeight() - footerSpacing;
+
+      //       pdf.text(textPage, marginLeft, startY);
+      //       startY += textPage.length * textHeight;
+
+      //       if (startY + textHeight > pdfHeight - marginTop) {
+      //         pdf.text('', marginLeft, footerY);
+      //       }
+      //     }
+
+      //     const pdfDataUri = pdf.output('datauristring');
+      //     const link = document.createElement('a');
+      //     link.href = pdfDataUri;
+      //     link.download = 'edital.pdf';
+      //     link.click();
+
+      //     document.body.removeChild(tempDiv);
+      //   });
+      // }
+    } catch {
+      let errorMessage = "Modelo de edital não cadastrado";
 
       switch (this.storedLanguage) {
-        case 'pt':
-          errorMessage = 'Modelo de edital não cadastrado'
+        case "pt":
+          errorMessage = "Modelo de edital não cadastrado";
           break;
-        case 'en':
-          errorMessage = 'Unregistered bid/tender notice template'
+        case "en":
+          errorMessage = "Unregistered bid/tender notice template";
           break;
-        case 'fr':
-          errorMessage = "Modèle d'avis d'appel d'offres non enregistré"
+        case "fr":
+          errorMessage = "Modèle d'avis d'appel d'offres non enregistré";
           break;
-        case 'es':
-          errorMessage = 'Modelo de convocatoria no registrado'
+        case "es":
+          errorMessage = "Modelo de convocatoria no registrado";
           break;
       }
 
@@ -428,113 +587,67 @@ export class AssociacaoLicitacaoDataComponent {
   }
 
   async downloadAta() {
-   //if (!this.response.ataFile) {
+    try {
+      const selectedLanguage = this.translate.currentLang;
+      let language;
+      switch (selectedLanguage) {
+        case "pt":
+          language = LanguageContractEnum.portuguese;
+          break;
+        case "en":
+          language = LanguageContractEnum.english;
+          break;
+        case "es":
+          language = LanguageContractEnum.spanish;
+          break;
+        case "fr":
+          language = LanguageContractEnum.french;
+          break;
+        default:
+          language = LanguageContractEnum.english;
+          break;
+      }
 
-   //  let errorMessage = 'Não há ata para essa licitação!';
+      await this.bidService
+        .downloadDocument(this.response._id, language, ModelContractClassificationEnum.ata)
+        .then(data => {
+          const buffer = data;
+          const file = new Blob([buffer], {
+            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          });
+          const fileURL = URL.createObjectURL(file);
+          const link = document.createElement("a");
+          link.href = fileURL;
+          const name = this.response.bid_count + "/" + new Date(this.response.createdAt).getFullYear();
+          link.setAttribute("download", `Ata-${name}.docx`);
+          link.style.display = "none"; // Oculta o link no DOM
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch(error => {
+          console.error(error);
+          this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+        });
+    } catch {
+      let errorMessage = "Modelo de contrato não cadastrado";
 
-   //  switch (this.storedLanguage) {
-   //    case 'pt':
-   //      errorMessage = 'Não há ata para essa licitação!'
-   //      break;
-   //    case 'en':
-   //      errorMessage = 'There are no minutes for this bid!'
-   //      break;
-   //    case 'fr':
-   //      errorMessage = "Il n'y a pas de minutes pour cette enchère !"
-   //      break;
-   //    case 'es':
-   //      errorMessage = '¡No hay minutos para esta oferta!'
-   //      break;
-   //  }
+      switch (this.storedLanguage) {
+        case "pt":
+          errorMessage = "Modelo de contrato não cadastrado";
+          break;
+        case "en":
+          errorMessage = "Unregistered contract template";
+          break;
+        case "fr":
+          errorMessage = "Modèle de contrat non enregistré";
+          break;
+        case "es":
+          errorMessage = "Modelo de contrato no registrado";
+          break;
+      }
 
-   //  this.toastrService.error(errorMessage, "", { progressBar: true });
-   //  return;
-   //}
-
-   //const result = await this.associationBidService.download(this.response._id, 'ataFile');
-
-   //const file = new Blob([result], { type: 'application/pdf' });
-   //const url = window.URL.createObjectURL(file);
-   //window.open(url);
-   try {
-
-    const pdfDownaload = await this.associationBidService.bidPdf(this.response._id, 'De Ata');
-
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = pdfDownaload;
-
-    if (tempDiv) {
-      html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
-        const pdf = new jsPDF('p', 'mm', 'a4');
-      
-        const imgData = canvas.toDataURL('image/png');
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight() / 2;
-        const marginLeft = 10;
-        const marginTop = 10;
-      
-        const maxFontSize = 12;
-        const lineHeight = 1.2;
-      
-        const footerSpacing = 10; 
-      
-        const text = tempDiv.innerText;
-        const textLines = pdf.splitTextToSize(text, pdfWidth - marginLeft * 2);
-      
-        let fontSize = maxFontSize;
-        let textHeight = (1) * pdf.internal.scaleFactor;
-      
-        let startY = marginTop;
-        let remainingText = textLines;
-      
-        while (remainingText.length) {
-          if (startY + textHeight > pdfHeight - marginTop - footerSpacing) {
-            pdf.addPage();
-            startY = marginTop;
-          }
-      
-          const availableSpace = pdfHeight - startY - marginTop - footerSpacing;
-          const maxLines = Math.floor(availableSpace / textHeight);
-          const textPage = remainingText.splice(0, maxLines);
-          const footerY = pdf.internal.pageSize.getHeight() - footerSpacing;
-      
-          pdf.text(textPage, marginLeft, startY);
-          startY += textPage.length * textHeight;
-          
-          if (startY + textHeight > pdfHeight - marginTop) {
-            pdf.text('', marginLeft, footerY);
-          }
-        }
-      
-        const pdfDataUri = pdf.output('datauristring');
-        const link = document.createElement('a');
-        link.href = pdfDataUri;
-        link.download = 'ata.pdf';
-        link.click();
-      
-        document.body.removeChild(tempDiv);
-      });
+      this.toastrService.error(errorMessage, "", { progressBar: true });
     }
-  } catch {
-
-    let errorMessage = 'Modelo de contrato não cadastrado';
-
-    switch (this.storedLanguage) {
-      case 'pt':
-        errorMessage = 'Modelo de contrato não cadastrado'
-        break;
-      case 'en':
-        errorMessage = 'Unregistered contract template'
-        break;
-      case 'fr':
-        errorMessage = "Modèle de contrat non enregistré"
-        break;
-      case 'es':
-        errorMessage = 'Modelo de contrato no registrado'
-        break;
-    }
-
-    this.toastrService.error(errorMessage, "", { progressBar: true });
-  }
   }
 }

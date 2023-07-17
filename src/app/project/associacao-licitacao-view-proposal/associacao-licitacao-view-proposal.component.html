@@ -10,13 +10,10 @@
         class="my-4 text-center unblock-messege py-1 d-flex justify-content-center">
         <div class="pr-1"><img src="../../../../assets/images/icon-alert-blue.svg"></div>
         <div *ngIf="response.proposals.length > 1" class="unblock-text">{{"ASSOCIATION_CONTRACTS.ESTIMATED_TOTAL_VALUE"
-            | translate}}: {{valueEsteemed
-            |
-            currency: 'R$ '}}</div>
+            | translate}}: {{valueEsteemed | currency : 'BRL'}}</div>
         <div *ngIf="response.proposals.length === 1" class="unblock-text">
             {{"ASSOCIATION_CONTRACTS.ESTIMATED_TOTAL_VALUE" | translate}}:
-            {{response.proposals[0].total_value |
-            currency: 'R$ '}}</div>
+            {{response.proposals[0].total_value | currency : 'BRL'}}</div>
     </div>
 
     <div *ngIf="handleTie()" class="w-100 d-flex justify-content-end my-2">
@@ -48,13 +45,15 @@
                                     <h6 class="text-dark">{{"ASSOCIATION_CONTRACTS.SUPPLIER" | translate}}</h6>
                                     <h6>{{item?.name}}</h6>
                                 </div>
-                                <div *ngIf="item?.proposal?.proposedBy?.name" class="d-flex flex-column">
+                                <div class="d-flex flex-column">
                                     <h6 class="text-dark">Fornecedor</h6>
-                                    <h6 *ngIf="item?.proposal?.proposedBy?.name">{{item?.proposal?.proposedBy?.name}}</h6>
+                                    <h6>{{getSupplierName(item?.proposal?._id || '')}}
+                                    </h6>
                                 </div>
                                 <div *ngIf="item?.proposal?.total_value" class="d-flex flex-column">
                                     <h6 class="text-dark">{{"ASSOCIATION_AGREEMENTS.TOTAL_VALUE" | translate}}</h6>
-                                    <h6 *ngIf="item.proposal.total_value">{{item.proposal.total_value | currency: 'R$ '}}</h6>
+                                    <h6 *ngIf="item.proposal.total_value">{{item.proposal.total_value | currency :
+                                        'BRL'}}</h6>
                                 </div>
 
                                 <div *ngIf="!item?.proposal?.total_value" class="d-flex flex-column">
@@ -63,10 +62,12 @@
                                     <a (click)="download()">{{"ASSOCIATION_CONTRACTS.DOWNLOAD_SPREADSHEET" |
                                         translate}}</a>
                                 </div>
+
                                 <!-- <i class="bi"
                                     [ngClass]="{'bi-caret-down-fill': !isIconUp(i), 'bi-caret-up': isIconUp(i)}"></i> -->
                             </div>
-                            <div *ngIf="item?.proposal?.proposalWin === true && item.proposal.association_accept === false" class="space-buttons-action-bid-custom">
+                            <div *ngIf="item?.proposal?.proposalWin === true && item.proposal.association_accept === false"
+                                class="space-buttons-action-bid-custom">
                                 <button class="btn btn-outline-danger mt-3" (click)="refuse(item.proposal)"
                                     *ngIf="item.proposal.status !== 'aceitoRevisor' && item.proposal.status !== 'aceitoAssociacao' && !item.proposal.acceptedRevisorAt"
                                     style="max-width: 250px !important;">{{"SUPPLIER_BIDDING.REFUSE" |

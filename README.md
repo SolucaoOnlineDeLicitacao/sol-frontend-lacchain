@@ -25,3 +25,22 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+# Internationalization
+
+## Translation files
+
+Files are located on branch `feature/add-change-language`, no diretório `src/assets/i118n`.
+
+There will be 4 files with different languages:
+
+- `en.json` (English)
+- `es.json` (Spanish)
+- `fr.json` (French)
+- `pt.json` (Portuguese)
+
+> JSON files are used to translate files from the `src/app` directory into their respective languages.
+
+To add a new language, create a file in the same format and in the same directory as the others, copy one of the files, and translate into the language you want.
+
+![Internationalization](https://i.imgur.com/4FRIHg7.png)

@@ -21,4 +21,6 @@ export abstract class AssociationBidRequestDto {
     invited_suppliers?: string[];
     editalFile?: string;
     ataFile?: string;
+    state?: string;
+    city?: string;
 }

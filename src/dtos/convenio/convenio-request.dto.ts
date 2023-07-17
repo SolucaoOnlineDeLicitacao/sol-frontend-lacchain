@@ -9,4 +9,5 @@ export abstract class ConvenioRequestDto {
     validity_date: Date;
     associationId: string;
     reviewerId: string;
+    
 }

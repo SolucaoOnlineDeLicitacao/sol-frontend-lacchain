@@ -21,7 +21,7 @@
                         <h5 class="f-size-16">{{user?.name}}</h5>
                     </div>
                     <div class="col-12 col-lg-6 p-2 text-capitalize">
-                        <h6 class="font-poppins f-size-14 text-secondary">CPF/CNPJ</h6>
+                        <h6 class="font-poppins f-size-14 text-secondary">{{"REGISTER_SUPPLIER.CPF_CNPJ" | translate}}</h6>
                         <h5 *ngIf="user?.document?.length == 14" class="f-size-16">{{user?.document! | mask: '00.000.000/0000-00'}}</h5>
                         <h5 *ngIf="user?.document?.length == 11" class="f-size-16">{{user?.document! | mask: '000.000.000-00'}}</h5>
                     </div>

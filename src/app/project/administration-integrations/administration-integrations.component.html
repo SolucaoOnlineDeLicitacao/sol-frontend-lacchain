@@ -10,15 +10,27 @@
       *ngFor="let item of endpointList | paginate: { itemsPerPage: itensPerPage, currentPage: currentPage }; let i= index;"
       class="col-md-11 border mt-2 br-10 py-3 m-3">
       <div class="row ">
-        <div class="col-md-12 d-flex justify-content-between">
-          <h3><strong>{{item.endpointType}}</strong></h3>
-          <div class="d-block">
-            <h6 class="text-dark mb-0">Status</h6>
-            <p [ngClass]="handlerColorByStauts(item.status)" class="d-flex align-items-center">
-              <i [ngClass]="handlerIconsByStatus(item.status)" class="pr-1"></i>
-              {{item.status}}
-            </p>
-          </div>
+        <div class="col-md-6">
+          <h3><strong *ngIf="item.endpointType === 'association'">{{'ENDPOINT_NAME.ASSOCIATION' |
+              translate}}</strong></h3>
+          <h3><strong *ngIf="item.endpointType === 'agreement'">{{'ENDPOINT_NAME.AGREEMENT' |
+              translate}}</strong></h3>
+          <h3><strong *ngIf="item.endpointType === 'costItems'">{{'ENDPOINT_NAME.COSTITEMS' |
+              translate}}</strong></h3>
+        </div>
+        <div class="col-md-6 d-flex flex-column align-items-end">
+          <h6 class="text-dark mb-0">Status</h6>
+          <p [ngClass]="handlerColorByStauts(item.status)" class="d-flex align-items-center">
+            <i [ngClass]="handlerIconsByStatus(item.status)" class="pr-1"></i>
+            <span *ngIf="item.status === 'success'">{{'ENDPOINT_STATUS.SUCCESS' |
+              translate}}</span>
+            <span *ngIf="item.status === 'error'">{{'ENDPOINT_STATUS.ERROR' |
+              translate}}</span>
+            <span *ngIf="item.status === 'running'">{{'ENDPOINT_STATUS.RUNNING' |
+              translate}}</span>
+            <span *ngIf="item.status === 'stopped'">{{'ENDPOINT_STATUS.STOPPED' |
+              translate}}</span>
+          </p>
         </div>
         <div class="col-md-12">
           <div *ngIf="idList !== i" class="row">
@@ -36,7 +48,8 @@
                         translate}}
                         <i class="bi bi-eye pl-1"></i>
                       </h6>
-                      <h6 class="color-pattern" style="line-break: anywhere;" *ngIf="seeToken.get(item._id)">{{item.token}}
+                      <h6 class="color-pattern" style="line-break: anywhere;" *ngIf="seeToken.get(item._id)">
+                        {{item.token}}
                       </h6>
                       <h6 class="color-pattern" *ngIf="!seeToken.get(item._id)">******</h6>
                     </div>

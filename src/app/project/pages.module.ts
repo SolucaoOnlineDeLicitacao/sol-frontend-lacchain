@@ -130,6 +130,12 @@ import { ReportGeneralComponent } from './report-general/report-general.componen
 import { ReportGeneratedComponent } from './report-generated/report-generated.component';
 import { AdministrationIntegrationsComponent } from './administration-integrations/administration-integrations.component';
 import { EndPointsService } from 'src/services/endpoints.service';
+import { CEPPipe } from '../pipe/cep.pipe';
+import { CNPJPipe } from '../pipe/cnpj.pipe';
+import { AdministrationLicitacoesRevisorComponent } from './administration-licitacoes-revisor/administration-licitacoes-revisor.component';
+import { AdministrationAgreementRevisorComponent } from './administration-agreement-revisor/administration-agreement-revisor.component';
+import { AdministrationSetTimeComponent } from './administration-licitacoes/administration-set-time/administration-set-time.component';
+import { PlataformService } from 'src/services/plataform.service';
 
 @NgModule({
     declarations: [
@@ -230,7 +236,12 @@ import { EndPointsService } from 'src/services/endpoints.service';
         ReportContractComponent,
         ReportGeneralComponent,
         ReportGeneratedComponent,
-        AdministrationIntegrationsComponent
+        AdministrationIntegrationsComponent,
+        CEPPipe,
+        CNPJPipe,
+        AdministrationLicitacoesRevisorComponent,
+        AdministrationAgreementRevisorComponent,
+        AdministrationSetTimeComponent
     ],
     imports: [
         CommonModule,
@@ -272,7 +283,8 @@ import { EndPointsService } from 'src/services/endpoints.service';
         GetProposalByIdResolve,
         DashbordService,
         ReportsService,
-        EndPointsService
+        EndPointsService,
+        PlataformService
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA,

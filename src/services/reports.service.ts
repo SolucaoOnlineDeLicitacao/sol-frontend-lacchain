@@ -3,6 +3,7 @@ import { BaseService } from "./base.service";
 import { environment } from "src/environments/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { ReportContractResponseDto } from "src/dtos/reports/report-contract.response.dto";
+import { Observable, map, catchError } from 'rxjs';
 
 @Injectable()
 export class ReportsService extends BaseService {
@@ -53,6 +54,12 @@ export class ReportsService extends BaseService {
     downloadLink.click();
 
     window.URL.revokeObjectURL(downloadLink.href);
+  }
+
+  download(_id: string) {
+    return this.httpClient
+      .get(`${this.url}/download-report/${_id}`, this.authorizedHeaderFile)
+      .pipe(map(response => response), catchError(this.serviceError))
   }
 
 }

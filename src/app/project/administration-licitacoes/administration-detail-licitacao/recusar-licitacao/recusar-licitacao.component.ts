@@ -12,7 +12,8 @@ import { AssociationBidService } from 'src/services/association-bid.service';
 export class RecusarLicitacaoComponent implements OnInit {
 
   responseId: any;
-  storedLanguage : string | null
+  storedLanguage : string | null;
+  reason: string;
 
   constructor(
     private modalService: NgbModal,
@@ -30,9 +31,15 @@ export class RecusarLicitacaoComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
+  getReason(event: any) {
+    this.reason = event.target.value;
+  
+  }
+
   confirm() {
     let request = {
-      status: 'deserted'
+      status: 'returned',
+      declined_reason: this.reason
     }
 
     this.bidService.changeStatus(this.responseId, request).subscribe({

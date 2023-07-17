@@ -25,8 +25,6 @@ export class AssociationService extends BaseService {
       .get<AssociationResponseDto[]>(`${this.url}/list`, this.authorizedHeader);
   }
 
-
-
   register(dto: AssociationRegisterRegisterDto) {
     return this.httpClient
       .post<AssociationResponseDto>(`${this.url}/register`, dto, this.authorizedHeader);

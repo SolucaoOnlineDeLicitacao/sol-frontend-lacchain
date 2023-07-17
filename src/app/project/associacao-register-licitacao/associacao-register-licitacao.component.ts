@@ -6,13 +6,18 @@ import { ToastrService } from "ngx-toastr";
 import { forkJoin } from "rxjs";
 import { AllotmentRequestDto, ItemRequestDto } from "src/app/interface/licitacao.interface";
 import { AssociationBidRequestDto } from "src/dtos/association/association-bid.dto";
+import { WorkPlanDto, WorkPlanInterface } from "src/dtos/convenio/convenio-response.dto";
 import { CostItemsResponseDto } from "src/dtos/cost-items/cost-items-response.dto";
+import { WorkPlanProductInterface, WorkPlanRegisterRequest } from "src/dtos/workPlan/work-plan-register-request.dto";
 import { BidStatusEnum } from "src/enums/bid-status.enum";
 import { AssociationBidService } from "src/services/association-bid.service";
 import { ConvenioService } from "src/services/convenio.service";
 import { CostItemsService } from "src/services/cost-items.service";
 import { SupplierService } from "src/services/supplier.service";
 import { UserService } from "src/services/user.service";
+import Stepper from 'bs-stepper';
+import axios from 'axios';
+import { WorkPlanService } from "src/services/work-plan.service";
 
 @Component({
   selector: "app-associacao-register-licitacao",
@@ -21,8 +26,10 @@ import { UserService } from "src/services/user.service";
 })
 export class AssociacaoRegisterLicitacaoComponent {
   @ViewChild('pdfLote') pdfFileLote: ElementRef;
-  form!: FormGroup;
+  formModel!: FormGroup;
+  formDate!: FormGroup;
   formAddLots!: FormGroup;
+  form!: FormGroup;
   isSubmit: boolean = false;
   selectedFile: File | null = null;
   invitedSupplier: any[] = [];
@@ -41,49 +48,120 @@ export class AssociacaoRegisterLicitacaoComponent {
   costItemsList: CostItemsResponseDto[];
   selectedEdital: any;
   selectedAta: any;
-  checkBidType: string
-  today: any
+  checkBidType: string;
+  today: any;
 
   date: string;
   classification: any[] = [];
   costItemsListFilter: any[] = [];
 
-  storedLanguage: string | null
+  storedLanguage: string | null;
 
   selectedAdditionalFiles: any[] = [];
 
   daysToDeliveryValidator: boolean = false;
+
+  disableEditLot = false;
+  itemIdOfLote: string;
+  quantityItem = 0;
+  lotToEdit: any
+  lotNumber: number;
+
+  itemSelected: any = true;
+
+  private stepper: Stepper;
+
+
+  estados: string[] = [];
+  cidades: string[] = [];
+
+  estadosArrGet: any[] = [
+    { estado: "Acre", sigla: "AC" },
+    { estado: "Alagoas", sigla: "AL" },
+    { estado: "Amapá", sigla: "AP" },
+    { estado: "Amazonas", sigla: "AM" },
+    { estado: "Bahia", sigla: "BA" },
+    { estado: "Ceará", sigla: "CE" },
+    { estado: "Distrito Federal", sigla: "DF" },
+    { estado: "Espírito Santo", sigla: "ES" },
+    { estado: "Goiás", sigla: "GO" },
+    { estado: "Maranhão", sigla: "MA" },
+    { estado: "Mato Grosso", sigla: "MT" },
+    { estado: "Mato Grosso do Sul", sigla: "MS" },
+    { estado: "Minas Gerais", sigla: "MG" },
+    { estado: "Pará", sigla: "PA" },
+    { estado: "Paraíba", "sigla": "PB" },
+    { estado: "Paraná", "sigla": "PR" },
+    { estado: "Pernambuco", sigla: "PE" },
+    { estado: "Piauí", sigla: "PI" },
+    { estado: "Rio de Janeiro", sigla: "RJ" },
+    { estado: "Rio Grande do Norte", sigla: "RN" },
+    { estado: "Rio Grande do Sul", sigla: "RS" },
+    { estado: "Rondônia", sigla: "RO" },
+    { estado: "Roraima", sigla: "RR" },
+    { estado: "Santa Catarina", sigla: "SC" },
+    { estado: "São Paulo", sigla: "SP" },
+    { estado: "Sergipe", sigla: "SE" },
+    { estado: "Tocantins", sigla: "TO" }
+  ];
+
+  supplierList: any = [];
+
+  resumo: boolean = false;
+
+  associationSelected: any;
+
+  placeToDelivery: string = ''
+  daysToDelivery: string = ''
+  insuranceId: string;
+  workPlanId: WorkPlanDto[];
+  workPlanList: any;
+
+  viewBiddingTypeMsg: boolean = false;
+  viewModalityMsg: boolean = false;
+  viewDescriptionMsg: boolean = false;
+  viewInsuranceMsg: boolean = false;
+  viewClassificationMsg: boolean = false;
+  viewAdicionalSiteMsg: boolean = false;
+  quantityAgreement: number;
+
 
   constructor(
     private formBuilder: FormBuilder,
     private toastrService: ToastrService,
     private router: Router,
     private associationBidService: AssociationBidService,
+    private workPlanService: WorkPlanService,
     private convenioService: ConvenioService,
     private supplierService: SupplierService,
     private ngxSpinnerService: NgxSpinnerService,
     private costItemsService: CostItemsService
   ) {
-    this.form = this.formBuilder.group({
+    this.formModel = this.formBuilder.group({
+      biddingType: ["", [Validators.required]],
+      modality: ["", [Validators.required]],
       description: ["", [Validators.required]],
       insurance: ["", [Validators.required]],
       classification: ["", [Validators.required]],
-      initialDate: ["", [Validators.required]],
-      closureDate: ["", [Validators.required]],
-      timebreakerDays: ["", [Validators.required]],
-      executionDays: ["", [Validators.required]],
-      deliveryPlace: ["", [Validators.required]],
-      biddingType: ["", [Validators.required]],
-      modality: ["", [Validators.required]],
       adicionalSite: [""],
       editalFile: [""],
       ataFile: [""]
     });
 
+    this.formDate = this.formBuilder.group({
+      initialDate: [""],
+      closureDate: ["", [Validators.required]],
+      timebreakerDays: ["", [Validators.required]],
+      executionDays: ["", [Validators.required]],
+      deliveryPlace: ["", [Validators.required]],
+      stateSelect: ['', [Validators.required]],
+      citySelect: ['', [Validators.required]],
+    })
+
     this.formAddLots = this.formBuilder.group({
       batchName: ["", [Validators.required]],
-      deliveryTimeDays: ["", [Validators.required]],
-      deliveryPlaceLots: ["", [Validators.required]],
+      deliveryTimeDays: [""],
+      deliveryPlaceLots: [""],
       quantity: ["0"],
       item: [""],
       inviteSuppliers: [""],
@@ -91,6 +169,12 @@ export class AssociacaoRegisterLicitacaoComponent {
   }
 
   ngOnInit(): void {
+
+    this.stepper = new Stepper(document.querySelector('#stepper1'), {
+      linear: false,
+      animation: true,
+    })
+
     this.today = new Date()
     const currentDate = new Date();
     currentDate.setFullYear(currentDate.getFullYear() + 10);
@@ -107,6 +191,65 @@ export class AssociacaoRegisterLicitacaoComponent {
         this.costItemsList = data.costItens;
         this.userList = data.suppliers;
         this.convenioList = data.convenios.filter((item: any) => !!item.association);
+        let maxQuantity: number = 0;
+        this.formAddLots.controls['item'].valueChanges.subscribe({
+          next: data => {
+            if (data && data !== '') {
+              const convenio = this.convenioList.filter(el => el._id === this.formModel.controls['insurance'].value);
+              for (let iterator of convenio[0].workPlan) {
+                for (let item of iterator.product) {
+                  if (item.costItems._id === data) {
+                    maxQuantity = item.quantity
+                  }
+                }
+              }
+            }
+          }
+        })
+
+        this.formAddLots.controls['quantity'].valueChanges.subscribe({
+          next: data => {
+            if (data > maxQuantity) {
+              this.formAddLots.patchValue({
+                quantity: maxQuantity
+              })
+            }
+          }
+        });
+
+        this.formModel.controls['biddingType'].valueChanges.subscribe({
+          next: data => {
+            if (data !== 'individualPrice') {
+              this.formDate.controls['deliveryPlace'].valueChanges.subscribe({
+                next: data => {
+                  this.formAddLots.patchValue({
+                    deliveryPlaceLots: data
+                  })
+                }
+              })
+            }
+          }
+        })
+
+        this.formModel.controls['insurance'].valueChanges.subscribe({
+          next: data => {
+            let association = [];
+            association = this.convenioList.filter((el: any) => el._id === data);
+            this.formDate.patchValue({
+              deliveryPlace: association[0].association.address.publicPlace
+            })
+          }
+        });
+
+        this.formDate.controls['executionDays'].valueChanges.subscribe({
+          next: data => {
+            this.formAddLots.patchValue({
+              deliveryTimeDays: data
+            })
+          }
+        });
+
+
 
         if (localStorage.getItem("newBid")) {
 
@@ -120,7 +263,7 @@ export class AssociacaoRegisterLicitacaoComponent {
           this.lots = newBid.add_allotment;
           const executionDays = this.differenceInDays(newBid.days_to_delivery);
 
-          this.form.patchValue({
+          this.formModel.patchValue({
             description: newBid.description,
             status: newBid.status || "awaiting",
             insurance: newBid.agreement._id,
@@ -136,9 +279,9 @@ export class AssociacaoRegisterLicitacaoComponent {
             invited_suppliers: this.invitedSupplierId,
           });
 
-          this.changeAgreement();
+          this.changeAgreement(this.insuranceId);
 
-          this.form.patchValue({
+          this.formModel.patchValue({
             classification: newBid.classification,
           });
 
@@ -151,21 +294,156 @@ export class AssociacaoRegisterLicitacaoComponent {
     });
 
     this.storedLanguage = localStorage.getItem('selectedLanguage');
-
+    this.carregarEstados();
   }
+
+
+  viewMessage(msgView: string) {
+    if (msgView === 'biddingType') {
+      this.viewBiddingTypeMsg = true;
+      this.viewModalityMsg = false;
+      this.viewDescriptionMsg = false;
+      this.viewInsuranceMsg = false;
+      this.viewClassificationMsg = false;
+      this.viewAdicionalSiteMsg = false;
+    }
+
+    if (msgView === 'modality') {
+      this.viewBiddingTypeMsg = false;
+      this.viewModalityMsg = true;
+      this.viewDescriptionMsg = false;
+      this.viewInsuranceMsg = false;
+      this.viewClassificationMsg = false;
+      this.viewAdicionalSiteMsg = false;
+    }
+
+    if (msgView === 'description') {
+      this.viewBiddingTypeMsg = false;
+      this.viewModalityMsg = false;
+      this.viewDescriptionMsg = true;
+      this.viewInsuranceMsg = false;
+      this.viewClassificationMsg = false;
+      this.viewAdicionalSiteMsg = false;
+    }
+
+    if (msgView === 'insurance') {
+      this.viewBiddingTypeMsg = false;
+      this.viewModalityMsg = false;
+      this.viewDescriptionMsg = false;
+      this.viewInsuranceMsg = true;
+      this.viewClassificationMsg = false;
+      this.viewAdicionalSiteMsg = false;
+    }
+
+    if (msgView === 'classification') {
+      this.viewBiddingTypeMsg = false;
+      this.viewModalityMsg = false;
+      this.viewDescriptionMsg = false;
+      this.viewInsuranceMsg = false;
+      this.viewClassificationMsg = true;
+      this.viewAdicionalSiteMsg = false;
+    }
+
+    if (msgView === 'adicionalSite') {
+      this.viewBiddingTypeMsg = false;
+      this.viewModalityMsg = false;
+      this.viewDescriptionMsg = false;
+      this.viewInsuranceMsg = false;
+      this.viewClassificationMsg = false;
+      this.viewAdicionalSiteMsg = true;
+    }
+  }
+
+  next(value: string) {
+    if (value === 'step1' || value === 'step2') {
+      this.stepper.next();
+    }
+    if (value === 'step3' && this.formModel.controls['modality'].value !== 'openClosed') {
+      if (this.formModel.controls['modality'].value === '') {
+        this.toastrService.error('Selecione uma modalidade', '', { progressBar: true })
+        return
+      }
+      this.stepper.next();
+    }
+    if (value === 'step3' && this.formModel.controls['modality'].value === 'openClosed') {
+      this.resumo = true;
+      for (let iterator of this.convenioList) {
+        if (iterator._id === this.formModel.controls['insurance'].value) {
+          this.associationSelected = iterator
+        }
+      }
+
+      this.stepper.to(5);
+    } else if (value === 'step4') {
+      this.resumo = true;
+      for (let iterator of this.convenioList) {
+        if (iterator._id === this.formModel.controls['insurance'].value) {
+          this.associationSelected = iterator
+        }
+      }
+      this.stepper.next();
+    }
+  }
+
+  carregarEstados() {
+    axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+      .then((response: any) => {
+        this.estados = response.data.map((estado: any) => estado.nome);
+      })
+      .catch((error: any) => {
+        console.error('Erro ao carregar estados:', error);
+      });
+  }
+
+  selecionarEstado(estado: string) {
+
+    if (estado === '' || estado === null || estado === undefined) {
+      this.cidades = [];
+      this.formDate.patchValue({
+        citySelect: ''
+      })
+      return
+    }
+
+    const teste = this.estadosArrGet.filter(el => el.estado === estado);
+
+    axios.get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${teste[0].sigla}/municipios`)
+      .then((response: any) => {
+        this.cidades = response.data.map((cidade: any) => cidade.nome);
+      })
+      .catch((error: any) => {
+        console.error('Erro ao carregar cidades:', error);
+      });
+  }
+
+  selecionarCidade(cidade: string) { }
+
 
   validationInput(event: any) {
     const valueInput = event?.target.value
-    this.form.patchValue({
+    this.formDate.patchValue({
       executionDays: valueInput.replace(/[^0-9]/g, '')
     })
   }
 
   validationExecutionDays(event: any) {
     const valueInput = event?.target.value
-    this.form.patchValue({
+    this.formDate.patchValue({
       timebreakerDays: valueInput.replace(/[^0-9]/g, '')
     })
+  }
+
+  checkClosureDate(event: any) {
+    const valueInput = event?.target.value;
+    let sanitizedValue = valueInput.replace(/[^0-9]/g, '');
+
+    if (sanitizedValue.length > 1 && sanitizedValue.startsWith('0')) {
+      sanitizedValue = sanitizedValue.slice(1);
+    }
+
+    this.formDate.patchValue({
+      closureDate: sanitizedValue
+    });
   }
 
   validationDeliveryTimeDays(event: any) {
@@ -173,10 +451,11 @@ export class AssociacaoRegisterLicitacaoComponent {
     this.formAddLots.patchValue({
       deliveryTimeDays: valueInput.replace(/[^0-9]/g, '')
     })
+
   }
 
   validateDaysInput() {
-    const executionDaysValue = parseInt(this.form.controls["executionDays"].value);
+    const executionDaysValue = parseInt(this.formDate.controls["executionDays"].value);
     const deliveryTimeDaysValue = parseInt(this.formAddLots.controls["deliveryTimeDays"].value);
 
     if (deliveryTimeDaysValue > executionDaysValue) {
@@ -196,9 +475,9 @@ export class AssociacaoRegisterLicitacaoComponent {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  onSubmit() {
+  onSubmitDraft() {
     this.isSubmit = true;
-    if (this.form.status == "INVALID") {
+    if (this.formModel.status == "INVALID") {
 
       let errorMessage = 'Preencha todos os campos obrigatórios!';
 
@@ -226,42 +505,48 @@ export class AssociacaoRegisterLicitacaoComponent {
 
     if (!this.item || this.item.length === 0) {
       newBid = {
-        description: this.form.controls["description"].value,
+        description: this.formModel.controls["description"].value,
         status: BidStatusEnum.draft,
-        agreementId: this.form.controls["insurance"].value,
-        classification: this.form.controls["classification"].value,
-        start_at: this.form.controls["initialDate"].value,
-        end_at: this.form.controls["closureDate"].value,
-        days_to_delivery: this.form.controls["executionDays"].value.toString(),
-        days_to_tiebreaker: this.form.controls["timebreakerDays"].value.toString(),
-        local_to_delivery: this.form.controls["deliveryPlace"].value,
-        bid_type: this.form.controls["biddingType"].value,
-        modality: this.form.controls["modality"].value,
-        aditional_site: this.form.controls["adicionalSite"].value,
+        agreementId: this.formModel.controls["insurance"].value,
+        classification: this.formModel.controls["classification"].value,
+        start_at: this.formDate.controls["initialDate"].value,
+        end_at: this.formDate.controls["closureDate"].value,
+        days_to_delivery: this.formDate.controls["executionDays"].value.toString(),
+        days_to_tiebreaker: this.formDate.controls["timebreakerDays"].value.toString(),
+        local_to_delivery: this.formDate.controls["deliveryPlace"].value,
+        bid_type: this.formModel.controls["biddingType"].value,
+        modality: this.formModel.controls["modality"].value,
+        aditional_site: this.formModel.controls["adicionalSite"].value,
+        state: this.formDate.controls["stateSelect"].value,
+        city: this.formDate.controls["citySelect"].value,
         add_allotment: this.lots,
         invited_suppliers: this.invitedSupplierId,
         editalFile: this.selectedEdital,
         ataFile: this.selectedAta || null,
       };
+
     } else {
       newBid = {
-        description: this.form.controls["description"].value,
+        description: this.formModel.controls["description"].value,
         status: BidStatusEnum.draft,
-        agreementId: this.form.controls["insurance"].value,
-        classification: this.form.controls["classification"].value,
-        start_at: this.form.controls["initialDate"].value,
-        end_at: this.form.controls["closureDate"].value,
-        days_to_delivery: this.form.controls["executionDays"].value,
-        days_to_tiebreaker: this.form.controls["timebreakerDays"].value,
-        local_to_delivery: this.form.controls["deliveryPlace"].value,
-        bid_type: this.form.controls["biddingType"].value,
-        modality: this.form.controls["modality"].value,
-        aditional_site: this.form.controls["adicionalSite"].value,
+        agreementId: this.formModel.controls["insurance"].value,
+        classification: this.formModel.controls["classification"].value,
+        start_at: this.formDate.controls["initialDate"].value,
+        end_at: this.formDate.controls["closureDate"].value,
+        days_to_delivery: this.formDate.controls["executionDays"].value,
+        days_to_tiebreaker: this.formDate.controls["timebreakerDays"].value,
+        local_to_delivery: this.formDate.controls["deliveryPlace"].value,
+        bid_type: this.formModel.controls["biddingType"].value,
+        modality: this.formModel.controls["modality"].value,
+        aditional_site: this.formModel.controls["adicionalSite"].value,
+        state: this.formDate.controls["stateSelect"].value,
+        city: this.formDate.controls["citySelect"].value,
         add_allotment: this.lots,
         invited_suppliers: this.invitedSupplierId,
         editalFile: this.selectedEdital,
         ataFile: this.selectedAta || null,
       };
+
     }
 
     this.ngxSpinnerService.show();
@@ -284,6 +569,8 @@ export class AssociacaoRegisterLicitacaoComponent {
     formData.append('bid_type', newBid.bid_type!);
     formData.append('modality', newBid.modality!);
     formData.append('aditional_site', newBid.aditional_site!);
+    formData.append('state', newBid.state!);
+    formData.append('city', newBid.city!);
 
     if (newBid.invited_suppliers)
       for (let i = 0; i < newBid.invited_suppliers.length; i++)
@@ -301,9 +588,181 @@ export class AssociacaoRegisterLicitacaoComponent {
           formData.append(`add_allotment[${i}][add_item][${j}][group]`, newBid.add_allotment[i].add_item[j].group);
           formData.append(`add_allotment[${i}][add_item][${j}][item]`, newBid.add_allotment[i].add_item[j].item);
           formData.append(`add_allotment[${i}][add_item][${j}][quantity]`, newBid.add_allotment[i].add_item[j].quantity);
+          formData.append(`add_allotment[${i}][add_item][${j}][unitMeasure]`, newBid.add_allotment[i].add_item[j].unitMeasure);
+          formData.append(`add_allotment[${i}][add_item][${j}][specification]`, newBid.add_allotment[i].add_item[j].specification);
         }
       }
     }
+
+
+    this.associationBidService.bidRegisterFormData(formData).subscribe({
+      next: data => {
+
+        let successMessage = 'Licitação criada com sucesso!';
+
+        switch (this.storedLanguage) {
+          case 'pt':
+            successMessage = 'Licitação criada com sucesso!'
+            break;
+          case 'en':
+            successMessage = 'Tender created successfully!'
+            break;
+          case 'fr':
+            successMessage = "Appel d'offres créé avec succès !"
+            break;
+          case 'es':
+            successMessage = '¡Oferta creada con éxito!'
+            break;
+        }
+
+        this.toastrService.success(successMessage, "", { progressBar: true });
+        this.ngxSpinnerService.hide();
+        this.router.navigate(["/pages/associacao/licitacoes"]);
+      },
+      error: error => {
+
+        let errorMessage = 'Não foi possível criar a Licitação, verifique os campos';
+
+        switch (this.storedLanguage) {
+          case 'pt':
+            errorMessage = 'Não foi possível criar a Licitação, verifique os campos'
+            break;
+          case 'en':
+            errorMessage = 'Unable to create the Tender, check the fields'
+            break;
+          case 'fr':
+            errorMessage = "Impossible de créer l'offre, vérifiez les champs"
+            break;
+          case 'es':
+            errorMessage = 'No se pudo crear la Oferta, verifique los campos'
+            break;
+        }
+
+        this.toastrService.error(errorMessage, "", { progressBar: true });
+        this.ngxSpinnerService.hide();
+      },
+    });
+  }
+
+  onSubmit() {
+    this.isSubmit = true;
+    if (this.formModel.status == "INVALID") {
+
+      let errorMessage = 'Preencha todos os campos obrigatórios!';
+
+      switch (this.storedLanguage) {
+        case 'pt':
+          errorMessage = 'Preencha todos os campos obrigatórios!'
+          break;
+        case 'en':
+          errorMessage = 'Fill in all required fields!'
+          break;
+        case 'fr':
+          errorMessage = 'Remplissez tous les champs obligatoires !'
+          break;
+        case 'es':
+          errorMessage = '¡Complete todos los campos requeridos!'
+          break;
+      }
+
+
+      this.toastrService.error(errorMessage);
+      return;
+    }
+
+    let newBid: AssociationBidRequestDto;
+
+    if (!this.item || this.item.length === 0) {
+      newBid = {
+        description: this.formModel.controls["description"].value,
+        status: BidStatusEnum.awaiting,
+        agreementId: this.formModel.controls["insurance"].value,
+        classification: this.formModel.controls["classification"].value,
+        start_at: this.formDate.controls["initialDate"].value,
+        end_at: this.formDate.controls["closureDate"].value,
+        days_to_delivery: this.formDate.controls["executionDays"].value.toString(),
+        days_to_tiebreaker: this.formDate.controls["timebreakerDays"].value.toString(),
+        local_to_delivery: this.formDate.controls["deliveryPlace"].value,
+        bid_type: this.formModel.controls["biddingType"].value,
+        modality: this.formModel.controls["modality"].value,
+        aditional_site: this.formModel.controls["adicionalSite"].value,
+        state: this.formDate.controls["stateSelect"].value,
+        city: this.formDate.controls["citySelect"].value,
+        add_allotment: this.lots,
+        invited_suppliers: this.invitedSupplierId,
+        editalFile: this.selectedEdital,
+        ataFile: this.selectedAta || null,
+      };
+
+    } else {
+      newBid = {
+        description: this.formModel.controls["description"].value,
+        status: BidStatusEnum.awaiting,
+        agreementId: this.formModel.controls["insurance"].value,
+        classification: this.formModel.controls["classification"].value,
+        start_at: this.formDate.controls["initialDate"].value,
+        end_at: this.formDate.controls["closureDate"].value,
+        days_to_delivery: this.formDate.controls["executionDays"].value,
+        days_to_tiebreaker: this.formDate.controls["timebreakerDays"].value,
+        local_to_delivery: this.formDate.controls["deliveryPlace"].value,
+        bid_type: this.formModel.controls["biddingType"].value,
+        modality: this.formModel.controls["modality"].value,
+        aditional_site: this.formModel.controls["adicionalSite"].value,
+        state: this.formDate.controls["stateSelect"].value,
+        city: this.formDate.controls["citySelect"].value,
+        add_allotment: this.lots,
+        invited_suppliers: this.invitedSupplierId,
+        editalFile: this.selectedEdital,
+        ataFile: this.selectedAta || null,
+      };
+
+    }
+
+    this.ngxSpinnerService.show();
+
+    const formData = new FormData();
+
+    this.selectedAdditionalFiles.forEach((file: any) => {
+      formData.append('files', file);
+    });
+
+    formData.append('description', newBid.description!);
+    formData.append('agreementId', newBid.agreementId!);
+    formData.append('classification', newBid.classification!);
+    formData.append('start_at', newBid.start_at!);
+    formData.append('end_at', newBid.end_at!);
+    formData.append('days_to_delivery', newBid.days_to_delivery!);
+    formData.append('days_to_tiebreaker', newBid.days_to_tiebreaker!);
+    formData.append('local_to_delivery', newBid.local_to_delivery!);
+    formData.append('status', newBid.status!);
+    formData.append('bid_type', newBid.bid_type!);
+    formData.append('modality', newBid.modality!);
+    formData.append('aditional_site', newBid.aditional_site!);
+    formData.append('state', newBid.state!);
+    formData.append('city', newBid.city!);
+
+    if (newBid.invited_suppliers)
+      for (let i = 0; i < newBid.invited_suppliers.length; i++)
+        formData.append(`invited_suppliers[${i}][_id]`, newBid.invited_suppliers[i]!);
+
+    if (newBid.add_allotment) {
+      for (let i = 0; i < newBid.add_allotment.length; i++) {
+        formData.append(`add_allotment[${i}][allotment_name]`, newBid.add_allotment[i].allotment_name!);
+        formData.append(`add_allotment[${i}][days_to_delivery]`, newBid.add_allotment[i].days_to_delivery!);
+        formData.append(`add_allotment[${i}][place_to_delivery]`, newBid.add_allotment[i].place_to_delivery!);
+        formData.append(`add_allotment[${i}][quantity]`, newBid.add_allotment[i].quantity!);
+        formData.append(`add_allotment[${i}][files]`, newBid.add_allotment[i].files!);
+
+        for (let j = 0; j < newBid.add_allotment[i].add_item.length; j++) {
+          formData.append(`add_allotment[${i}][add_item][${j}][group]`, newBid.add_allotment[i].add_item[j].group);
+          formData.append(`add_allotment[${i}][add_item][${j}][item]`, newBid.add_allotment[i].add_item[j].item);
+          formData.append(`add_allotment[${i}][add_item][${j}][quantity]`, newBid.add_allotment[i].add_item[j].quantity);
+          formData.append(`add_allotment[${i}][add_item][${j}][unitMeasure]`, newBid.add_allotment[i].add_item[j].unitMeasure);
+          formData.append(`add_allotment[${i}][add_item][${j}][specification]`, newBid.add_allotment[i].add_item[j].specification);
+        }
+      }
+    }
+
 
     this.associationBidService.bidRegisterFormData(formData).subscribe({
       next: data => {
@@ -361,7 +820,7 @@ export class AssociacaoRegisterLicitacaoComponent {
   isFormValid(): boolean {
     const itemValid = this.formAddLots.controls["item"].valid;
     const quantityValid = this.formAddLots.controls["quantity"].valid;
-    const isIndividualPrice = this.form.controls["biddingType"].value === "individualPrice";
+    const isIndividualPrice = this.formModel.controls["biddingType"].value === "individualPrice";
     const isOneItem = this.item?.length === 1;
 
     return itemValid && quantityValid && !(isIndividualPrice && isOneItem);
@@ -394,6 +853,8 @@ export class AssociacaoRegisterLicitacaoComponent {
     this.invitedSupplier.splice(index, 1);
     this.invitedSupplierId.splice(index, 1);
   }
+
+
 
   onSelectFileProductImage(event: any) {
 
@@ -445,25 +906,100 @@ export class AssociacaoRegisterLicitacaoComponent {
     }
   }
 
-  addItem() {
-    const selectedItem = this.costItemsList.find(item => item._id === this.formAddLots.controls["item"].value);
-
-    if (selectedItem) {
-      const newItem: ItemRequestDto = {
-        group: "grupo",
-        item: selectedItem.name || "",
-        quantity: this.formAddLots.controls["quantity"].value,
-      };
-      this.item.push(newItem);
-      this.formAddLots.controls["item"].reset()
-      this.formAddLots.controls["quantity"].reset();
-      this.formAddLots.markAsPristine();
+  setItemValue(IdItem: string) {
+    this.itemIdOfLote = IdItem
+    for (let i = 0; i < this.workPlanId.length; i++) {
+      for (let x = 0; x < this.workPlanId[i].product.length; x++) {
+        const item = this.workPlanId[i].product[x];
+        if (item.costItems === this.itemIdOfLote) {
+          this.quantityAgreement = item.quantity
+          this.quantityItem = item.quantity
+        }
+        console.log(item.quantity)
+      }
     }
-    // if (this.item.length > 0) {
-    //   this.formAddLots.controls["batchName"].disable()
-    //   this.formAddLots.controls["deliveryTimeDays"].disable()
-    //   this.formAddLots.controls["deliveryPlaceLots"].disable()
-    // }
+    this.itemSelected = false;
+
+  }
+
+  addItem() {
+    for (let i = 0; i < this.workPlanId.length; i++) {
+      for (let x = 0; x < this.workPlanId[i].product.length; x++) {
+        const item = this.workPlanId[i].product[x];
+        if (item.costItems === this.itemIdOfLote) {
+          let countQuantity = item.quantity - Number(this.formAddLots.controls["quantity"].value)
+          // console.log(countQuantity)
+          let workplandto: WorkPlanRegisterRequest = {
+            name: this.workPlanId[i].name,
+            product: [{
+              quantity: countQuantity,
+              unitValue: item.unitValue,
+              costItems: item.costItems
+            }]
+          }
+          this.workPlanService.update(this.workPlanId[i]._id, workplandto).subscribe({
+            next: data => {
+
+              // console.log('deu bom', workplandto, this.workPlanId[i]._id);
+            },
+            error: error => {
+              console.error('deu errado', error.error.message);
+            },
+          });
+
+        }
+      }
+    }
+    const selectedItem = this.costItemsList.find(item => item._id === this.formAddLots.controls["item"].value);
+    if (this.checkBidType !== 'individualPrice') {
+      if (selectedItem) {
+        const newItem: ItemRequestDto = {
+          group: "grupo",
+          item: selectedItem.name || "",
+          quantity: this.formAddLots.controls["quantity"].value,
+          unitMeasure: selectedItem.unitMeasure!,
+          specification: selectedItem.specification
+        };
+        this.item.push(newItem);
+        this.formAddLots.controls["item"].reset()
+        this.formAddLots.controls["quantity"].reset();
+        this.formAddLots.markAsPristine();
+      }
+    } else {
+
+      if (selectedItem) {
+        const newItem: ItemRequestDto = {
+          group: "grupo",
+          item: selectedItem.name || "",
+          quantity: this.formAddLots.controls["quantity"].value,
+          unitMeasure: selectedItem.unitMeasure!,
+          specification: selectedItem.specification
+        };
+
+        const newAllotment: AllotmentRequestDto = {
+          allotment_name: this.formModel.controls["description"].value,
+          days_to_delivery: this.formDate.controls["closureDate"].value,
+          place_to_delivery: this.formDate.controls["deliveryPlace"].value,
+          quantity: this.formAddLots.controls["quantity"].value,
+          files: this.supplierImg,
+          add_item: [newItem],
+          isSectionOpen: false
+        };
+
+
+        this.lots.push({ ...newAllotment });
+
+
+        this.item = [];
+        this.pdfFileLote.nativeElement.value = "";
+        this.formAddLots.reset();
+        this.supplierImg = "";
+
+
+      }
+      this.itemSelected = true
+    }
+
   }
 
   getItemName(itemId: string): string {
@@ -471,11 +1007,25 @@ export class AssociacaoRegisterLicitacaoComponent {
     return item && item.name ? item.name : "";
   }
 
-  changeAgreement() {
+  changeAgreement(insurance: string) {
+    this.insuranceId = insurance;
+
+    this.convenioService.getConvenioById(insurance).subscribe({
+      next: data => {
+        this.workPlanId = data.workPlan;
+        // console.log('convênio', data);
+        for (let i = 0; i < this.workPlanId.length; i++) {
+          // console.log(this.workPlanId[i].product);
+        }
+      },
+      error: error => {
+        console.error(error.error.message);
+      },
+    });
 
     this.classification = [];
 
-    this.form.patchValue({
+    this.formModel.patchValue({
       classification: ''
     });
 
@@ -483,7 +1033,7 @@ export class AssociacaoRegisterLicitacaoComponent {
       item: ''
     });
 
-    let convenioIndex = this.convenioList.findIndex((el: any) => el._id == this.form.controls['insurance'].value);
+    let convenioIndex = this.convenioList.findIndex((el: any) => el._id == this.formModel.controls['insurance'].value);
     for (const workPlan of this.convenioList[convenioIndex].workPlan) {
       const categorys = workPlan.product.map((a: any) => a.costItems?.category?.category_name);
       for (const category of categorys) {
@@ -503,56 +1053,75 @@ export class AssociacaoRegisterLicitacaoComponent {
 
   changeClassification() {
     this.costItemsListFilter = [];
-    this.costItemsListFilter = this.costItemsList.filter((a: any) => a.category?.category_name == this.form.controls['classification'].value);
+    this.costItemsListFilter = this.costItemsList.filter((a: any) => a.category?.category_name == this.formModel.controls['classification'].value);
     for (const costItem of this.costItemsList) {
-      if (costItem?.category?.category_name == this.form.controls['insurance'].value) {
+      if (costItem?.category?.category_name == this.formModel.controls['insurance'].value) {
         this.costItemsListFilter.push(costItem);
       }
     }
+
+    this.supplierList = [];
+
+    for (let item of this.userList) {
+      for (let iterator of item.categories) {
+        if (iterator.category_name === this.formModel.controls['classification'].value) {
+          if (item.blocked === false) {
+            this.supplierList.push(item);
+          }
+        }
+      }
+    }
+
   }
 
   addLot() {
-    if (this.item.length > 0) {
-      const newAllotment: AllotmentRequestDto = {
-        allotment_name: this.formAddLots.controls["batchName"].value,
-        days_to_delivery: this.formAddLots.controls["deliveryTimeDays"].value,
-        place_to_delivery: this.formAddLots.controls["deliveryPlaceLots"].value,
-        quantity: this.formAddLots.controls["quantity"].value,
-        files: this.supplierImg,
-        add_item: [...this.item],
-      };
+    if (this.checkBidType !== 'individualPrice') {
+      if (this.item.length > 0) {
+        const newAllotment: AllotmentRequestDto = {
+          allotment_name: this.formAddLots.controls["batchName"].value,
+          days_to_delivery: this.daysToDelivery || this.formAddLots.controls["deliveryTimeDays"].value,
+          place_to_delivery: this.placeToDelivery || this.formAddLots.controls["deliveryPlaceLots"].value,
+          quantity: this.formAddLots.controls["quantity"].value,
+          files: this.supplierImg,
+          add_item: [...this.item],
+          isSectionOpen: false
+        };
 
-      this.lots.push({ ...newAllotment });
-      this.item = [];
-      this.pdfFileLote.nativeElement.value = "";
-      this.formAddLots.reset();
-      this.supplierImg = "";
-
-      console.log(newAllotment);
+        this.lots.push({ ...newAllotment });
+        this.item = [];
+        this.pdfFileLote.nativeElement.value = "";
+        this.formAddLots.reset();
+        this.supplierImg = "";
 
 
-    } else {
+      } else {
 
-      let errorMessage = 'É necessário adicionar pelo menos um item ao lote';
+        let errorMessage = 'É necessário adicionar pelo menos um item ao lote';
 
-      switch (this.storedLanguage) {
-        case 'pt':
-          errorMessage = 'É necessário adicionar pelo menos um item ao lote'
-          break;
-        case 'en':
-          errorMessage = 'You must add at least one item to the batch'
-          break;
-        case 'fr':
-          errorMessage = "Vous devez ajouter au moins un article au lot"
-          break;
-        case 'es':
-          errorMessage = 'Debe agregar al menos un artículo al lote'
-          break;
+        switch (this.storedLanguage) {
+          case 'pt':
+            errorMessage = 'É necessário adicionar pelo menos um item ao lote'
+            break;
+          case 'en':
+            errorMessage = 'You must add at least one item to the batch'
+            break;
+          case 'fr':
+            errorMessage = "Vous devez ajouter au moins un article au lot"
+            break;
+          case 'es':
+            errorMessage = 'Debe agregar al menos un artículo al lote'
+            break;
+        }
+
+        this.toastrService.error(errorMessage, "", { progressBar: true });
       }
+      this.formAddLots.markAsPristine();
 
-      this.toastrService.error(errorMessage, "", { progressBar: true });
+      this.formAddLots.patchValue({
+        deliveryTimeDays: this.formDate.controls['executionDays'].value,
+        deliveryPlaceLots: this.formDate.controls['deliveryPlace'].value
+      })
     }
-    this.formAddLots.markAsPristine();
   }
 
   getYear(event: any, formName: string) {
@@ -562,11 +1131,11 @@ export class AssociacaoRegisterLicitacaoComponent {
 
 
     if (formName === 'closureDate') {
-      if (!this.form.controls['initialDate'].value) {
-        this.form.controls['closureDate'].reset()
+      if (!this.formDate.controls['initialDate'].value) {
+        this.formDate.controls['closureDate'].reset()
       }
     } else {
-      this.form.controls['closureDate'].reset()
+      this.formDate.controls['closureDate'].reset()
 
     }
 
@@ -576,13 +1145,159 @@ export class AssociacaoRegisterLicitacaoComponent {
     this.lots.splice(index, 1);
   }
 
-  checkValue(event: any) {
-    if (event.target.value < 0) {
-      event.target.value = 0;
+  editAllotment(event: any) {
+    switch (event.target.id) {
+      case 'batchName':
+        this.lots[this.lotNumber].allotment_name = event.target.value;
+
+        break
+      case 'deliveryTimeDays':
+        this.lots[this.lotNumber].days_to_delivery = event.target.value
+        break
+      case 'deliveryPlaceLots':
+        this.lots[this.lotNumber].place_to_delivery = event.target.value
+        break
+      default:
+    }
+
+  }
+
+  addAllotmentItem(item: any) {
+    const selectedItem = this.costItemsList.find(item => item._id === this.formAddLots.controls["item"].value);
+
+    if (selectedItem) {
+      const newItem: ItemRequestDto = {
+        group: "grupo",
+        item: selectedItem.name || "",
+        quantity: this.formAddLots.controls["quantity"].value,
+        unitMeasure: selectedItem.unitMeasure || "",
+        specification: selectedItem.specification
+      };
+
+      this.lots[this.lotNumber].add_item.push(newItem);
+
+
     }
   }
 
+  onSelectFileAllotment(event: any) {
+
+    for (let i = 0; i < event.target.files.length; i++) {
+      this.totalFiles.push(event.target.files[i]);
+    }
+
+    if (event.target.files && event.target.files[0]) {
+      this.notImage = false;
+      var filesAmount = event.target.files.length;
+      for (let i = 0; i < filesAmount; i++) {
+        var reader = new FileReader();
+        reader.onload = (event: any) => {
+          this.supplierImg = event.target.result as string;
+
+        };
+        reader.readAsDataURL(event.target.files[i]);
+
+      }
+    }
+
+  }
+
+  removeAllotmentItem(index: number) {
+    this.lots[this.lotNumber].add_item.splice(index, 1)
+
+  }
+
+  editBatch(event: any, index: number) {
+    this.lotNumber = index
+
+
+  }
+
+  saveChanges() {
+    this.disableEditLot = !this.disableEditLot
+
+    this.lots[this.lotNumber].files = this.supplierImg
+  }
+
+  editLot(index: number) {
+
+    this.lotNumber = index
+    this.disableEditLot = !this.disableEditLot
+    this.lotToEdit = this.lots[index]
+
+    console.log(this.lotToEdit);
+
+    console.log(this.lotNumber);
+
+    const item = this.costItemsListFilter.filter(el => el.name === this.lotToEdit.add_item[0].item)
+
+    this.formAddLots.patchValue({
+      batchName: this.lotToEdit.allotment_name,
+      deliveryTimeDays: this.lotToEdit.days_to_delivery,
+      deliveryPlaceLots: this.lotToEdit.place_to_delivery,
+      quantity: this.lotToEdit.add_item[0].quantity,
+      item: item[0]._id,
+    })
+
+  }
+
+  saveEdit() {
+
+    const index = this.lots.indexOf(this.lotToEdit);
+    if (index > -1) {
+      this.lots.splice(index, 1);
+    }
+
+    const selectedItem = this.costItemsList.find(item => item._id === this.formAddLots.controls["item"].value);
+
+    if (selectedItem) {
+      const newItem: ItemRequestDto = {
+        group: "grupo",
+        item: selectedItem.name || "",
+        quantity: this.formAddLots.controls["quantity"].value,
+        unitMeasure: selectedItem.unitMeasure || "",
+        specification: selectedItem.specification
+      };
+
+      this.lots[this.lotNumber].add_item.push(newItem);
+
+    }
+    this.disableEditLot = !this.disableEditLot
+  }
+
+  checkValue(event: any) {
+    if (event.target.value < 0) {
+      event.target.value = 0
+    }
+  }
+
+
+  setLot(event: any) {
+    if (event.target.id === 'executionDays') {
+      this.daysToDelivery = event.target.value
+
+
+    }
+    if (event.target.id === 'deliveryPlace') {
+      this.placeToDelivery = event.target.value
+
+    }
+
+    if (event.target.id === 'deliveryPlaceLots') {
+      this.placeToDelivery = event.target.value
+
+    }
+
+    if (event.target.id === 'deliveryTimeDays') {
+      this.daysToDelivery = event.target.value
+    }
+
+
+
+  }
+
   removeItem(index: number) {
+
     this.item.splice(index, 1);
     if (this.item.length === 0) {
       this.formAddLots.controls["batchName"].enable()
@@ -597,5 +1312,9 @@ export class AssociacaoRegisterLicitacaoComponent {
     var now = new Date();
     let difference = futureDate.getTime() - now.getTime();
     return Math.ceil(difference / (1000 * 3600 * 24));
+  }
+
+  toggleSectionAllotment(allotment: AllotmentRequestDto) {
+    allotment.isSectionOpen = !allotment.isSectionOpen;
   }
 }

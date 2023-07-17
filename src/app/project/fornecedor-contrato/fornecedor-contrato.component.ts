@@ -5,6 +5,7 @@ import { AuthService } from 'src/services/auth.service';
 import { ContractsService } from 'src/services/contract.service';
 import { DatamockService } from 'src/services/datamock.service';
 import { jsPDF } from 'jspdf';
+import { ContractInterface } from 'src/app/interface/contracts.interface';
 
 @Component({
   selector: 'app-fornecedor-contrato',
@@ -12,7 +13,7 @@ import { jsPDF } from 'jspdf';
   styleUrls: ['./fornecedor-contrato.component.scss']
 })
 export class FornecedorContratoComponent {
-  contratosList: any [] = [];
+  contratosList: ContractInterface[] = [];
   currentPage: number = 1;
   itensPerPage: number = 6;
   searchTool = false;

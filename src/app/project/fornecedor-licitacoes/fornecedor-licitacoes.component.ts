@@ -28,6 +28,8 @@ export class FornecedorLicitacoesComponent {
   licitacoesId: any;
   associationName: any;
   listAssociationInfo: any;
+  selectedFilterOption : string = "listAll"
+  search : string = ''
 
   idArray: string[] = [];
   listIdAssociation: any;
@@ -88,12 +90,34 @@ export class FornecedorLicitacoesComponent {
   }
 
   filter(event: any) {
-    const search = event.target.value;
+    this.search = event.target.value;
     this.licitacoesListFilter = this.licitacoesList.filter(
-      (item: any) =>
-        item.bid_count?.toLowerCase().includes(search.toLowerCase()) ||
-        item.description?.toLowerCase().includes(search.toLowerCase()) ||
-        item.association?.association?.name.toLowerCase().includes(search.toLowerCase())
+      (item: any) => {
+        if(this.selectedFilterOption === 'listAll' || this.selectedFilterOption === 'descending') {
+          return item.bid_count?.toLowerCase().includes(this.search.toLowerCase()) ||
+            item.description?.toLowerCase().includes(this.search.toLowerCase()) ||
+            item.association?.association?.name.toLowerCase().includes(this.search.toLowerCase())
+        }
+
+        if(!this.search.length) return item.status === this.selectedFilterOption
+
+        if(this.search.length && item.status === this.selectedFilterOption) {
+          return item.bid_count?.toLowerCase().includes(this.search.toLowerCase()) ||
+            item.description?.toLowerCase().includes(this.search.toLowerCase()) ||
+            item.association?.association?.name.toLowerCase().includes(this.search.toLowerCase())
+        }
+      }
     );
+  }
+
+  changeSelectedFilter(event : any) {
+    this.selectedFilterOption = event.target.value;
+
+    const object = { 
+      target : {
+        value : this.search
+      } 
+    }
+    this.filter(object)
   }
 }
