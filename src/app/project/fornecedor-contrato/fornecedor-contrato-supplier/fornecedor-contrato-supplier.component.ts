@@ -125,76 +125,50 @@ export class FornecedorContratoSupplierComponent {
   }
 
   async downloadPdf() {
-    try {
-      const selectedLanguage = this.translate.currentLang;
-      let language;
-      switch (selectedLanguage) {
-        case "pt":
-          language = LanguageContractEnum.portuguese;
-          break;
-        case "en":
-          language = LanguageContractEnum.english;
-          break;
-        case "es":
-          language = LanguageContractEnum.spanish;
-          break;
-        case "fr":
-          language = LanguageContractEnum.french;
-          break;
-        default:
-          language = LanguageContractEnum.english;
-          break;
-      }
+    this.ngxSpinnerService.show();
+    const selectedLanguage = this.translate.currentLang;
+    let language;
+    switch (selectedLanguage) {
+      case "pt":
+        language = LanguageContractEnum.portuguese;
+        break;
+      case "en":
+        language = LanguageContractEnum.english;
+        break;
+      case "es":
+        language = LanguageContractEnum.spanish;
+        break;
+      case "fr":
+        language = LanguageContractEnum.french;
+        break;
+      default:
+        language = LanguageContractEnum.english;
+        break;
+    }
 
-      this.contractsService
-        .getPdf(this.id.toString(), language, this.loteList.bid_number.classification)
-        .then(data => {
-          const buffer = data;
-          const file = new Blob([buffer], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-          });
-          const fileURL = URL.createObjectURL(file);
-          const link = document.createElement("a");
-          link.href = fileURL;
-          const name =
-            this.loteList.bid_number.bid_count + "/" + new Date(this.loteList.bid_number.createdAt).getFullYear();
-          link.setAttribute("download", `Contract-${name}.docx`);
-          link.style.display = "none"; // Oculta o link no DOM
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        })
-        .catch(error => {
-          console.error(error);
-          this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+    this.contractsService
+      .getPdf(this.id.toString(), language, this.loteList.bid_number.classification)
+      .then(data => {
+        const buffer = data;
+        const file = new Blob([buffer], {
+          type: "application/pdf",
         });
-
-      // const pdfDownaload = await this.contractsService.getPdf(this.id.toString());
-
-      // const tempDiv = document.createElement('div');
-      // tempDiv.innerHTML = pdfDownaload;
-
-      // if (tempDiv) {
-      //   html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
-      //     const pdf = new jsPDF('p', 'mm', 'a4');
-
-      //     const imgData = canvas.toDataURL('image/png');
-      //     const pdfWidth = pdf.internal.pageSize.getWidth();
-      //     const pdfHeight = pdf.internal.pageSize.getHeight();
-      //     const marginLeft = 10;
-      //     const marginTop = 10;
-
-      //     pdf.addImage(imgData, 'PNG', marginLeft, marginTop, pdfWidth - (2 * marginLeft), pdfHeight - (2 * marginTop));
-
-      //     const pdfDataUri = pdf.output('datauristring');
-      //     const link = document.createElement('a');
-      //     link.href = pdfDataUri;
-      //     link.download = 'contrato.pdf';
-      //     link.click();
-
-      //     document.body.removeChild(tempDiv);
-      //   });
-      // }
-    } catch {}
+        const fileURL = URL.createObjectURL(file);
+        const link = document.createElement("a");
+        link.href = fileURL;
+        const name =
+          this.loteList.bid_number.bid_count + "/" + new Date(this.loteList.bid_number.createdAt).getFullYear();
+        link.setAttribute("download", `Contract-${name}.pdf`);
+        link.style.display = "none"; // Oculta o link no DOM
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        this.ngxSpinnerService.hide();
+      })
+      .catch(error => {
+        console.error(error);
+        this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+        this.ngxSpinnerService.hide();
+      });
   }
 }

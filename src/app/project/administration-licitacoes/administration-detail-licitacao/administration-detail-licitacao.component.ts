@@ -90,6 +90,7 @@ export class AdministrationDetailLicitacaoComponent {
     if (command === "contract") this.router.navigate(["/pages/licitacoes/contratos-licitacoes"]);
 
     if (command === "edital") {
+      this.spinnerService.show();
       let type = ModelContractClassificationEnum.editalBens;
       switch (this.response.classification) {
         case "servicos":
@@ -130,78 +131,24 @@ export class AdministrationDetailLicitacaoComponent {
         .then(data => {
           const buffer = data;
           const file = new Blob([buffer], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            type: "application/pdf",
           });
           const fileURL = URL.createObjectURL(file);
           const link = document.createElement("a");
           link.href = fileURL;
           const name = this.response.bid_count + "/" + new Date(this.response.createdAt).getFullYear();
-          link.setAttribute("download", `Edital-${name}.docx`);
+          link.setAttribute("download", `Edital-${name}.pdf`);
           link.style.display = "none"; // Oculta o link no DOM
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
+          this.spinnerService.hide();
         })
         .catch(error => {
           console.error(error);
           this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+          this.spinnerService.hide();
         });
-
-      // const tempDiv = document.createElement('div');
-      // tempDiv.innerHTML = pdfDownaload;
-
-      // if (tempDiv) {
-      //   html2canvas(document.body.appendChild(tempDiv)).then((canvas) => {
-      //     const pdf = new jsPDF('p', 'mm', 'a4');
-
-      //     const imgData = canvas.toDataURL('image/png');
-      //     const pdfWidth = pdf.internal.pageSize.getWidth();
-      //     const pdfHeight = pdf.internal.pageSize.getHeight() / 2;
-      //     const marginLeft = 10;
-      //     const marginTop = 10;
-
-      //     const maxFontSize = 12;
-      //     const lineHeight = 1.2;
-
-      //     const footerSpacing = 10;
-
-      //     const text = tempDiv.innerText;
-      //     const textLines = pdf.splitTextToSize(text, pdfWidth - marginLeft * 2);
-
-      //     let fontSize = maxFontSize;
-      //     let textHeight = (1) * pdf.internal.scaleFactor;
-
-      //     let startY = marginTop;
-      //     let remainingText = textLines;
-
-      //     while (remainingText.length) {
-      //       if (startY + textHeight > pdfHeight - marginTop - footerSpacing) {
-      //         pdf.addPage();
-      //         startY = marginTop;
-      //       }
-
-      //       const availableSpace = pdfHeight - startY - marginTop - footerSpacing;
-      //       const maxLines = Math.floor(availableSpace / textHeight);
-      //       const textPage = remainingText.splice(0, maxLines);
-      //       const footerY = pdf.internal.pageSize.getHeight() - footerSpacing;
-
-      //       pdf.text(textPage, marginLeft, startY);
-      //       startY += textPage.length * textHeight;
-
-      //       if (startY + textHeight > pdfHeight - marginTop) {
-      //         pdf.text('', marginLeft, footerY);
-      //       }
-      //     }
-
-      //     const pdfDataUri = pdf.output('datauristring');
-      //     const link = document.createElement('a');
-      //     link.href = pdfDataUri;
-      //     link.download = 'edital.pdf';
-      //     link.click();
-
-      //     document.body.removeChild(tempDiv);
-      //   });
-      // }
     }
 
     if (command === "dados_complementares") {
@@ -244,6 +191,7 @@ export class AdministrationDetailLicitacaoComponent {
       //this.toastrService.success("Baixado com sucesso!", "", { progressBar: true });
     }
     if (command === "ata") {
+      this.spinnerService.show();
       const selectedLanguage = this.translate.currentLang;
       let language;
       switch (selectedLanguage) {
@@ -269,21 +217,23 @@ export class AdministrationDetailLicitacaoComponent {
         .then(data => {
           const buffer = data;
           const file = new Blob([buffer], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            type: "application/pdf",
           });
           const fileURL = URL.createObjectURL(file);
           const link = document.createElement("a");
           link.href = fileURL;
           const name = this.response.bid_count + "/" + new Date(this.response.createdAt).getFullYear();
-          link.setAttribute("download", `Ata-${name}.docx`);
+          link.setAttribute("download", `Ata-${name}.pdf`);
           link.style.display = "none"; // Oculta o link no DOM
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
+          this.spinnerService.hide();
         })
         .catch(error => {
           console.error(error);
           this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+          this.spinnerService.hide();
         });
     }
   }

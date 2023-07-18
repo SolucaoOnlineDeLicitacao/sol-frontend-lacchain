@@ -11,6 +11,7 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import { LanguageContractEnum } from "src/enums/language-contract.enum";
 import { ModelContractClassificationEnum } from "src/enums/modelContract-classification.enum";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: "app-fornecedor-detalhe-licitacao",
@@ -36,9 +37,8 @@ export class FornecedorDetalheLicitacaoComponent {
     private route: ActivatedRoute,
     private translate: TranslateService,
     private bidService: AssociationBidService,
-
-    private proposalService: ProposalService,
-    private associationBidService: AssociationBidService
+    private ngxSpinnerService: NgxSpinnerService,
+    private proposalService: ProposalService
   ) {}
   ngOnInit(): void {
     this.route.data.subscribe({
@@ -67,6 +67,7 @@ export class FornecedorDetalheLicitacaoComponent {
 
   async openModal(command: string) {
     if (command === "edital") {
+      this.ngxSpinnerService.show();
       let type = ModelContractClassificationEnum.editalBens;
       switch (this.response.classification) {
         case "servicos":
@@ -107,25 +108,28 @@ export class FornecedorDetalheLicitacaoComponent {
         .then(data => {
           const buffer = data;
           const file = new Blob([buffer], {
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            type: "application/pdf",
           });
           const fileURL = URL.createObjectURL(file);
           const link = document.createElement("a");
           link.href = fileURL;
           const name = this.response.bid_count + "/" + new Date(this.response.createdAt).getFullYear();
-          link.setAttribute("download", `Edital-${name}.docx`);
+          link.setAttribute("download", `Edital-${name}.pdf`);
           link.style.display = "none"; // Oculta o link no DOM
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
+          this.ngxSpinnerService.hide();
         })
         .catch(error => {
           console.error(error);
           this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+          this.ngxSpinnerService.hide();
         });
     }
     if (command === "ata") {
       try {
+        this.ngxSpinnerService.show();
         const selectedLanguage = this.translate.currentLang;
         let language;
         switch (selectedLanguage) {
@@ -151,21 +155,23 @@ export class FornecedorDetalheLicitacaoComponent {
           .then(data => {
             const buffer = data;
             const file = new Blob([buffer], {
-              type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              type: "application/pdf",
             });
             const fileURL = URL.createObjectURL(file);
             const link = document.createElement("a");
             link.href = fileURL;
             const name = this.response.bid_count + "/" + new Date(this.response.createdAt).getFullYear();
-            link.setAttribute("download", `Ata-${name}.docx`);
-            link.style.display = "none"; // Oculta o link no DOM
+            link.setAttribute("download", `Ata-${name}.pdf`);
+            link.style.display = "none";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            this.ngxSpinnerService.hide();
           })
           .catch(error => {
             console.error(error);
             this.toastrService.error(this.translate.instant("TOASTRS.DOWNLOAD_ERROR"), "", { progressBar: true });
+            this.ngxSpinnerService.hide();
           });
       } catch {
         let errorMessage = "Modelo de contrato não cadastrado";
@@ -184,15 +190,9 @@ export class FornecedorDetalheLicitacaoComponent {
             errorMessage = "Modelo de contrato no registrado";
             break;
         }
-
         this.toastrService.error(errorMessage, "", { progressBar: true });
+        this.ngxSpinnerService.hide();
       }
-
-      //const result = await this.associationBidService.download(this.response._id, "ataFile");
-      //const file = new Blob([result], { type: "application/pdf" });
-      //const url = window.URL.createObjectURL(file);
-      //window.open(url);
-      //this.toastrService.success(this.translate.instant('TOASTRS.SUCCESS_DOWNLOAD'), '', { progressBar: true });
     }
     if (command === "arquivoComplementar") {
       const result = await this.bidService.download(this.response._id, "ataFile").toPromise();
